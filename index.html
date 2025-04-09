@@ -3,19 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gospel Springs - Spiritual Growth App</title>
+    <title>Gospel Springs Mission - Spiritual Growth App</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="manifest" href="/manifest.json">
     <style>
         :root {
-            --primary: #3F72AF;
-            --secondary: #112D4E;
-            --accent: #F67280;
-            --light: #F9F7F7;
-            --dark: #1A1A1A;
-            --gradient: linear-gradient(135deg, #3F72AF 0%, #112D4E 100%);
+            --primary: #2C5F2D; /* Deep green */
+            --secondary: #1A3A1A; /* Darker green */
+            --accent: #97BC62; /* Light green */
+            --light: #F5F5F5; /* Off-white */
+            --dark: #1A1A1A; /* Dark text */
+            --gradient: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             --font-primary: 'Segoe UI', system-ui, sans-serif;
+            --transition: all 0.3s ease;
         }
 
         * {
@@ -30,40 +31,7 @@
             color: var(--dark);
             background: var(--light);
             -webkit-tap-highlight-color: transparent;
-        }
-
-        /* Loading Screen */
-        .loader {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            transition: opacity 0.3s;
-        }
-
-        .loader.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid var(--light);
-            border-top: 4px solid var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            scroll-behavior: smooth;
         }
 
         .container {
@@ -72,26 +40,20 @@
             padding: 0 1rem;
         }
 
-        header {
+        /* Header with logo only */
+        .logo-header {
             background: var(--gradient);
-            color: white;
             padding: 1rem 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            text-align: center;
             box-shadow: var(--shadow);
         }
 
-        .nav-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
         .logo {
-            display: flex;
+            display: inline-flex;
             align-items: center;
             gap: 0.5rem;
+            color: white;
+            text-decoration: none;
         }
 
         .logo img {
@@ -106,50 +68,43 @@
             font-size: 1.2rem;
         }
 
-        .nav-menu {
-            display: flex;
-            gap: 1.5rem;
-            align-items: center;
-        }
-
-        .nav-link {
-            color: white;
-            text-decoration: none;
-            padding: 0.5rem;
-            border-radius: 0.5rem;
-            transition: background 0.3s;
-        }
-
-        .nav-link:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .hamburger {
-            display: none;
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.5rem;
-            cursor: pointer;
-        }
-
         /* Main Content */
         .hero {
             padding: 4rem 0;
             text-align: center;
+            background: url('https://images.unsplash.com/photo-1452421822248-d4c2b47f0c81?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center center/cover;
+            color: white;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
         }
 
         .hero h1 {
             font-size: 2.5rem;
             margin-bottom: 1rem;
-            color: var(--secondary);
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
 
         .hero p {
             font-size: 1.1rem;
-            color: #666;
+            color: rgba(255, 255, 255, 0.9);
             max-width: 600px;
             margin: 0 auto 2rem;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
         }
 
         .countdown-container {
@@ -165,6 +120,7 @@
         .countdown-header {
             text-align: center;
             margin-bottom: 1.5rem;
+            color: var(--secondary);
         }
 
         .countdown-grid {
@@ -179,6 +135,12 @@
             padding: 1rem;
             border-radius: 0.5rem;
             text-align: center;
+            transition: var(--transition);
+        }
+
+        .countdown-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
         }
 
         .countdown-number {
@@ -192,9 +154,45 @@
             opacity: 0.9;
         }
 
+        .view-service-btn {
+            display: inline-block;
+            margin-top: 1.5rem;
+            padding: 0.8rem 1.5rem;
+            background: var(--accent);
+            color: var(--secondary);
+            text-decoration: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            transition: var(--transition);
+            border: 2px solid transparent;
+        }
+
+        .view-service-btn:hover {
+            background: transparent;
+            color: var(--accent);
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
         /* Features Section */
+        .section-title {
+            text-align: center;
+            margin-bottom: 1rem;
+            color: var(--secondary);
+            font-size: 2rem;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            color: #666;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            font-size: 1.1rem;
+        }
+
         .features {
             padding: 4rem 0;
+            background: white;
         }
 
         .features-grid {
@@ -205,16 +203,19 @@
         }
 
         .feature-card {
-            background: white;
+            background: var(--light);
             padding: 2rem;
             border-radius: 1rem;
             box-shadow: var(--shadow);
-            transition: transform 0.3s;
+            transition: var(--transition);
             text-align: center;
+            border-bottom: 4px solid transparent;
         }
 
         .feature-card:hover {
             transform: translateY(-5px);
+            border-bottom-color: var(--accent);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         }
 
         .feature-icon {
@@ -223,10 +224,53 @@
             margin-bottom: 1rem;
         }
 
+        /* Testimonials */
+        .testimonials {
+            padding: 4rem 0;
+            background: var(--light);
+        }
+
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .testimonial-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: var(--shadow);
+            position: relative;
+        }
+
+        .testimonial-card::before {
+            content: '"';
+            font-size: 4rem;
+            color: var(--accent);
+            opacity: 0.2;
+            position: absolute;
+            top: 0.5rem;
+            left: 1rem;
+        }
+
+        .testimonial-text {
+            font-style: italic;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .testimonial-author {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
         /* Signup Benefits */
         .benefits {
-            background: var(--light);
             padding: 4rem 0;
+            background: white;
         }
 
         .benefits-grid {
@@ -237,13 +281,19 @@
         }
 
         .benefit-card {
-            background: white;
+            background: var(--light);
             padding: 2rem;
             border-radius: 1rem;
             box-shadow: var(--shadow);
             display: flex;
             align-items: center;
             gap: 1rem;
+            transition: var(--transition);
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         }
 
         .benefit-icon {
@@ -278,7 +328,7 @@
             border-radius: 0.5rem;
             text-decoration: none;
             font-weight: 600;
-            transition: transform 0.3s;
+            transition: var(--transition);
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
@@ -286,7 +336,7 @@
 
         .btn-primary {
             background: var(--accent);
-            color: white;
+            color: var(--secondary);
         }
 
         .btn-outline {
@@ -296,6 +346,7 @@
 
         .btn:hover {
             transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
         /* Footer */
@@ -311,6 +362,26 @@
             gap: 2rem;
         }
 
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-logo img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid white;
+        }
+
+        .footer-text {
+            opacity: 0.8;
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+
         .social-links {
             display: flex;
             gap: 1rem;
@@ -320,22 +391,42 @@
         .social-link {
             font-size: 1.5rem;
             color: white;
-            transition: color 0.3s;
+            transition: var(--transition);
         }
 
         .social-link:hover {
             color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .footer-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .footer-link {
+            color: white;
+            text-decoration: none;
+            transition: var(--transition);
+            padding: 0.25rem 0;
+        }
+
+        .footer-link:hover {
+            color: var(--accent);
+            padding-left: 0.5rem;
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            opacity: 0.7;
+            font-size: 0.9rem;
         }
 
         @media (max-width: 768px) {
-            .nav-menu {
-                display: none;
-            }
-
-            .hamburger {
-                display: block;
-            }
-
             .hero h1 {
                 font-size: 2rem;
             }
@@ -348,12 +439,10 @@
                 width: 100%;
                 justify-content: center;
             }
-        }
 
-        /* PWA Enhancements */
-        @media (display-mode: standalone) {
-            header {
-                padding-top: env(safe-area-inset-top);
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
             }
         }
 
@@ -364,35 +453,39 @@
         }
 
         .animate-in {
-            animation: fadeIn 0.6s ease-out;
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+
+        .delay-1 {
+            animation-delay: 0.2s;
+        }
+
+        .delay-2 {
+            animation-delay: 0.4s;
         }
     </style>
 </head>
 <body>
-    <!-- Loading Screen -->
-    <div class="loader">
-        <div class="spinner"></div>
-    </div>
-
-    <header>
-        <nav class="container nav-container">
-            <div class="logo">
-                <img src="Gospel springs logo.jpg" alt="Gospel Springs">
-                <span class="logo-text">Gospel Springs</span>
-            </div>
-           
+    <!-- Simple Header with Logo -->
+    <header class="logo-header">
+        <div class="container">
+            <a href="#" class="logo">
+                <img src="Gospel springs logo.jpg" alt="Gospel Springs Mission">
+                <span class="logo-text">Gospel Springs Mission</span>
+            </a>
+        </div>
     </header>
 
     <main>
         <!-- Hero Section -->
-        <section class="hero animate-in" id="home">
-            <div class="container">
-                <h1>Transform Your Spiritual Journey</h1>
-                <p>Connect with a global community of believers and grow your faith through daily devotionals, prayer networks, and live worship experiences.</p>
+        <section class="hero" id="home">
+            <div class="container hero-content">
+                <h1 class="animate-in">Transform Your Spiritual Journey</h1>
+                <p class="animate-in delay-1">Connect with a global community of believers and grow your faith through daily devotionals, prayer networks, and live worship experiences with Gospel Springs Mission.</p>
                 
-                <div class="countdown-container">
+                <div class="countdown-container animate-in delay-2">
                     <div class="countdown-header">
-                        <h2>Next Live Sunday service starts In:</h2>
+                        <h2>Next Live Sunday Service Starts In:</h2>
                     </div>
                     <div class="countdown-grid">
                         <div class="countdown-item">
@@ -412,60 +505,88 @@
                             <div class="countdown-label">Seconds</div>
                         </div>
                     </div>
+                    <a href="login.html" class="view-service-btn">
+                        <i class="fas fa-video"></i> View Our Service
+                    </a>
                 </div>
             </div>
         </section>
 
         <!-- Features Section -->
-        <section class="features animate-in" id="features">
+        <section class="features" id="features">
             <div class="container">
-                <h2>Why Choose Gospel Springs?</h2>
+                <h2 class="section-title animate-in">Why Choose Gospel Springs Mission?</h2>
+                <p class="section-subtitle animate-in delay-1">Experience spiritual growth through our unique platform designed for believers at every stage of their journey.</p>
+                
                 <div class="features-grid">
-                    <div class="feature-card">
+                    <div class="feature-card animate-in">
                         <i class="fas fa-pray feature-icon"></i>
                         <h3>Daily Prayer Reminders</h3>
-                        <p>Never miss your prayer time with smart notifications and guided sessions.</p>
+                        <p>Never miss your prayer time with smart notifications and guided sessions tailored to your schedule.</p>
                     </div>
-                    <div class="feature-card">
+                    <div class="feature-card animate-in delay-1">
                         <i class="fas fa-bible feature-icon"></i>
                         <h3>Personalized Bible Plans</h3>
-                        <p>Custom reading plans based on your spiritual goals and interests.</p>
+                        <p>Custom reading plans based on your spiritual goals, interests, and reading pace.</p>
                     </div>
-                    <div class="feature-card">
+                    <div class="feature-card animate-in delay-2">
                         <i class="fas fa-users feature-icon"></i>
                         <h3>Global Community</h3>
-                        <p>Connect with believers worldwide through discussion forums and groups.</p>
+                        <p>Connect with believers worldwide through discussion forums, prayer groups, and virtual meetups.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials -->
+        <section class="testimonials">
+            <div class="container">
+                <h2 class="section-title animate-in">What Our Members Say</h2>
+                <p class="section-subtitle animate-in delay-1">Hear from believers whose lives have been transformed through Gospel Springs Mission.</p>
+                
+                <div class="testimonial-grid">
+                    <div class="testimonial-card animate-in">
+                        <p class="testimonial-text">Gospel Springs Mission has revolutionized my prayer life. The daily reminders and guided prayers have helped me develop consistency in my spiritual walk.</p>
+                        <p class="testimonial-author">- Sarah J., Lagos</p>
+                    </div>
+                    <div class="testimonial-card animate-in delay-1">
+                        <p class="testimonial-text">The Bible reading plans are exactly what I needed. I've read through the entire New Testament in 3 months thanks to the personalized plan!</p>
+                        <p class="testimonial-author">- Michael T., Abuja</p>
+                    </div>
+                    <div class="testimonial-card animate-in delay-2">
+                        <p class="testimonial-text">Being part of this global community has expanded my understanding of worship. The live services are powerful and uplifting.</p>
+                        <p class="testimonial-author">- Grace O., Port Harcourt</p>
                     </div>
                 </div>
             </div>
         </section>
 
         <!-- Signup Benefits -->
-        <section class="benefits animate-in">
+        <section class="benefits">
             <div class="container">
-                <h2>Unlock Spiritual Growth</h2>
-                <p class="subtitle">Create your free account to access these benefits:</p>
+                <h2 class="section-title animate-in">Unlock Spiritual Growth</h2>
+                <p class="section-subtitle animate-in delay-1">Create your free account to access these benefits:</p>
                 
                 <div class="benefits-grid">
-                    <div class="benefit-card">
+                    <div class="benefit-card animate-in">
                         <i class="fas fa-star benefit-icon"></i>
                         <div>
                             <h3>Personalized Experience</h3>
-                            <p>Get customized content based on your spiritual journey stage.</p>
+                            <p>Get customized content based on your spiritual journey stage and preferences.</p>
                         </div>
                     </div>
-                    <div class="benefit-card">
+                    <div class="benefit-card animate-in delay-1">
                         <i class="fas fa-bell benefit-icon"></i>
                         <div>
                             <h3>Event Reminders</h3>
-                            <p>Never miss important services or study groups.</p>
+                            <p>Never miss important services, study groups, or special prayer sessions.</p>
                         </div>
                     </div>
-                    <div class="benefit-card">
+                    <div class="benefit-card animate-in delay-2">
                         <i class="fas fa-chart-line benefit-icon"></i>
                         <div>
                             <h3>Progress Tracking</h3>
-                            <p>Monitor your spiritual growth with insightful analytics.</p>
+                            <p>Monitor your spiritual growth with insightful analytics and milestone achievements.</p>
                         </div>
                     </div>
                 </div>
@@ -473,11 +594,11 @@
         </section>
 
         <!-- CTA Section -->
-        <section class="cta-section animate-in">
+        <section class="cta-section">
             <div class="container">
-                <div class="cta-content">
+                <div class="cta-content animate-in">
                     <h2>Start Your Journey Today</h2>
-                    <p>Join over 500,000 believers already growing in their faith through Gospel Springs</p>
+                    <p>Join our growing community of believers who are deepening their faith through Gospel Springs Mission.</p>
                     
                     <div class="cta-buttons">
                         <a href="signup.html" class="btn btn-primary">
@@ -498,7 +619,11 @@
         <div class="container">
             <div class="footer-content">
                 <div>
-                    <h4>Connect With Us</h4>
+                    <div class="footer-logo">
+                        <img src="Gospel springs logo.jpg" alt="Gospel Springs Mission">
+                        <span class="logo-text">Gospel Springs Mission</span>
+                    </div>
+                    <p class="footer-text">Helping believers worldwide grow in faith through technology and community since 2020.</p>
                     <div class="social-links">
                         <a href="#" class="social-link"><i class="fab fa-whatsapp"></i></a>
                         <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
@@ -507,11 +632,21 @@
                     </div>
                 </div>
                 <div>
+                    <h4>Quick Links</h4>
+                    <nav class="footer-nav">
+                        <a href="#home" class="footer-link">Home</a>
+                        <a href="#features" class="footer-link">Features</a>
+                        <a href="login.html" class="footer-link">Live Services</a>
+                        <a href="signup.html" class="footer-link">Sign Up</a>
+                    </nav>
+                </div>
+                <div>
                     <h4>Resources</h4>
                     <nav class="footer-nav">
-                        <a href="#privacy" class="nav-link">Privacy Policy</a>
-                        <a href="#terms" class="nav-link">Terms of Service</a>
-    
+                        <a href="#privacy" class="footer-link">Privacy Policy</a>
+                        <a href="#terms" class="footer-link">Terms of Service</a>
+                        <a href="#faq" class="footer-link">FAQs</a>
+                        <a href="#contact" class="footer-link">Contact Us</a>
                     </nav>
                 </div>
             </div>
@@ -520,13 +655,6 @@
     </footer>
 
     <script>
-        // Loader
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                document.querySelector('.loader').classList.add('hidden');
-            }, 1000);
-        });
-
         // Countdown Timer
         function updateCountdown() {
             const nextSunday = new Date();
@@ -549,14 +677,6 @@
 
         setInterval(updateCountdown, 1000);
         updateCountdown();
-
-        // Mobile Navigation
-        const hamburger = document.querySelector('.hamburger');
-        const navMenu = document.querySelector('.nav-menu');
-
-        hamburger.addEventListener('click', () => {
-            navMenu.style.display = navMenu.style.display === 'flex' ? 'none' : 'flex';
-        });
 
         // Smooth Scroll
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
