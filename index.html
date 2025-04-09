@@ -3,20 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gospel Springs Mission - Spiritual Growth App</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Gospel Springs Mission - Spiritual Growth Community</title>
+    <meta name="description" content="Join Gospel Springs Mission - A vibrant community for spiritual growth through daily devotionals, prayer networks, and live worship experiences.">
+    <meta name="keywords" content="church, christian community, bible study, prayer, worship, gospel springs">
+    <meta property="og:title" content="Gospel Springs Mission">
+    <meta property="og:description" content="Transform your spiritual journey with our faith community">
+    <meta property="og:type" content="website">
     <link rel="manifest" href="/manifest.json">
     <style>
         :root {
-            --primary: #2C5F2D; /* Deep green */
-            --secondary: #1A3A1A; /* Darker green */
-            --accent: #97BC62; /* Light green */
-            --light: #F5F5F5; /* Off-white */
-            --dark: #1A1A1A; /* Dark text */
-            --gradient: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --navy: #112D4E;
+            --red: #F67280;
+            --white: #FFFFFF;
+            --gradient: linear-gradient(45deg, #112D4E 0%, #3F72AF 100%);
+            --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
             --font-primary: 'Segoe UI', system-ui, sans-serif;
-            --transition: all 0.3s ease;
         }
 
         * {
@@ -28,10 +29,9 @@
         body {
             font-family: var(--font-primary);
             line-height: 1.6;
-            color: var(--dark);
-            background: var(--light);
+            color: var(--navy);
+            background: var(--white);
             -webkit-tap-highlight-color: transparent;
-            scroll-behavior: smooth;
         }
 
         .container {
@@ -40,390 +40,162 @@
             padding: 0 1rem;
         }
 
-        /* Header with logo only */
-        .logo-header {
-            background: var(--gradient);
-            padding: 1rem 0;
-            text-align: center;
-            box-shadow: var(--shadow);
-        }
-
-        .logo {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: white;
-            text-decoration: none;
-        }
-
-        .logo img {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            border: 2px solid white;
-        }
-
-        .logo-text {
-            font-weight: 600;
-            font-size: 1.2rem;
-        }
-
-        /* Main Content */
+        /* Hero Section */
         .hero {
-            padding: 4rem 0;
+            height: 80vh;
+            background: linear-gradient(rgba(17, 45, 78, 0.8), rgba(17, 45, 78, 0.8)),
+                        url('hero-bg.jpg') center/cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             text-align: center;
-            background: url('https://images.unsplash.com/photo-1452421822248-d4c2b47f0c81?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center center/cover;
-            color: white;
-            position: relative;
-        }
-
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.6);
+            color: var(--white);
+            padding: 2rem;
         }
 
         .hero-content {
-            position: relative;
-            z-index: 1;
+            max-width: 800px;
         }
 
         .hero h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            color: white;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            font-size: 2.8rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
         }
 
         .hero p {
-            font-size: 1.1rem;
-            color: rgba(255, 255, 255, 0.9);
-            max-width: 600px;
-            margin: 0 auto 2rem;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
         }
 
-        .countdown-container {
-            background: rgba(255, 255, 255, 0.9);
+        /* Digital Countdown */
+        .countdown {
+            background: rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
             padding: 2rem;
             border-radius: 1rem;
-            box-shadow: var(--shadow);
-            margin: 2rem auto;
-            max-width: 600px;
-        }
-
-        .countdown-header {
-            text-align: center;
-            margin-bottom: 1.5rem;
-            color: var(--secondary);
+            margin: 2rem 0;
         }
 
         .countdown-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 1rem;
+            gap: 1.5rem;
+            font-family: 'Courier New', monospace;
         }
 
         .countdown-item {
-            background: var(--primary);
-            color: white;
-            padding: 1rem;
-            border-radius: 0.5rem;
             text-align: center;
-            transition: var(--transition);
-        }
-
-        .countdown-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            padding: 1rem;
         }
 
         .countdown-number {
-            font-size: 2rem;
+            font-size: 2.5rem;
             font-weight: 700;
-            margin-bottom: 0.25rem;
+            color: var(--red);
+            margin-bottom: 0.5rem;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
         }
 
         .countdown-label {
-            font-size: 0.8rem;
-            opacity: 0.9;
-        }
-
-        .view-service-btn {
-            display: inline-block;
-            margin-top: 1.5rem;
-            padding: 0.8rem 1.5rem;
-            background: var(--accent);
-            color: var(--secondary);
-            text-decoration: none;
-            border-radius: 0.5rem;
-            font-weight: 600;
-            transition: var(--transition);
-            border: 2px solid transparent;
-        }
-
-        .view-service-btn:hover {
-            background: transparent;
-            color: var(--accent);
-            border-color: var(--accent);
-            transform: translateY(-2px);
+            font-size: 0.9rem;
+            color: var(--white);
+            text-transform: uppercase;
         }
 
         /* Features Section */
-        .section-title {
-            text-align: center;
-            margin-bottom: 1rem;
-            color: var(--secondary);
-            font-size: 2rem;
-        }
-
-        .section-subtitle {
-            text-align: center;
-            color: #666;
-            max-width: 700px;
-            margin: 0 auto 2rem;
-            font-size: 1.1rem;
-        }
-
         .features {
             padding: 4rem 0;
-            background: white;
+            background: #f9f9f9;
         }
 
-        .features-grid {
+        .feature-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 2rem;
-            margin-top: 2rem;
+            margin-top: 3rem;
         }
 
-        .feature-card {
-            background: var(--light);
+        .feature-item {
+            text-align: center;
             padding: 2rem;
+            background: var(--white);
             border-radius: 1rem;
             box-shadow: var(--shadow);
-            transition: var(--transition);
-            text-align: center;
-            border-bottom: 4px solid transparent;
+            transition: transform 0.3s;
         }
 
-        .feature-card:hover {
+        .feature-item:hover {
             transform: translateY(-5px);
-            border-bottom-color: var(--accent);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         }
 
         .feature-icon {
             font-size: 2.5rem;
-            color: var(--primary);
+            color: var(--navy);
             margin-bottom: 1rem;
-        }
-
-        /* Testimonials */
-        .testimonials {
-            padding: 4rem 0;
-            background: var(--light);
-        }
-
-        .testimonial-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .testimonial-card {
-            background: white;
-            padding: 2rem;
-            border-radius: 1rem;
-            box-shadow: var(--shadow);
-            position: relative;
-        }
-
-        .testimonial-card::before {
-            content: '"';
-            font-size: 4rem;
-            color: var(--accent);
-            opacity: 0.2;
-            position: absolute;
-            top: 0.5rem;
-            left: 1rem;
-        }
-
-        .testimonial-text {
-            font-style: italic;
-            margin-bottom: 1rem;
-            position: relative;
-            z-index: 1;
-        }
-
-        .testimonial-author {
-            font-weight: 600;
-            color: var(--primary);
-        }
-
-        /* Signup Benefits */
-        .benefits {
-            padding: 4rem 0;
-            background: white;
-        }
-
-        .benefits-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-
-        .benefit-card {
-            background: var(--light);
-            padding: 2rem;
-            border-radius: 1rem;
-            box-shadow: var(--shadow);
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            transition: var(--transition);
-        }
-
-        .benefit-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .benefit-icon {
-            font-size: 1.5rem;
-            color: var(--accent);
-            min-width: 40px;
         }
 
         /* CTA Section */
         .cta-section {
-            text-align: center;
             padding: 4rem 0;
             background: var(--gradient);
-            color: white;
-        }
-
-        .cta-content {
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .cta-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin-top: 2rem;
-            flex-wrap: wrap;
+            color: var(--white);
+            text-align: center;
         }
 
         .btn {
+            display: inline-block;
             padding: 1rem 2rem;
-            border-radius: 0.5rem;
+            border-radius: 2rem;
             text-decoration: none;
             font-weight: 600;
-            transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
+            transition: all 0.3s;
+            margin: 0.5rem;
         }
 
         .btn-primary {
-            background: var(--accent);
-            color: var(--secondary);
+            background: var(--red);
+            color: var(--white);
         }
 
-        .btn-outline {
-            border: 2px solid white;
-            color: white;
-        }
-
-        .btn:hover {
+        .btn-primary:hover {
+            background: #ff5f6d;
             transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
         /* Footer */
         footer {
-            background: var(--secondary);
-            color: white;
-            padding: 4rem 0 2rem;
-        }
-
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
+            background: var(--navy);
+            color: var(--white);
+            padding: 3rem 0;
+            text-align: center;
         }
 
         .footer-logo {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .footer-logo img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border: 2px solid white;
-        }
-
-        .footer-text {
-            opacity: 0.8;
-            line-height: 1.7;
+            width: 80px;
             margin-bottom: 1rem;
         }
 
         .social-links {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1rem;
+            margin: 1.5rem 0;
         }
 
         .social-link {
+            color: var(--white);
             font-size: 1.5rem;
-            color: white;
-            transition: var(--transition);
+            margin: 0 1rem;
+            transition: color 0.3s;
         }
 
         .social-link:hover {
-            color: var(--accent);
-            transform: translateY(-2px);
-        }
-
-        .footer-nav {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .footer-link {
-            color: white;
-            text-decoration: none;
-            transition: var(--transition);
-            padding: 0.25rem 0;
-        }
-
-        .footer-link:hover {
-            color: var(--accent);
-            padding-left: 0.5rem;
-        }
-
-        .copyright {
-            text-align: center;
-            margin-top: 3rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            opacity: 0.7;
-            font-size: 0.9rem;
+            color: var(--red);
         }
 
         @media (max-width: 768px) {
@@ -435,58 +207,23 @@
                 grid-template-columns: repeat(2, 1fr);
             }
 
-            .btn {
-                width: 100%;
-                justify-content: center;
+            .countdown-number {
+                font-size: 2rem;
             }
-
-            .cta-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-        }
-
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .animate-in {
-            animation: fadeIn 0.6s ease-out forwards;
-        }
-
-        .delay-1 {
-            animation-delay: 0.2s;
-        }
-
-        .delay-2 {
-            animation-delay: 0.4s;
         }
     </style>
 </head>
 <body>
-    <!-- Simple Header with Logo -->
-    <header class="logo-header">
-        <div class="container">
-            <a href="#" class="logo">
-                <img src="Gospel springs logo.jpg" alt="Gospel Springs Mission">
-                <span class="logo-text">Gospel Springs Mission</span>
-            </a>
-        </div>
-    </header>
-
     <main>
         <!-- Hero Section -->
-        <section class="hero" id="home">
+        <section class="hero">
             <div class="container hero-content">
-                <h1 class="animate-in">Transform Your Spiritual Journey</h1>
-                <p class="animate-in delay-1">Connect with a global community of believers and grow your faith through daily devotionals, prayer networks, and live worship experiences with Gospel Springs Mission.</p>
+                <img src="gospel-springs-logo.png" alt="Gospel Springs Mission Logo" class="footer-logo">
+                <h1>Welcome to Gospel Springs Mission</h1>
+                <p>Join our growing family of believers committed to spiritual growth and community impact</p>
                 
-                <div class="countdown-container animate-in delay-2">
-                    <div class="countdown-header">
-                        <h2>Next Live Sunday Service Starts In:</h2>
-                    </div>
+                <!-- Countdown Timer -->
+                <div class="countdown">
                     <div class="countdown-grid">
                         <div class="countdown-item">
                             <div class="countdown-number" id="days">00</div>
@@ -505,89 +242,30 @@
                             <div class="countdown-label">Seconds</div>
                         </div>
                     </div>
-                    <a href="login.html" class="view-service-btn">
-                        <i class="fas fa-video"></i> View Our Service
-                    </a>
+                    <a href="login.html" class="btn btn-primary">View Live Service</a>
                 </div>
             </div>
         </section>
 
         <!-- Features Section -->
-        <section class="features" id="features">
+        <section class="features">
             <div class="container">
-                <h2 class="section-title animate-in">Why Choose Gospel Springs Mission?</h2>
-                <p class="section-subtitle animate-in delay-1">Experience spiritual growth through our unique platform designed for believers at every stage of their journey.</p>
-                
-                <div class="features-grid">
-                    <div class="feature-card animate-in">
+                <h2>Your Spiritual Journey Enhanced</h2>
+                <div class="feature-grid">
+                    <div class="feature-item">
                         <i class="fas fa-pray feature-icon"></i>
-                        <h3>Daily Prayer Reminders</h3>
-                        <p>Never miss your prayer time with smart notifications and guided sessions tailored to your schedule.</p>
+                        <h3>Daily Guided Prayer</h3>
+                        <p>Structured prayer sessions with timely reminders</p>
                     </div>
-                    <div class="feature-card animate-in delay-1">
+                    <div class="feature-item">
                         <i class="fas fa-bible feature-icon"></i>
-                        <h3>Personalized Bible Plans</h3>
-                        <p>Custom reading plans based on your spiritual goals, interests, and reading pace.</p>
+                        <h3>Bible Study Plans</h3>
+                        <p>Customized scripture reading journeys</p>
                     </div>
-                    <div class="feature-card animate-in delay-2">
-                        <i class="fas fa-users feature-icon"></i>
-                        <h3>Global Community</h3>
-                        <p>Connect with believers worldwide through discussion forums, prayer groups, and virtual meetups.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Testimonials -->
-        <section class="testimonials">
-            <div class="container">
-                <h2 class="section-title animate-in">What Our Members Say</h2>
-                <p class="section-subtitle animate-in delay-1">Hear from believers whose lives have been transformed through Gospel Springs Mission.</p>
-                
-                <div class="testimonial-grid">
-                    <div class="testimonial-card animate-in">
-                        <p class="testimonial-text">Gospel Springs Mission has revolutionized my prayer life. The daily reminders and guided prayers have helped me develop consistency in my spiritual walk.</p>
-                        <p class="testimonial-author">- Sarah J., Lagos</p>
-                    </div>
-                    <div class="testimonial-card animate-in delay-1">
-                        <p class="testimonial-text">The Bible reading plans are exactly what I needed. I've read through the entire New Testament in 3 months thanks to the personalized plan!</p>
-                        <p class="testimonial-author">- Michael T., Abuja</p>
-                    </div>
-                    <div class="testimonial-card animate-in delay-2">
-                        <p class="testimonial-text">Being part of this global community has expanded my understanding of worship. The live services are powerful and uplifting.</p>
-                        <p class="testimonial-author">- Grace O., Port Harcourt</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Signup Benefits -->
-        <section class="benefits">
-            <div class="container">
-                <h2 class="section-title animate-in">Unlock Spiritual Growth</h2>
-                <p class="section-subtitle animate-in delay-1">Create your free account to access these benefits:</p>
-                
-                <div class="benefits-grid">
-                    <div class="benefit-card animate-in">
-                        <i class="fas fa-star benefit-icon"></i>
-                        <div>
-                            <h3>Personalized Experience</h3>
-                            <p>Get customized content based on your spiritual journey stage and preferences.</p>
-                        </div>
-                    </div>
-                    <div class="benefit-card animate-in delay-1">
-                        <i class="fas fa-bell benefit-icon"></i>
-                        <div>
-                            <h3>Event Reminders</h3>
-                            <p>Never miss important services, study groups, or special prayer sessions.</p>
-                        </div>
-                    </div>
-                    <div class="benefit-card animate-in delay-2">
-                        <i class="fas fa-chart-line benefit-icon"></i>
-                        <div>
-                            <h3>Progress Tracking</h3>
-                            <p>Monitor your spiritual growth with insightful analytics and milestone achievements.</p>
-                        </div>
+                    <div class="feature-item">
+                        <i class="fas fa-hands-praying feature-icon"></i>
+                        <h3>Live Worship</h3>
+                        <p>Join our global prayer network</p>
                     </div>
                 </div>
             </div>
@@ -596,61 +274,22 @@
         <!-- CTA Section -->
         <section class="cta-section">
             <div class="container">
-                <div class="cta-content animate-in">
-                    <h2>Start Your Journey Today</h2>
-                    <p>Join our growing community of believers who are deepening their faith through Gospel Springs Mission.</p>
-                    
-                    <div class="cta-buttons">
-                        <a href="signup.html" class="btn btn-primary">
-                            <i class="fas fa-rocket"></i>
-                            Get Started
-                        </a>
-                        <a href="#features" class="btn btn-outline">
-                            <i class="fas fa-search"></i>
-                            Learn More
-                        </a>
-                    </div>
-                </div>
+                <h2>Ready to Deepen Your Faith?</h2>
+                <p>Join thousands already growing spiritually</p>
+                <a href="login.html" class="btn btn-primary">Start Your Journey Now</a>
             </div>
         </section>
     </main>
 
     <footer>
         <div class="container">
-            <div class="footer-content">
-                <div>
-                    <div class="footer-logo">
-                        <img src="Gospel springs logo.jpg" alt="Gospel Springs Mission">
-                        <span class="logo-text">Gospel Springs Mission</span>
-                    </div>
-                    <p class="footer-text">Helping believers worldwide grow in faith through technology and community since 2020.</p>
-                    <div class="social-links">
-                        <a href="#" class="social-link"><i class="fab fa-whatsapp"></i></a>
-                        <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
-                        <a href="#" class="social-link"><i class="fab fa-tiktok"></i></a>
-                        <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
-                    </div>
-                </div>
-                <div>
-                    <h4>Quick Links</h4>
-                    <nav class="footer-nav">
-                        <a href="#home" class="footer-link">Home</a>
-                        <a href="#features" class="footer-link">Features</a>
-                        <a href="login.html" class="footer-link">Live Services</a>
-                        <a href="signup.html" class="footer-link">Sign Up</a>
-                    </nav>
-                </div>
-                <div>
-                    <h4>Resources</h4>
-                    <nav class="footer-nav">
-                        <a href="#privacy" class="footer-link">Privacy Policy</a>
-                        <a href="#terms" class="footer-link">Terms of Service</a>
-                        <a href="#faq" class="footer-link">FAQs</a>
-                        <a href="#contact" class="footer-link">Contact Us</a>
-                    </nav>
-                </div>
+            <img src="gospel-springs-logo.png" alt="Gospel Springs Mission Logo" class="footer-logo">
+            <div class="social-links">
+                <a href="#" class="social-link"><i class="fab fa-whatsapp"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
             </div>
-            <p class="copyright">&copy; 2025 Gospel Springs Mission. All rights reserved.</p>
+            <p>&copy; 2024 Gospel Springs Mission. All rights reserved.</p>
         </div>
     </footer>
 
@@ -678,43 +317,19 @@
         setInterval(updateCountdown, 1000);
         updateCountdown();
 
-        // Smooth Scroll
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', (e) => {
-                e.preventDefault();
-                document.querySelector(anchor.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
-        });
-
-        // Intersection Observer for animations
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('animate-in');
-                }
-            });
-        }, {
-            threshold: 0.1
-        });
-
-        document.querySelectorAll('.animate-in').forEach((el) => {
-            observer.observe(el);
-        });
-
         // Service Worker Registration
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/sw.js')
                     .then(registration => {
-                        console.log('ServiceWorker registration successful');
+                        console.log('Service Worker registered');
                     })
                     .catch(err => {
-                        console.log('ServiceWorker registration failed: ', err);
+                        console.log('Service Worker registration failed:', err);
                     });
             });
         }
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
 </body>
 </html>
