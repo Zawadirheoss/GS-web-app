@@ -3,359 +3,345 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home - Gospel Springs</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Gospel Springs - Home</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary: #4361ee;
-            --secondary: #3f37c9;
-            --light: #f8f9fa;
-            --dark: #212529;
+            --primary-color: #4e73df;
+            --secondary-color: #1cc88a;
+            --dark-color: #5a5c69;
         }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
+        
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #f8f9fc;
         }
-
-        /* Header Styles */
+        
         .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 2rem;
-            background: white;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            position: fixed;
-            width: 100%;
+            background-color: white;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            padding: 1rem 0;
+            position: sticky;
             top: 0;
             z-index: 1000;
         }
-
-        .logo img {
+        
+        .logo {
             width: 50px;
-            height: 50px;
-            border-radius: 50%;
+            height: auto;
         }
-
-        .profile-menu {
-            position: relative;
+        
+        .hero-section {
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
+                        url('https://via.placeholder.com/1920x600') no-repeat center center;
+            background-size: cover;
+            color: white;
+            padding: 8rem 0;
+            text-align: center;
+            margin-bottom: 2rem;
         }
-
+        
+        .hero-content h1 {
+            font-size: 3rem;
+            font-weight: 700;
+        }
+        
         .profile-icon {
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background: var(--primary);
+            background-color: var(--primary-color);
             color: white;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
+            font-weight: bold;
         }
-
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            right: 0;
-            top: 50px;
-            background: white;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            border-radius: 8px;
-            min-width: 200px;
-            z-index: 1000;
+        
+        .dropdown-menu {
+            min-width: 10rem;
         }
-
-        .dropdown-content.show {
-            display: block;
-        }
-
-        .dropdown-item {
-            padding: 1rem;
+        
+        .password-toggle {
             cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .dropdown-item:hover {
-            background: var(--light);
-        }
-
-        /* Hero Section */
-        .hero {
-            height: 60vh;
-            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('hero-bg.jpg');
-            background-size: cover;
-            background-position: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-top: 70px;
-            position: relative;
-        }
-
-        .hero-content {
-            text-align: center;
-            color: white;
-        }
-
-        .greeting {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-
-        /* Modal Styles */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-        }
-
-        .modal-content {
-            background: white;
-            padding: 2rem;
-            border-radius: 10px;
-            width: 90%;
-            max-width: 400px;
-        }
-
-        .form-group {
-            margin-bottom: 1rem;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 0.8rem;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            margin-top: 0.5rem;
-        }
-
-        .password-container {
-            position: relative;
-        }
-
-        .toggle-password {
             position: absolute;
             right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            cursor: pointer;
+            top: 10px;
+        }
+        
+        .modal-content {
+            border-radius: 0.5rem;
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
+    <!-- Header Section -->
     <header class="header">
-        <div class="logo">
-            <img src="Gospel springs logo.jpg" alt="Logo">
-        </div>
-        
-        <div class="profile-menu">
-            <div class="profile-icon" id="profileIcon"></div>
-            <div class="dropdown-content" id="dropdownContent">
-                <div class="dropdown-item" id="updatePasswordBtn">Update Password</div>
-                <div class="dropdown-item" id="logoutBtn">Logout</div>
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <img src="Gospel springs logo.jpg" alt="Gospel Springs Logo" class="logo">
+                </div>
+                <div class="col-md-6 text-end">
+                    <div class="dropdown d-inline-block">
+                        <div class="profile-icon dropdown-toggle" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <!-- Initial will be inserted here by JavaScript -->
+                        </div>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="profileDropdown">
+                            <li><a class="dropdown-item" href="#" id="updatePasswordBtn">Update Password</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#" id="logoutBtn">Logout</a></li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </div>
     </header>
 
     <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-content">
-            <h1 class="greeting" id="greeting"></h1>
+    <section class="hero-section">
+        <div class="container">
+            <div class="hero-content">
+                <h1 id="greetingMessage">Welcome to Gospel Springs</h1>
+            </div>
         </div>
     </section>
 
+    <!-- Main Content -->
+    <main class="container my-5">
+        <!-- Your main content will go here -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card shadow mb-4">
+                    <div class="card-body">
+                        <p>Your main content will be placed here.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
     <!-- Update Password Modal -->
-    <div class="modal" id="updatePasswordModal">
-        <div class="modal-content">
-            <h2>Update Password</h2>
-            <form id="passwordForm">
-                <div class="form-group">
-                    <label>Old Password</label>
-                    <div class="password-container">
-                        <input type="password" id="oldPassword" class="form-control" required>
-                        <i class="fas fa-eye toggle-password" id="toggleOldPassword"></i>
-                    </div>
+    <div class="modal fade" id="updatePasswordModal" tabindex="-1" aria-labelledby="updatePasswordModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="updatePasswordModalLabel">Update Password</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                
-                <div class="form-group">
-                    <label>New Password</label>
-                    <div class="password-container">
-                        <input type="password" id="newPassword" class="form-control" required>
-                        <i class="fas fa-eye toggle-password" id="toggleNewPassword"></i>
-                    </div>
+                <div class="modal-body">
+                    <form id="updatePasswordForm">
+                        <div class="mb-3 position-relative">
+                            <label for="oldPassword" class="form-label">Old Password</label>
+                            <input type="password" class="form-control" id="oldPassword" required>
+                            <i class="fas fa-eye password-toggle" data-target="oldPassword"></i>
+                        </div>
+                        <div class="mb-3 position-relative">
+                            <label for="newPassword" class="form-label">New Password</label>
+                            <input type="password" class="form-control" id="newPassword" required>
+                            <i class="fas fa-eye password-toggle" data-target="newPassword"></i>
+                        </div>
+                        <div class="mb-3 position-relative">
+                            <label for="confirmPassword" class="form-label">Confirm Password</label>
+                            <input type="password" class="form-control" id="confirmPassword" required>
+                            <i class="fas fa-eye password-toggle" data-target="confirmPassword"></i>
+                        </div>
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">Update Password</button>
+                        </div>
+                    </form>
                 </div>
-                
-                <div class="form-group">
-                    <label>Confirm Password</label>
-                    <div class="password-container">
-                        <input type="password" id="confirmPassword" class="form-control" required>
-                        <i class="fas fa-eye toggle-password" id="toggleConfirmPassword"></i>
-                    </div>
-                </div>
-                
-                <button type="submit" class="btn" style="background: var(--primary); color: white; padding: 0.8rem; width: 100%; border: none; border-radius: 5px; cursor: pointer;">Update</button>
-            </form>
+            </div>
         </div>
     </div>
 
     <!-- Success Modal -->
-    <div class="modal" id="successModal">
-        <div class="modal-content">
-            <h2>Success!</h2>
-            <p>Password updated successfully</p>
-            <button class="btn" style="background: var(--primary); color: white;" onclick="window.location.href='login.html'">OK</button>
+    <div class="modal fade" id="successModal" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title" id="successModalLabel">Success</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Password updated successfully!</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">OK</button>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Firebase SDKs -->
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+    
+    <!-- Bootstrap JS Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-        import { 
-            getAuth, 
-            signOut, 
-            updatePassword,
-            reauthenticateWithCredential,
-            EmailAuthProvider
-        } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
-        import { 
-            getFirestore,
-            doc,
-            getDoc
-        } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyDJJqxh3UOsTcBPAXLeEWeLoQRmIy_6hNU",
-            authDomain: "web-app-ae5b6.firebaseapp.com",
-            projectId: "web-app-ae5b6",
-            storageBucket: "web-app-ae5b6.firebasestorage.app",
-            messagingSenderId: "921251501161",
-            appId: "1:921251501161:web:316ff3fc4345735762bef8"
-        };
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyDJJqxh3UOsTcBPAXLeEWeLoQRmIy_6hNU",
+    authDomain: "web-app-ae5b6.firebaseapp.com",
+    projectId: "web-app-ae5b6",
+    storageBucket: "web-app-ae5b6.firebasestorage.app",
+    messagingSenderId: "921251501161",
+    appId: "1:921251501161:web:316ff3fc4345735762bef8"
+  };
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
 
         // DOM Elements
-        const profileIcon = document.getElementById('profileIcon');
-        const dropdownContent = document.getElementById('dropdownContent');
-        const greeting = document.getElementById('greeting');
-        const updatePasswordModal = document.getElementById('updatePasswordModal');
-        const passwordForm = document.getElementById('passwordForm');
+        const greetingMessage = document.getElementById('greetingMessage');
+        const profileIcon = document.querySelector('.profile-icon');
+        const updatePasswordBtn = document.getElementById('updatePasswordBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const updatePasswordForm = document.getElementById('updatePasswordForm');
+        const updatePasswordModal = new bootstrap.Modal(document.getElementById('updatePasswordModal'));
+        const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+        const passwordToggles = document.querySelectorAll('.password-toggle');
 
-        // Toggle dropdown
-        profileIcon.addEventListener('click', () => {
-            dropdownContent.classList.toggle('show');
-        });
-
-        // Close dropdown when clicking outside
-        window.addEventListener('click', (e) => {
-            if (!e.target.closest('.profile-menu')) {
-                dropdownContent.classList.remove('show');
+        // Check authentication state
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                // User is signed in
+                getUserData(user.email);
+            } else {
+                // No user is signed in, redirect to login
+                window.location.href = 'login.html';
             }
         });
 
-        // Logout
-        document.getElementById('logoutBtn').addEventListener('click', () => {
-            signOut(auth).then(() => {
-                window.location.href = 'login.html';
-            });
-        });
-
-        // Update Password
-        document.getElementById('updatePasswordBtn').addEventListener('click', () => {
-            updatePasswordModal.style.display = 'flex';
-            dropdownContent.classList.remove('show');
-        });
-
-        // Toggle password visibility
-        function setupPasswordToggle(inputId, toggleId) {
-            const input = document.getElementById(inputId);
-            const toggle = document.getElementById(toggleId);
-            
-            toggle.addEventListener('click', () => {
-                const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
-                input.setAttribute('type', type);
-                toggle.classList.toggle('fa-eye-slash');
-            });
+        // Get user data from Firestore
+        function getUserData(email) {
+            db.collection('users').where('email', '==', email).get()
+                .then((querySnapshot) => {
+                    if (!querySnapshot.empty) {
+                        const userData = querySnapshot.docs[0].data();
+                        updateUI(userData.fullName);
+                    } else {
+                        console.log('No user data found');
+                        // Use email prefix as fallback
+                        const emailPrefix = email.split('@')[0];
+                        updateUI(emailPrefix);
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error getting user data:', error);
+                    // Use email prefix as fallback
+                    const emailPrefix = auth.currentUser.email.split('@')[0];
+                    updateUI(emailPrefix);
+                });
         }
 
-        setupPasswordToggle('oldPassword', 'toggleOldPassword');
-        setupPasswordToggle('newPassword', 'toggleNewPassword');
-        setupPasswordToggle('confirmPassword', 'toggleConfirmPassword');
+        // Update UI with user data
+        function updateUI(fullName) {
+            // Set profile icon with first letter of full name
+            profileIcon.textContent = fullName.charAt(0).toUpperCase();
+            
+            // Set greeting message based on time of day
+            const hour = new Date().getHours();
+            let greeting;
+            
+            if (hour < 12) {
+                greeting = 'Good morning';
+            } else if (hour < 18) {
+                greeting = 'Good afternoon';
+            } else {
+                greeting = 'Good evening';
+            }
+            
+            greetingMessage.textContent = `${greeting}, ${fullName}. Welcome back!`;
+        }
 
-        // Update password form
-        passwordForm.addEventListener('submit', async (e) => {
+        // Update password
+        updatePasswordForm.addEventListener('submit', (e) => {
             e.preventDefault();
             
-            const user = auth.currentUser;
             const oldPassword = document.getElementById('oldPassword').value;
             const newPassword = document.getElementById('newPassword').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
-
+            
             if (newPassword !== confirmPassword) {
-                alert("Passwords don't match!");
+                alert('New password and confirm password do not match');
                 return;
             }
+            
+            const user = auth.currentUser;
+            const credential = firebase.auth.EmailAuthProvider.credential(
+                user.email, 
+                oldPassword
+            );
+            
+            // Reauthenticate user
+            user.reauthenticateWithCredential(credential)
+                .then(() => {
+                    // Update password
+                    return user.updatePassword(newPassword);
+                })
+                .then(() => {
+                    // Password updated successfully
+                    updatePasswordModal.hide();
+                    successModal.show();
+                    
+                    // Redirect to login after a delay
+                    setTimeout(() => {
+                        auth.signOut().then(() => {
+                            window.location.href = 'login.html';
+                        });
+                    }, 2000);
+                })
+                .catch((error) => {
+                    console.error('Error updating password:', error);
+                    alert('Error updating password: ' + error.message);
+                });
+        });
 
-            try {
-                // Reauthenticate user
-                const credential = EmailAuthProvider.credential(user.email, oldPassword);
-                await reauthenticateWithCredential(user, credential);
+        // Toggle password visibility
+        passwordToggles.forEach(toggle => {
+            toggle.addEventListener('click', () => {
+                const targetId = toggle.getAttribute('data-target');
+                const passwordInput = document.getElementById(targetId);
                 
-                // Update password
-                await updatePassword(user, newPassword);
-                updatePasswordModal.style.display = 'none';
-                document.getElementById('successModal').style.display = 'flex';
-            } catch (error) {
-                console.error("Error updating password:", error);
-                alert(error.message);
-            }
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    toggle.classList.remove('fa-eye');
+                    toggle.classList.add('fa-eye-slash');
+                } else {
+                    passwordInput.type = 'password';
+                    toggle.classList.remove('fa-eye-slash');
+                    toggle.classList.add('fa-eye');
+                }
+            });
         });
 
-        // Load user data
-        auth.onAuthStateChanged(async (user) => {
-            if (!user) {
+        // Show update password modal
+        updatePasswordBtn.addEventListener('click', () => {
+            updatePasswordModal.show();
+        });
+
+        // Logout
+        logoutBtn.addEventListener('click', () => {
+            auth.signOut().then(() => {
                 window.location.href = 'login.html';
-                return;
-            }
-
-            // Get user data from Firestore
-            const docRef = doc(db, "users", user.email);
-            const docSnap = await getDoc(docRef);
-
-            if (docSnap.exists()) {
-                const userData = docSnap.data();
-                const fullName = userData.fullName || 'User';
-                const initial = fullName.charAt(0).toUpperCase();
-                profileIcon.textContent = initial;
-
-                // Set greeting
-                const hour = new Date().getHours();
-                let greetingText = 'Good ';
-                greetingText += hour < 12 ? 'Morning' : hour < 18 ? 'Afternoon' : 'Evening';
-                greetingText += `, ${fullName}`;
-                greeting.textContent = greetingText;
-            }
-        });
-
-        // Close modals
-        window.addEventListener('click', (e) => {
-            if (e.target.classList.contains('modal')) {
-                e.target.style.display = 'none';
-            }
+            });
         });
     </script>
 </body>
