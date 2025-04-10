@@ -14,7 +14,6 @@
             --secondary-color: #34a853;
             --accent-color: #fbbc05;
             --dark-color: #202124;
-            --light-color: #f8f9fa;
         }
 
         body {
@@ -23,10 +22,9 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            padding-bottom: 80px; /* Space for footer */
+            padding-bottom: 80px;
         }
 
-        /* Blue Top Navigation */
         .top-nav {
             background-color: var(--primary-color);
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
@@ -43,11 +41,6 @@
             transition: transform 0.3s;
         }
 
-        .menu-toggle:hover {
-            transform: scale(1.1);
-        }
-
-        /* Sidebar */
         .sidebar {
             width: 280px;
             height: 100vh;
@@ -80,38 +73,14 @@
             transform: translateX(8px);
         }
 
-        .sidebar-nav .nav-link i {
-            width: 24px;
-            text-align: center;
-            margin-right: 10px;
-        }
-
-        /* Hero Section */
         .hero-section {
             background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
                         url('APG.jpg') no-repeat center center/cover;
             color: white;
             padding: 8rem 0;
             margin-bottom: 2rem;
-            position: relative;
         }
 
-        .hero-content h1 {
-            font-size: 3.2rem;
-            font-weight: 700;
-            text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
-            animation: fadeInUp 1s ease;
-            line-height: 1.3;
-        }
-
-        .hero-content .welcome-text {
-            font-size: 1.8rem;
-            font-weight: 300;
-            display: block;
-            margin-top: 1rem;
-        }
-
-        /* Profile Icon */
         .profile-icon {
             width: 42px;
             height: 42px;
@@ -124,18 +93,10 @@
             cursor: pointer;
             font-weight: bold;
             font-size: 1.2rem;
-            transition: all 0.3s;
         }
 
-        .profile-icon:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 0 3px rgba(251, 188, 5, 0.3);
-        }
-
-        /* Bottom Navigation with Logo */
         .bottom-nav {
-            background-color: var(--dark-color);
-            color: white;
+            background-color: white;
             padding: 1.5rem 0;
             position: fixed;
             bottom: 0;
@@ -147,39 +108,16 @@
         .footer-logo {
             height: 50px;
             width: auto;
-            filter: brightness(0) invert(1);
-            transition: transform 0.3s;
         }
 
-        .footer-logo:hover {
-            transform: scale(1.05);
-        }
-
-        /* Animations */
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Responsive Adjustments */
-        @media (max-width: 768px) {
-            .hero-content h1 {
-                font-size: 2.5rem;
-            }
-            .hero-content .welcome-text {
-                font-size: 1.4rem;
-            }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body>
-    <!-- Blue Top Navigation -->
+    <!-- Top Navigation -->
     <nav class="top-nav">
         <div class="container-fluid">
             <div class="d-flex justify-content-between align-items-center">
@@ -188,7 +126,7 @@
                     <span class="text-white fw-bold d-none d-md-block">Gospel Springs</span>
                 </div>
                 <div class="profile-icon dropdown-toggle" id="profileDropdown" data-bs-toggle="dropdown">
-                    <!-- Initial will be inserted here by JavaScript -->
+                    <!-- Initial will be inserted here -->
                 </div>
                 <ul class="dropdown-menu dropdown-menu-end">
                     <li><a class="dropdown-item" href="#" id="updatePasswordBtn"><i class="fas fa-key me-2"></i>Update Password</a></li>
@@ -199,27 +137,21 @@
         </div>
     </nav>
 
-    <!-- Sidebar Navigation -->
+    <!-- Sidebar -->
     <div class="sidebar">
         <div class="sidebar-nav">
             <nav class="nav flex-column">
-                <a class="nav-link active" href="#"><i class="fas fa-home"></i> Home</a>
-                <a class="nav-link" href="#"><i class="fas fa-info-circle"></i> About Us</a>
-                <a class="nav-link" href="#"><i class="fas fa-video"></i> Live Events</a>
-                <a class="nav-link" href="#"><i class="fas fa-calendar-alt"></i> Events</a>
-                <a class="nav-link" href="#"><i class="fas fa-images"></i> Gallery</a>
-                <a class="nav-link" href="#"><i class="fas fa-envelope"></i> Contact</a>
+                <a class="nav-link active" href="#"><i class="fas fa-home me-2"></i>Home</a>
+                <a class="nav-link" href="#"><i class="fas fa-info-circle me-2"></i>About Us</a>
+                <a class="nav-link" href="#"><i class="fas fa-video me-2"></i>Live Events</a>
             </nav>
         </div>
     </div>
 
     <!-- Hero Section -->
     <section class="hero-section">
-        <div class="container">
-            <div class="hero-content text-center">
-                <h1 id="greetingMessage"></h1>
-                <span class="welcome-text">Welcome to Gospel Springs Ministries</span>
-            </div>
+        <div class="container text-center">
+            <h1 id="greetingMessage" class="animate__animated animate__fadeIn"></h1>
         </div>
     </section>
 
@@ -230,21 +162,21 @@
                 <div class="card shadow-sm mb-4">
                     <div class="card-body">
                         <h3 class="card-title">Welcome to Our Community</h3>
-                        <p class="card-text">Your content will go here. This is a placeholder for your main content area.</p>
+                        <p class="card-text">Your main content goes here...</p>
                     </div>
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- Bottom Navigation with Logo -->
+    <!-- Bottom Navigation -->
     <nav class="bottom-nav">
         <div class="container text-center">
-            <img src="Gospel springs logo.jpg" alt="Gospel Springs Logo" class="footer-logo">
+            <img src="Gospel springs logo.jpg" alt="Logo" class="footer-logo">
         </div>
     </nav>
 
-    <!-- Update Password Modal -->
+    <!-- Modals -->
     <div class="modal fade" id="updatePasswordModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -278,7 +210,6 @@
         </div>
     </div>
 
-    <!-- Success Modal -->
     <div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -287,7 +218,7 @@
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <p class="mb-0">Your password has been updated successfully!</p>
+                    <p class="mb-0">Password updated successfully!</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-success" data-bs-dismiss="modal">Continue</button>
@@ -296,15 +227,13 @@
         </div>
     </div>
 
-    <!-- Firebase SDK -->
+    <!-- Scripts -->
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyDJJqxh3UOsTcBPAXLeEWeLoQRmIy_6hNU",
             authDomain: "web-app-ae5b6.firebaseapp.com",
@@ -314,190 +243,94 @@
             appId: "1:921251501161:web:316ff3fc4345735762bef8"
         };
 
-        // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        // DOM Elements
         const greetingMessage = document.getElementById('greetingMessage');
         const profileIcon = document.querySelector('.profile-icon');
         const menuToggle = document.querySelector('.menu-toggle');
         const sidebar = document.querySelector('.sidebar');
-        const updatePasswordBtn = document.getElementById('updatePasswordBtn');
-        const logoutBtn = document.getElementById('logoutBtn');
-        const updatePasswordForm = document.getElementById('updatePasswordForm');
-        const passwordToggles = document.querySelectorAll('.password-toggle');
 
-        // Initialize Bootstrap Modals
-        const updatePasswordModal = new bootstrap.Modal(document.getElementById('updatePasswordModal'));
-        const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+        // Sidebar Toggle
+        menuToggle.addEventListener('click', () => sidebar.classList.toggle('active'));
 
-        // Toggle Sidebar
-        menuToggle.addEventListener('click', () => {
-            sidebar.classList.toggle('active');
-        });
-
-        // Close sidebar when clicking outside
-        document.addEventListener('click', (e) => {
-            if (!sidebar.contains(e.target) && !menuToggle.contains(e.target)) {
-                sidebar.classList.remove('active');
-            }
-        });
-
-        // Auth State Listener
-        auth.onAuthStateChanged((user) => {
+        // Auth State
+        auth.onAuthStateChanged(user => {
             if (user) {
-                // User is signed in
-                getUserData(user.email);
+                db.collection('users').where('email', '==', user.email).get()
+                    .then(snapshot => {
+                        const userData = snapshot.docs[0].data();
+                        updateUI(userData);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        setFallbackGreeting(user);
+                    });
             } else {
-                // No user is signed in, redirect to login
                 window.location.href = 'login.html';
             }
         });
 
-        // Get user data from Firestore
-        function getUserData(email) {
-            db.collection('users').where('email', '==', email).get()
-                .then((querySnapshot) => {
-                    if (!querySnapshot.empty) {
-                        const userData = querySnapshot.docs[0].data();
-                        updateUI(userData);
-                    } else {
-                        console.log('No user data found');
-                        // Fallback to email prefix
-                        const emailPrefix = email.split('@')[0];
-                        profileIcon.textContent = emailPrefix.charAt(0).toUpperCase();
-                        setGenericGreeting();
-                    }
-                })
-                .catch((error) => {
-                    console.error('Error getting user data:', error);
-                    // Fallback to email prefix
-                    const emailPrefix = auth.currentUser.email.split('@')[0];
-                    profileIcon.textContent = emailPrefix.charAt(0).toUpperCase();
-                    setGenericGreeting();
-                });
-        }
-
-        // Update UI with user data
         function updateUI(userData) {
-            // Set profile icon with first letter of full name
             profileIcon.textContent = userData.fullName.charAt(0).toUpperCase();
             
-            // Set greeting message based on time of day and gender
             const hour = new Date().getHours();
-            let greeting;
-            
-            if (hour < 12) {
-                greeting = 'Good morning';
-            } else if (hour < 18) {
-                greeting = 'Good afternoon';
-            } else {
-                greeting = 'Good evening';
-            }
-            
-            // Add gender-specific title
+            let greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
             let title = '';
+            
             if (userData.gender) {
-                title = userData.gender.toLowerCase() === 'male' ? 'sir' : 
-                       userData.gender.toLowerCase() === 'female' ? 'madam' : '';
+                title = userData.gender.toLowerCase() === 'male' ? 'sir' :
+                        userData.gender.toLowerCase() === 'female' ? 'madam' : '';
             }
-            
-            greetingMessage.innerHTML = `${greeting} ${title ? `<span class="text-warning">${title}</span>` : ''} <span class="text-accent">${userData.fullName}</span>`;
+
+            greetingMessage.innerHTML = `${greeting} ${title ? `<span class="text-warning">${title}</span>` : ''}<br>
+                                        <span class="fs-4">${userData.fullName}</span><br>
+                                        <small class="text-light">Welcome to Gospel Springs</small>`;
         }
 
-        // Fallback greeting if no user data
-        function setGenericGreeting() {
-            const hour = new Date().getHours();
-            let greeting;
-            
-            if (hour < 12) {
-                greeting = 'Good morning';
-            } else if (hour < 18) {
-                greeting = 'Good afternoon';
-            } else {
-                greeting = 'Good evening';
-            }
-            
-            greetingMessage.textContent = `${greeting}, welcome to Gospel Springs!`;
+        function setFallbackGreeting(user) {
+            const emailPrefix = user.email.split('@')[0];
+            profileIcon.textContent = emailPrefix.charAt(0).toUpperCase();
+            greetingMessage.textContent = `Welcome to Gospel Springs, ${emailPrefix}!`;
         }
 
-        // Toggle password visibility
-        passwordToggles.forEach(toggle => {
-            toggle.addEventListener('click', () => {
-                const targetId = toggle.getAttribute('data-target');
-                const passwordInput = document.getElementById(targetId);
-                
-                if (passwordInput.type === 'password') {
-                    passwordInput.type = 'text';
-                    toggle.classList.replace('fa-eye-slash', 'fa-eye');
-                } else {
-                    passwordInput.type = 'password';
-                    toggle.classList.replace('fa-eye', 'fa-eye-slash');
-                }
-            });
-        });
-
-        // Show update password modal
-        updatePasswordBtn.addEventListener('click', (e) => {
+        // Password Update
+        document.getElementById('updatePasswordForm').addEventListener('submit', e => {
             e.preventDefault();
-            updatePasswordModal.show();
-        });
-
-        // Update password
-        updatePasswordForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            
+            const user = auth.currentUser;
             const oldPassword = document.getElementById('oldPassword').value;
             const newPassword = document.getElementById('newPassword').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
-            
+
             if (newPassword !== confirmPassword) {
-                alert('New password and confirm password do not match');
+                alert("Passwords don't match!");
                 return;
             }
+
+            const credential = firebase.auth.EmailAuthProvider.credential(user.email, oldPassword);
             
-            const user = auth.currentUser;
-            const credential = firebase.auth.EmailAuthProvider.credential(
-                user.email, 
-                oldPassword
-            );
-            
-            // Reauthenticate user
             user.reauthenticateWithCredential(credential)
+                .then(() => user.updatePassword(newPassword))
                 .then(() => {
-                    // Update password
-                    return user.updatePassword(newPassword);
+                    new bootstrap.Modal(document.getElementById('successModal')).show();
+                    document.getElementById('updatePasswordForm').reset();
                 })
-                .then(() => {
-                    // Password updated successfully
-                    updatePasswordModal.hide();
-                    successModal.show();
-                    
-                    // Clear form
-                    updatePasswordForm.reset();
-                    
-                    // Reset password toggles
-                    passwordToggles.forEach(toggle => {
-                        if (toggle.classList.contains('fa-eye')) {
-                            toggle.classList.replace('fa-eye', 'fa-eye-slash');
-                        }
-                    });
-                })
-                .catch((error) => {
-                    console.error('Error updating password:', error);
-                    alert('Error updating password: ' + error.message);
-                });
+                .catch(error => alert('Error: ' + error.message));
+        });
+
+        // Password Toggles
+        document.querySelectorAll('.password-toggle').forEach(toggle => {
+            toggle.addEventListener('click', () => {
+                const target = document.getElementById(toggle.dataset.target);
+                target.type = target.type === 'password' ? 'text' : 'password';
+                toggle.classList.toggle('fa-eye-slash');
+                toggle.classList.toggle('fa-eye');
+            });
         });
 
         // Logout
-        logoutBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            auth.signOut().then(() => {
-                window.location.href = 'login.html';
-            });
-        });
+        document.getElementById('logoutBtn').addEventListener('click', () => auth.signOut());
     </script>
 </body>
 </html>
