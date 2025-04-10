@@ -3,582 +3,337 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gospel Springs Mission - Spiritual Growth Community</title>
-    <meta name="description" content="Join Gospel Springs Mission - A vibrant community for spiritual growth through daily devotionals, prayer networks, and live worship experiences.">
-    <meta name="keywords" content="church, christian community, bible study, prayer, worship, gospel springs">
-    <meta property="og:title" content="Gospel Springs Mission">
-    <meta property="og:description" content="Transform your spiritual journey with our faith community">
-    <meta property="og:type" content="website">
-    <link rel="manifest" href="/manifest.json">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Gospel Springs - Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root {
-            --navy: #112D4E;
-            --red: #F67280;
-            --white: #FFFFFF;
-            --gold: #FFD700;
-            --gradient: linear-gradient(45deg, #112D4E 0%, #1a365f 100%);
-            --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            --font-primary: 'Segoe UI', system-ui, sans-serif;
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
         }
 
         body {
-            font-family: var(--font-primary);
-            line-height: 1.6;
-            color: var(--navy);
-            background: var(--white);
-            -webkit-tap-highlight-color: transparent;
-            overflow-x: hidden;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: url('church.jpg') no-repeat center center fixed;
+            background-size: cover;
+            position: relative;
+            overflow: hidden;
         }
 
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 1rem;
+        .overlay {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(86, 58, 250, 0.7), rgba(116, 15, 214, 0.7));
+            backdrop-filter: blur(5px);
         }
 
-        /* Hero Section */
-        .hero {
-            height: 100vh;
-            background: linear-gradient(rgba(17, 45, 78, 0.9), rgba(17, 45, 78, 0.9)),
-                        url('hero-bg.jpg') center/cover fixed;
+        .login-container {
+            position: relative;
+            width: 440px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px 50px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            transform: translateY(20px);
+            opacity: 0;
+            animation: slideUp 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        @keyframes slideUp {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .logo {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: -80px auto 20px;
+            border: 3px solid #fff;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            position: relative;
+            animation: float 4s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-weight: 600;
+            font-size: 1.8em;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #666;
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+
+        .input-container {
+            position: relative;
+        }
+
+        .input-container i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #888;
+            font-size: 1.1em;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 20px 12px 45px;
+            border: 2px solid #eee;
+            border-radius: 10px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            background: #f8f8f8;
+        }
+
+        input:focus {
+            border-color: #6a5af9;
+            background: #fff;
+            box-shadow: 0 5px 15px rgba(106, 90, 249, 0.1);
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #888;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(45deg, #6a5af9, #8b6bf5);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(106, 90, 249, 0.3);
+        }
+
+        .social-login {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .social-login p {
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .social-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .social-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 10px;
+            border: 2px solid #eee;
+            background: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
             display: flex;
             align-items: center;
             justify-content: center;
+        }
+
+        .social-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .social-btn.google {
+            color: #db4437;
+        }
+
+        .signup-link {
             text-align: center;
-            color: var(--white);
-            position: relative;
-            overflow: hidden;
+            margin-top: 25px;
+            color: #666;
         }
 
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent 50%, rgba(255,255,255,0.1) 50%);
-            background-size: 3px 3px;
-            transform: rotate(45deg);
-            z-index: 0;
-        }
-
-        .hero-content {
-            position: relative;
-            z-index: 1;
-            max-width: 800px;
-            padding: 2rem;
-        }
-
-        .church-logo {
-            width: 50px;
-            margin-bottom: 2rem;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
-            border-radius: 50px;
-        }
-
-        .hero h1 {
-            font-size: 3.5rem;
-            margin-bottom: 1.5rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-            animation: slideIn 1s ease-out;
-        }
-
-        .hero p {
-            font-size: 1.3rem;
-            margin-bottom: 2rem;
-            opacity: 0.95;
-            animation: fadeIn 1s ease-out 0.3s backwards;
-        }
-
-        /* Digital Countdown */
-        .countdown {
-            background: rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(12px);
-            padding: 2rem;
-            border-radius: 1rem;
-            margin: 2rem 0;
-            box-shadow: var(--shadow);
-            animation: scaleUp 0.5s ease-out 0.5s backwards;
-        }
-
-        .countdown-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 2rem;
-            font-family: 'Courier New', monospace;
-            margin-bottom: 1.5rem;
-        }
-
-        .countdown-item {
-            text-align: center;
-            padding: 1rem;
-            position: relative;
-        }
-
-        .countdown-item::after {
-            content: ':';
-            position: absolute;
-            right: -1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--red);
-            font-size: 2rem;
-        }
-
-        .countdown-item:last-child::after {
-            display: none;
-        }
-
-        .countdown-number {
-            font-size: 3rem;
-            font-weight: 700;
-            color: var(--red);
-            margin-bottom: 0.5rem;
-            text-shadow: 0 0 10px rgba(246, 114, 128, 0.3);
-            animation: pulse 1s infinite;
-        }
-
-        .countdown-label {
-            font-size: 1rem;
-            color: var(--white);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        /* Features Section */
-        .features {
-            padding: 6rem 0;
-            background: #f9f9f9;
-            position: relative;
-        }
-
-        .features::before {
-            content: '';
-            position: absolute;
-            top: -50px;
-            left: 0;
-            width: 100%;
-            height: 100px;
-            background: linear-gradient(to bottom right, transparent 49%, #f9f9f9 50%);
-        }
-
-        .feature-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 3rem;
-            margin-top: 3rem;
-        }
-
-        .feature-item {
-            text-align: center;
-            padding: 3rem 2rem;
-            background: var(--white);
-            border-radius: 1rem;
-            box-shadow: var(--shadow);
-            transition: all 0.3s;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .feature-item:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-        }
-
-        .feature-item::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent 50%, rgba(17,45,78,0.05) 50%);
-            background-size: 3px 3px;
-            transform: rotate(45deg);
-            z-index: 0;
-        }
-
-        .feature-icon {
-            font-size: 3rem;
-            color: var(--navy);
-            margin-bottom: 1.5rem;
-            position: relative;
-            z-index: 1;
-        }
-
-        /* Testimonials */
-        .testimonials {
-            padding: 6rem 0;
-            background: var(--navy);
-            color: var(--white);
-        }
-
-        .testimonial-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
-        }
-
-        .testimonial-card {
-            background: rgba(255,255,255,0.1);
-            padding: 2rem;
-            border-radius: 1rem;
-            backdrop-filter: blur(10px);
-        }
-
-        /* CTA Section */
-        .cta-section {
-            padding: 6rem 0;
-            background: linear-gradient(45deg, var(--navy), #1a365f);
-            color: var(--white);
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .cta-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('data:image/svg+xml;utf8,<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="40" fill="%23F67280" opacity="0.1"/></svg>');
-            background-size: 80px;
-            opacity: 0.1;
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            padding: 1.2rem 2.5rem;
-            border-radius: 50px;
+        .signup-link a {
+            color: #6a5af9;
             text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s;
-            margin: 0.5rem;
-            position: relative;
-            overflow: hidden;
-            border: none;
-            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
         }
 
-        .btn-primary {
-            background: var(--red);
-            color: var(--white);
-            box-shadow: 0 4px 15px rgba(246, 114, 128, 0.4);
+        .signup-link a:hover {
+            color: #8b6bf5;
+            text-decoration: underline;
         }
 
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(246, 114, 128, 0.5);
-        }
-
-        .btn-primary::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(120deg, transparent, rgba(255,255,255,0.3), transparent);
-            transition: 0.5s;
-        }
-
-        .btn-primary:hover::after {
-            left: 100%;
-        }
-
-        /* Footer */
-        footer {
-            background: var(--navy);
-            color: var(--white);
-            padding: 4rem 0 2rem;
+        .error-message {
+            color: #ff4757;
+            font-size: 0.9em;
+            margin-top: 10px;
             text-align: center;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
         }
 
-        .footer-logo {
-            width: 100px;
-            margin-bottom: 2rem;
+        .error-message.show {
+            opacity: 1;
+            transform: translateY(0);
         }
-
-        .social-links {
-            margin: 2rem 0;
-        }
-
-        .social-link {
-            color: var(--white);
-            font-size: 1.8rem;
-            margin: 0 1.5rem;
-            transition: all 0.3s;
-            display: inline-block;
-        }
-
-        .social-link:hover {
-            color: var(--red);
-            transform: translateY(-3px);
-        }
-
-        /* Animations */
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.7; }
-            100% { opacity: 1; }
-        }
-
-        @keyframes slideIn {
-            from { transform: translateY(50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes scaleUp {
-            from { transform: scale(0.9); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-
-        @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.5rem;
-            }
-
-            .countdown-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 1rem;
-            }
-
-            .countdown-item::after {
-                display: none;
-            }
-
-            .countdown-number {
-                font-size: 2rem;
-            }
-
-            .features {
-                padding: 4rem 0;
-            }
-        }
-        .countdown-title {
-    font-size: 2.5rem;
-    text-align: center;
-    margin: 2rem 0;
-    background: linear-gradient(45deg, 
-        #112D4E 20%, 
-        #F67280 50%, 
-        #112D4E 80%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    text-shadow: 
-        2px 2px 4px rgba(17, 45, 78, 0.3),
-        0 0 10px rgba(246, 114, 128, 0.3);
-    animation: title-glow 2s ease-in-out infinite alternate;
-    position: relative;
-    display: inline-block;
-    padding: 0.5rem 2rem;
-}
-
-.countdown-title::before,
-.countdown-title::after {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    background: radial-gradient(circle at 50% 50%, 
-        rgba(255,255,255,0.1) 0%, 
-        transparent 70%);
-    z-index: -1;
-    animation: shimmer 4s linear infinite;
-}
-
-.countdown-title::after {
-    background: linear-gradient(45deg, 
-        transparent 45%,
-        rgba(255,255,255,0.2) 50%,
-        transparent 55%);
-    animation: shine 3s linear infinite;
-}
-
-@keyframes title-glow {
-    0% { 
-        filter: drop-shadow(0 0 5px rgba(246, 114, 128, 0.3));
-        transform: scale(1);
-    }
-    100% { 
-        filter: drop-shadow(0 0 15px rgba(246, 114, 128, 0.5));
-        transform: scale(1.02);
-    }
-}
-
-@keyframes shine {
-    0% { background-position: -200% 50%; }
-    100% { background-position: 200% 50%; }
-}
-
-@keyframes shimmer {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-@media (max-width: 768px) {
-    .countdown-title {
-        font-size: 2rem;
-        padding: 0.5rem 1rem;
-    }
-}
     </style>
 </head>
 <body>
-    <main>
-        <!-- Hero Section -->
-        <section class="hero">
-            <div class="container hero-content">
-                <img src="Gospel springs logo.jpg" alt="Church Logo" class="church-logo">
-                <h1>Welcome to Gospel Springs Mission</h1>
-                <p>Experience transformative faith in our global community of believers</p>
-             <!-- Countdown Timer -->
-                <h1 class="countdown-title">Next Sunday Service Starts In...</h1>
-                <!-- Countdown Timer -->
-                <div class="countdown">
-                    <div class="countdown-grid">
-                        <div class="countdown-item">
-                            <div class="countdown-number" id="days">00</div>
-                            <div class="countdown-label">Days</div>
-                        </div>
-                        <div class="countdown-item">
-                            <div class="countdown-number" id="hours">00</div>
-                            <div class="countdown-label">Hours</div>
-                        </div>
-                        <div class="countdown-item">
-                            <div class="countdown-number" id="minutes">00</div>
-                            <div class="countdown-label">Minutes</div>
-                        </div>
-                        <div class="countdown-item">
-                            <div class="countdown-number" id="seconds">00</div>
-                            <div class="countdown-label">Seconds</div>
-                        </div>
-                    </div>
-                    <a href="login.html" class="btn btn-primary">
-                        <i class="fas fa-video me-2"></i>
-                        Join Live Service
-                    </a>
+    <div class="overlay"></div>
+    <div class="login-container">
+        <img src="Gospel springs logo.jpg" alt="Logo" class="logo">
+        <h2>Welcome Back!</h2>
+        
+        <form id="loginForm">
+            <div class="form-group">
+                <label>Email Address</label>
+                <div class="input-container">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="email" name="email" required placeholder="example@email.com">
                 </div>
             </div>
-        </section>
-
-        <!-- Features Section -->
-        <section class="features">
-            <div class="container">
-                <h2 class="text-center">Spiritual Growth Features</h2>
-                <div class="feature-grid">
-                    <article class="feature-item">
-                        <i class="fas fa-praying-hands feature-icon"></i>
-                        <h3>Daily Prayer Network</h3>
-                        <p>24/7 prayer support from our global community</p>
-                    </article>
-                    <article class="feature-item">
-                        <i class="fas fa-bible feature-icon"></i>
-                        <h3>Bible Engagement</h3>
-                        <p>Interactive study plans with progress tracking</p>
-                    </article>
-                    <article class="feature-item">
-                        <i class="fas fa-church feature-icon"></i>
-                        <h3>Virtual Sanctuary</h3>
-                        <p>Immersive worship experiences anytime, anywhere</p>
-                    </article>
+            
+            <div class="form-group">
+                <label>Password</label>
+                <div class="input-container">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="password" name="password" required placeholder="••••••••">
+                    <i class="fas fa-eye toggle-password"></i>
                 </div>
             </div>
-        </section>
+            
+            <button type="submit">Sign In <i class="fas fa-arrow-right"></i></button>
+            <div id="errorMessage" class="error-message"></div>
+        </form>
 
-        <!-- CTA Section -->
-        <section class="cta-section">
-            <div class="container">
-                <h2>Begin Your Spiritual Journey</h2>
-                <p class="mb-4">Join thousands growing in faith daily</p>
-                <a href="login.html" class="btn btn-primary">
-                    <i class="fas fa-door-open me-2"></i>
-                    Start Now
-                </a>
+        <div class="social-login">
+            <p>Or continue with</p>
+            <div class="social-buttons">
+                <div class="social-btn google">
+                    <i class="fab fa-google"></i>
+                </div>
             </div>
-        </section>
-    </main>
-
-    <!-- Footer -->
-    <footer>
-        <div class="container">
-            <img src="Gospel springs logo.jpg" alt="Church Logo" class="footer-logo">
-            <div class="social-links">
-                <a href="#" class="social-link" aria-label="WhatsApp">
-                    <i class="fab fa-whatsapp"></i>
-                </a>
-                <a href="#" class="social-link" aria-label="Facebook">
-                    <i class="fab fa-facebook"></i>
-                </a>
-                <a href="#" class="social-link" aria-label="YouTube">
-                    <i class="fab fa-youtube"></i>
-                </a>
-            </div>
-            <p class="mt-3">&copy; 2024 Gospel Springs Mission. All rights reserved.</p>
         </div>
-    </footer>
 
-    <script>
-        // Countdown Timer
-        function updateCountdown() {
-            const nextSunday = new Date();
-            nextSunday.setDate(nextSunday.getDate() + (7 - nextSunday.getDay()));
-            nextSunday.setHours(10, 0, 0, 0);
+        <div class="signup-link">
+            New member? <a href="#" id="signupLink">Create account</a>
+        </div>
+    </div>
 
-            const now = new Date();
-            const diff = nextSunday - now;
+    <script type="module">
+        // Firebase configuration and initialization
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-auth.js";
+        import { getAnalytics, logEvent } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-analytics.js";
 
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+        const firebaseConfig = {
+            apiKey: "AIzaSyDJJqxh3UOsTcBPAXLeEWeLoQRmIy_6hNU",
+            authDomain: "web-app-ae5b6.firebaseapp.com",
+            projectId: "web-app-ae5b6",
+            storageBucket: "web-app-ae5b6.firebasestorage.app",
+            messagingSenderId: "921251501161",
+            appId: "1:921251501161:web:316ff3fc4345735762bef8"
+        };
 
-            document.getElementById('days').textContent = days.toString().padStart(2, '0');
-            document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
-            document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
-            document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
-        }
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const analytics = getAnalytics(app);
+        const provider = new GoogleAuthProvider();
 
-        setInterval(updateCountdown, 1000);
-        updateCountdown();
-
-        // Service Worker Registration
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js')
-                    .then(registration => {
-                        console.log('Service Worker registered');
-                    })
-                    .catch(err => {
-                        console.log('Service Worker registration failed:', err);
-                    });
+        // Password toggle
+        document.querySelectorAll('.toggle-password').forEach(icon => {
+            icon.addEventListener('click', function() {
+                const passwordField = this.parentElement.querySelector('input');
+                const type = passwordField.type === 'password' ? 'text' : 'password';
+                passwordField.type = type;
+                this.classList.toggle('fa-eye-slash');
+                logEvent(analytics, 'toggle_password');
             });
+        });
+
+        // Form submission
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('errorMessage');
+
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                logEvent(analytics, 'login_success');
+                window.location.href = '/homepage.html';
+            } catch (error) {
+                errorMessage.textContent = this.getErrorMessage(error.code);
+                errorMessage.classList.add('show');
+                logEvent(analytics, 'login_error', { error: error.code });
+                setTimeout(() => errorMessage.classList.remove('show'), 3000);
+            }
+        });
+
+        // Google Sign-In
+        document.querySelector('.google').addEventListener('click', () => {
+            signInWithPopup(auth, provider)
+                .then(() => window.location.href = '/homepage.html')
+                .catch(error => console.error(error));
+        });
+
+        // Error messages
+        function getErrorMessage(code) {
+            const messages = {
+                'auth/invalid-email': 'Invalid email format',
+                'auth/user-disabled': 'Account disabled',
+                'auth/user-not-found': 'Account not found',
+                'auth/wrong-password': 'Incorrect password',
+                'default': 'Login failed. Please try again.'
+            };
+            return messages[code] || messages['default'];
         }
 
-        // Parallax Effect
-        window.addEventListener('scroll', () => {
-            const scrolled = window.pageYOffset;
-            document.querySelector('.hero').style.backgroundPositionY = scrolled * 0.5 + 'px';
+        // Signup link
+        document.getElementById('signupLink').addEventListener('click', (e) => {
+            e.preventDefault();
+            window.location.href = '/signup.html';
         });
     </script>
 </body>
