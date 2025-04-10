@@ -10,10 +10,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary-color: #4A90E2;
-            --secondary-color: #7ED321;
-            --accent-color: #FF5A5F;
-            --dark-color: #2D2D2D;
+            --primary-color: #1a73e8;
+            --secondary-color: #34a853;
+            --accent-color: #fbbc05;
+            --dark-color: #202124;
+            --light-color: #f8f9fa;
         }
 
         body {
@@ -22,17 +23,31 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            padding-bottom: 80px; /* Space for footer */
         }
 
-        .header {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            padding: 0.5rem 0;
+        /* Blue Top Navigation */
+        .top-nav {
+            background-color: var(--primary-color);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            padding: 0.75rem 0;
             position: sticky;
             top: 0;
             z-index: 1000;
         }
 
+        .menu-toggle {
+            font-size: 1.5rem;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .menu-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        /* Sidebar */
         .sidebar {
             width: 280px;
             height: 100vh;
@@ -40,148 +55,246 @@
             left: -280px;
             top: 0;
             background: white;
-            box-shadow: 4px 0 20px rgba(0,0,0,0.05);
-            transition: all 0.3s;
-            z-index: 999;
+            box-shadow: 4px 0 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease-out;
+            z-index: 1050;
+            padding-top: 60px;
         }
 
         .sidebar.active {
             left: 0;
         }
 
+        .sidebar-nav .nav-link {
+            padding: 12px 20px;
+            margin: 4px 10px;
+            border-radius: 8px;
+            color: var(--dark-color);
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .sidebar-nav .nav-link:hover {
+            background-color: var(--primary-color);
+            color: white;
+            transform: translateX(8px);
+        }
+
+        .sidebar-nav .nav-link i {
+            width: 24px;
+            text-align: center;
+            margin-right: 10px;
+        }
+
+        /* Hero Section */
         .hero-section {
-            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), 
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
                         url('APG.jpg') no-repeat center center/cover;
             color: white;
-            padding: 10rem 0;
+            padding: 8rem 0;
+            margin-bottom: 2rem;
             position: relative;
-            overflow: hidden;
         }
 
         .hero-content h1 {
-            font-size: 3.5rem;
+            font-size: 3.2rem;
             font-weight: 700;
-            text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
             animation: fadeInUp 1s ease;
+            line-height: 1.3;
         }
 
+        .hero-content .welcome-text {
+            font-size: 1.8rem;
+            font-weight: 300;
+            display: block;
+            margin-top: 1rem;
+        }
+
+        /* Profile Icon */
         .profile-icon {
-            width: 45px;
-            height: 45px;
+            width: 42px;
+            height: 42px;
             border-radius: 50%;
-            background: var(--accent-color);
+            background-color: var(--accent-color);
             color: white;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: transform 0.3s ease;
+            font-weight: bold;
+            font-size: 1.2rem;
+            transition: all 0.3s;
         }
 
         .profile-icon:hover {
-            transform: scale(1.05);
+            transform: scale(1.1);
+            box-shadow: 0 0 0 3px rgba(251, 188, 5, 0.3);
         }
 
-        .nav-footer {
-            background: var(--dark-color);
+        /* Bottom Navigation with Logo */
+        .bottom-nav {
+            background-color: var(--dark-color);
             color: white;
             padding: 1.5rem 0;
-            margin-top: auto;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
         }
 
         .footer-logo {
-            width: 80px;
-            height: auto;
+            height: 50px;
+            width: auto;
             filter: brightness(0) invert(1);
+            transition: transform 0.3s;
         }
 
+        .footer-logo:hover {
+            transform: scale(1.05);
+        }
+
+        /* Animations */
         @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        .menu-toggle {
-            font-size: 1.5rem;
-            color: white;
-            margin-left: 1rem;
-            cursor: pointer;
-        }
-
-        .sidebar-nav {
-            padding: 2rem 1rem;
-        }
-
-        .sidebar-nav .nav-link {
-            padding: 0.8rem 1.5rem;
-            margin: 0.5rem 0;
-            border-radius: 8px;
-            color: var(--dark-color);
-            transition: all 0.3s ease;
-        }
-
-        .sidebar-nav .nav-link:hover {
-            background: var(--primary-color);
-            color: white;
-            transform: translateX(10px);
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+            .hero-content .welcome-text {
+                font-size: 1.4rem;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Sidebar -->
+    <!-- Blue Top Navigation -->
+    <nav class="top-nav">
+        <div class="container-fluid">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-bars menu-toggle me-3"></i>
+                    <span class="text-white fw-bold d-none d-md-block">Gospel Springs</span>
+                </div>
+                <div class="profile-icon dropdown-toggle" id="profileDropdown" data-bs-toggle="dropdown">
+                    <!-- Initial will be inserted here by JavaScript -->
+                </div>
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="#" id="updatePasswordBtn"><i class="fas fa-key me-2"></i>Update Password</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item" href="#" id="logoutBtn"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sidebar Navigation -->
     <div class="sidebar">
         <div class="sidebar-nav">
             <nav class="nav flex-column">
-                <a class="nav-link active" href="#"><i class="fas fa-home me-2"></i>Home</a>
-                <a class="nav-link" href="#"><i class="fas fa-info-circle me-2"></i>About Us</a>
-                <a class="nav-link" href="#"><i class="fas fa-video me-2"></i>Live Events</a>
+                <a class="nav-link active" href="#"><i class="fas fa-home"></i> Home</a>
+                <a class="nav-link" href="#"><i class="fas fa-info-circle"></i> About Us</a>
+                <a class="nav-link" href="#"><i class="fas fa-video"></i> Live Events</a>
+                <a class="nav-link" href="#"><i class="fas fa-calendar-alt"></i> Events</a>
+                <a class="nav-link" href="#"><i class="fas fa-images"></i> Gallery</a>
+                <a class="nav-link" href="#"><i class="fas fa-envelope"></i> Contact</a>
             </nav>
         </div>
     </div>
 
-    <!-- Header -->
-    <header class="header">
-        <div class="container-fluid">
-            <div class="d-flex justify-content-between align-items-center">
-                <div class="d-flex align-items-center">
-                    <i class="fas fa-bars menu-toggle"></i>
-                </div>
-                <div class="d-flex align-items-center">
-                    <div class="profile-icon dropdown-toggle" data-bs-toggle="dropdown">
-                        <!-- Initial will be inserted here -->
-                    </div>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                        <li><a class="dropdown-item" href="#" id="updatePasswordBtn">Update Password</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="#" id="logoutBtn">Logout</a></li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </header>
-
     <!-- Hero Section -->
     <section class="hero-section">
-        <div class="container text-center">
-            <div class="hero-content">
+        <div class="container">
+            <div class="hero-content text-center">
                 <h1 id="greetingMessage"></h1>
+                <span class="welcome-text">Welcome to Gospel Springs Ministries</span>
             </div>
         </div>
     </section>
 
     <!-- Main Content -->
-    <main class="container my-5 flex-grow-1">
-        <!-- Your content goes here -->
+    <main class="container my-5">
+        <div class="row">
+            <div class="col-12">
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <h3 class="card-title">Welcome to Our Community</h3>
+                        <p class="card-text">Your content will go here. This is a placeholder for your main content area.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="nav-footer">
+    <!-- Bottom Navigation with Logo -->
+    <nav class="bottom-nav">
         <div class="container text-center">
-            <img src="Gospel springs logo.jpg" alt="Logo" class="footer-logo">
+            <img src="Gospel springs logo.jpg" alt="Gospel Springs Logo" class="footer-logo">
         </div>
-    </footer>
+    </nav>
 
-    <!-- Modals (Same as previous version) -->
-    <!-- Include modals from previous code here -->
+    <!-- Update Password Modal -->
+    <div class="modal fade" id="updatePasswordModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">Update Password</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="updatePasswordForm">
+                        <div class="mb-3 position-relative">
+                            <label for="oldPassword" class="form-label">Old Password</label>
+                            <input type="password" class="form-control" id="oldPassword" required>
+                            <i class="fas fa-eye-slash password-toggle" data-target="oldPassword"></i>
+                        </div>
+                        <div class="mb-3 position-relative">
+                            <label for="newPassword" class="form-label">New Password</label>
+                            <input type="password" class="form-control" id="newPassword" required>
+                            <i class="fas fa-eye-slash password-toggle" data-target="newPassword"></i>
+                        </div>
+                        <div class="mb-3 position-relative">
+                            <label for="confirmPassword" class="form-label">Confirm Password</label>
+                            <input type="password" class="form-control" id="confirmPassword" required>
+                            <i class="fas fa-eye-slash password-toggle" data-target="confirmPassword"></i>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">Update Password</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title">Success</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="mb-0">Your password has been updated successfully!</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">Continue</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
@@ -191,7 +304,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        // Firebase Config
+        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyDJJqxh3UOsTcBPAXLeEWeLoQRmIy_6hNU",
             authDomain: "web-app-ae5b6.firebaseapp.com",
@@ -211,49 +324,180 @@
         const profileIcon = document.querySelector('.profile-icon');
         const menuToggle = document.querySelector('.menu-toggle');
         const sidebar = document.querySelector('.sidebar');
+        const updatePasswordBtn = document.getElementById('updatePasswordBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const updatePasswordForm = document.getElementById('updatePasswordForm');
+        const passwordToggles = document.querySelectorAll('.password-toggle');
+
+        // Initialize Bootstrap Modals
+        const updatePasswordModal = new bootstrap.Modal(document.getElementById('updatePasswordModal'));
+        const successModal = new bootstrap.Modal(document.getElementById('successModal'));
 
         // Toggle Sidebar
         menuToggle.addEventListener('click', () => {
             sidebar.classList.toggle('active');
         });
 
+        // Close sidebar when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!sidebar.contains(e.target) && !menuToggle.contains(e.target)) {
+                sidebar.classList.remove('active');
+            }
+        });
+
         // Auth State Listener
         auth.onAuthStateChanged((user) => {
             if (user) {
-                db.collection('users').where('email', '==', user.email).get()
-                    .then(snapshot => {
-                        const userData = snapshot.docs[0].data();
-                        updateGreeting(userData);
-                        profileIcon.textContent = userData.fullName.charAt(0).toUpperCase();
-                    })
-                    .catch(() => {
-                        const emailPrefix = user.email.split('@')[0];
-                        profileIcon.textContent = emailPrefix.charAt(0).toUpperCase();
-                    });
+                // User is signed in
+                getUserData(user.email);
             } else {
+                // No user is signed in, redirect to login
                 window.location.href = 'login.html';
             }
         });
 
-        function updateGreeting(userData) {
-            const hour = new Date().getHours();
-            let greeting = '';
-            
-            if (hour < 12) greeting = 'Good morning';
-            else if (hour < 18) greeting = 'Good afternoon';
-            else greeting = 'Good evening';
-
-            const title = userData.gender?.toLowerCase() === 'male' ? 'sir' : 
-                         userData.gender?.toLowerCase() === 'female' ? 'madam' : '';
-
-            greetingMessage.innerHTML = `
-                ${greeting} ${title ? `<span class="text-warning">${title}</span>` : ''}
-                <span class="text-primary">${userData.fullName}</span>!<br>
-                <small class="h4">Welcome to Gospel Springs</small>
-            `;
+        // Get user data from Firestore
+        function getUserData(email) {
+            db.collection('users').where('email', '==', email).get()
+                .then((querySnapshot) => {
+                    if (!querySnapshot.empty) {
+                        const userData = querySnapshot.docs[0].data();
+                        updateUI(userData);
+                    } else {
+                        console.log('No user data found');
+                        // Fallback to email prefix
+                        const emailPrefix = email.split('@')[0];
+                        profileIcon.textContent = emailPrefix.charAt(0).toUpperCase();
+                        setGenericGreeting();
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error getting user data:', error);
+                    // Fallback to email prefix
+                    const emailPrefix = auth.currentUser.email.split('@')[0];
+                    profileIcon.textContent = emailPrefix.charAt(0).toUpperCase();
+                    setGenericGreeting();
+                });
         }
 
-        // Password Update and Logout Logic (Same as previous version)
+        // Update UI with user data
+        function updateUI(userData) {
+            // Set profile icon with first letter of full name
+            profileIcon.textContent = userData.fullName.charAt(0).toUpperCase();
+            
+            // Set greeting message based on time of day and gender
+            const hour = new Date().getHours();
+            let greeting;
+            
+            if (hour < 12) {
+                greeting = 'Good morning';
+            } else if (hour < 18) {
+                greeting = 'Good afternoon';
+            } else {
+                greeting = 'Good evening';
+            }
+            
+            // Add gender-specific title
+            let title = '';
+            if (userData.gender) {
+                title = userData.gender.toLowerCase() === 'male' ? 'sir' : 
+                       userData.gender.toLowerCase() === 'female' ? 'madam' : '';
+            }
+            
+            greetingMessage.innerHTML = `${greeting} ${title ? `<span class="text-warning">${title}</span>` : ''} <span class="text-accent">${userData.fullName}</span>`;
+        }
+
+        // Fallback greeting if no user data
+        function setGenericGreeting() {
+            const hour = new Date().getHours();
+            let greeting;
+            
+            if (hour < 12) {
+                greeting = 'Good morning';
+            } else if (hour < 18) {
+                greeting = 'Good afternoon';
+            } else {
+                greeting = 'Good evening';
+            }
+            
+            greetingMessage.textContent = `${greeting}, welcome to Gospel Springs!`;
+        }
+
+        // Toggle password visibility
+        passwordToggles.forEach(toggle => {
+            toggle.addEventListener('click', () => {
+                const targetId = toggle.getAttribute('data-target');
+                const passwordInput = document.getElementById(targetId);
+                
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    toggle.classList.replace('fa-eye-slash', 'fa-eye');
+                } else {
+                    passwordInput.type = 'password';
+                    toggle.classList.replace('fa-eye', 'fa-eye-slash');
+                }
+            });
+        });
+
+        // Show update password modal
+        updatePasswordBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            updatePasswordModal.show();
+        });
+
+        // Update password
+        updatePasswordForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const oldPassword = document.getElementById('oldPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            if (newPassword !== confirmPassword) {
+                alert('New password and confirm password do not match');
+                return;
+            }
+            
+            const user = auth.currentUser;
+            const credential = firebase.auth.EmailAuthProvider.credential(
+                user.email, 
+                oldPassword
+            );
+            
+            // Reauthenticate user
+            user.reauthenticateWithCredential(credential)
+                .then(() => {
+                    // Update password
+                    return user.updatePassword(newPassword);
+                })
+                .then(() => {
+                    // Password updated successfully
+                    updatePasswordModal.hide();
+                    successModal.show();
+                    
+                    // Clear form
+                    updatePasswordForm.reset();
+                    
+                    // Reset password toggles
+                    passwordToggles.forEach(toggle => {
+                        if (toggle.classList.contains('fa-eye')) {
+                            toggle.classList.replace('fa-eye', 'fa-eye-slash');
+                        }
+                    });
+                })
+                .catch((error) => {
+                    console.error('Error updating password:', error);
+                    alert('Error updating password: ' + error.message);
+                });
+        });
+
+        // Logout
+        logoutBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            auth.signOut().then(() => {
+                window.location.href = 'login.html';
+            });
+        });
     </script>
 </body>
 </html>
