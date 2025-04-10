@@ -10,10 +10,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary-color: #1a73e8;
-            --secondary-color: #34a853;
-            --accent-color: #fbbc05;
-            --dark-color: #202124;
+            --primary-color: #4361ee;
+            --secondary-color: #3a0ca3;
+            --accent-color: #f72585;
+            --dark-color: #14213d;
+            --light-color: #f8f9fa;
         }
 
         body {
@@ -22,70 +23,108 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            padding-bottom: 80px;
+            padding-bottom: 60px;
         }
 
+        /* Top Navigation */
         .top-nav {
-            background-color: var(--primary-color);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
             padding: 0.75rem 0;
             position: sticky;
             top: 0;
-            z-index: 1000;
+            z-index: 1050;
         }
 
-        .menu-toggle {
-            font-size: 1.5rem;
-            color: white;
-            cursor: pointer;
-            transition: transform 0.3s;
-        }
-
+        /* Sidebar */
         .sidebar {
-            width: 280px;
+            width: 300px;
             height: 100vh;
             position: fixed;
-            left: -280px;
+            left: -300px;
             top: 0;
             background: white;
-            box-shadow: 4px 0 20px rgba(0,0,0,0.1);
-            transition: all 0.3s ease-out;
-            z-index: 1050;
-            padding-top: 60px;
+            box-shadow: 5px 0 25px rgba(0,0,0,0.1);
+            transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 1040;
+            padding-top: 70px;
+            overflow-y: auto;
         }
 
         .sidebar.active {
             left: 0;
         }
 
+        .sidebar-close {
+            position: absolute;
+            right: 15px;
+            top: 15px;
+            font-size: 1.5rem;
+            color: var(--dark-color);
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .sidebar-close:hover {
+            transform: rotate(90deg);
+            color: var(--accent-color);
+        }
+
         .sidebar-nav .nav-link {
-            padding: 12px 20px;
-            margin: 4px 10px;
+            padding: 12px 25px;
+            margin: 5px 15px;
             border-radius: 8px;
             color: var(--dark-color);
-            font-weight: 500;
+            font-weight: 600;
             transition: all 0.3s;
         }
 
         .sidebar-nav .nav-link:hover {
-            background-color: var(--primary-color);
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
             color: white;
-            transform: translateX(8px);
+            transform: translateX(10px);
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
         }
 
+        .sidebar-nav .nav-link i {
+            width: 25px;
+            text-align: center;
+            margin-right: 10px;
+        }
+
+        /* Hero Section */
         .hero-section {
             background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
                         url('APG.jpg') no-repeat center center/cover;
             color: white;
-            padding: 8rem 0;
+            padding: 7rem 0;
             margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
         }
 
+        .hero-content h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+            animation: fadeInUp 1s ease;
+            line-height: 1.2;
+        }
+
+        .hero-content .greeting-sub {
+            font-size: 1.5rem;
+            font-weight: 300;
+            display: block;
+            margin-top: 1rem;
+            opacity: 0.9;
+        }
+
+        /* Profile Icon */
         .profile-icon {
-            width: 42px;
-            height: 42px;
+            width: 45px;
+            height: 45px;
             border-radius: 50%;
-            background-color: var(--accent-color);
+            background: var(--accent-color);
             color: white;
             display: flex;
             align-items: center;
@@ -93,26 +132,186 @@
             cursor: pointer;
             font-weight: bold;
             font-size: 1.2rem;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(247, 37, 133, 0.3);
         }
 
+        .profile-icon:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 15px rgba(247, 37, 133, 0.4);
+        }
+
+        /* Bottom Navigation */
         .bottom-nav {
             background-color: white;
-            padding: 1.5rem 0;
+            padding: 0.75rem 0;
             position: fixed;
             bottom: 0;
             width: 100%;
-            z-index: 1000;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            z-index: 1030;
+            box-shadow: 0 -2px 15px rgba(0,0,0,0.08);
+            height: 60px;
+            display: flex;
+            align-items: center;
         }
 
         .footer-logo {
-            height: 50px;
+            height: 40px;
             width: auto;
+            transition: transform 0.3s;
         }
 
+        .footer-logo:hover {
+            transform: scale(1.05);
+        }
+
+        /* Chat Interface */
+        .chat-container {
+            position: fixed;
+            bottom: 70px;
+            right: 20px;
+            width: 350px;
+            height: 450px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.15);
+            display: flex;
+            flex-direction: column;
+            z-index: 1020;
+            transform: translateY(100%);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .chat-container.active {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 15px;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-close {
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+            background-color: #f8f9fa;
+        }
+
+        .message {
+            margin-bottom: 10px;
+            padding: 8px 12px;
+            border-radius: 15px;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+
+        .received {
+            background-color: #e9ecef;
+            align-self: flex-start;
+            border-bottom-left-radius: 5px;
+        }
+
+        .sent {
+            background-color: var(--primary-color);
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 5px;
+        }
+
+        .chat-input {
+            display: flex;
+            padding: 10px;
+            border-top: 1px solid #dee2e6;
+            background-color: white;
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+        }
+
+        .chat-input input {
+            flex: 1;
+            border: 1px solid #dee2e6;
+            border-radius: 20px;
+            padding: 8px 15px;
+            outline: none;
+        }
+
+        .chat-input button {
+            margin-left: 10px;
+            border: none;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .chat-toggle {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: var(--accent-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(247, 37, 133, 0.4);
+            z-index: 1010;
+            transition: all 0.3s;
+        }
+
+        .chat-toggle:hover {
+            transform: scale(1.1);
+        }
+
+        /* Animations */
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+            .hero-content .greeting-sub {
+                font-size: 1.2rem;
+            }
+            .sidebar {
+                width: 250px;
+            }
+            .chat-container {
+                width: 300px;
+                height: 400px;
+            }
         }
     </style>
 </head>
@@ -122,7 +321,7 @@
         <div class="container-fluid">
             <div class="d-flex justify-content-between align-items-center">
                 <div class="d-flex align-items-center">
-                    <i class="fas fa-bars menu-toggle me-3"></i>
+                    <i class="fas fa-bars menu-toggle me-3" style="font-size: 1.5rem; color: white; cursor: pointer;"></i>
                     <span class="text-white fw-bold d-none d-md-block">Gospel Springs</span>
                 </div>
                 <div class="profile-icon dropdown-toggle" id="profileDropdown" data-bs-toggle="dropdown">
@@ -130,6 +329,7 @@
                 </div>
                 <ul class="dropdown-menu dropdown-menu-end">
                     <li><a class="dropdown-item" href="#" id="updatePasswordBtn"><i class="fas fa-key me-2"></i>Update Password</a></li>
+                    <li><a class="dropdown-item" href="#" id="openChatBtn"><i class="fas fa-comments me-2"></i>Messages</a></li>
                     <li><hr class="dropdown-divider"></li>
                     <li><a class="dropdown-item" href="#" id="logoutBtn"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
                 </ul>
@@ -139,11 +339,16 @@
 
     <!-- Sidebar -->
     <div class="sidebar">
+        <i class="fas fa-times sidebar-close"></i>
         <div class="sidebar-nav">
             <nav class="nav flex-column">
-                <a class="nav-link active" href="#"><i class="fas fa-home me-2"></i>Home</a>
-                <a class="nav-link" href="#"><i class="fas fa-info-circle me-2"></i>About Us</a>
-                <a class="nav-link" href="#"><i class="fas fa-video me-2"></i>Live Events</a>
+                <a class="nav-link active" href="#"><i class="fas fa-home"></i> Home</a>
+                <a class="nav-link" href="#"><i class="fas fa-info-circle"></i> About Us</a>
+                <a class="nav-link" href="#"><i class="fas fa-video"></i> Live Events</a>
+                <a class="nav-link" href="#"><i class="fas fa-calendar-alt"></i> Events</a>
+                <a class="nav-link" href="#"><i class="fas fa-praying-hands"></i> Prayer Requests</a>
+                <a class="nav-link" href="#"><i class="fas fa-images"></i> Gallery</a>
+                <a class="nav-link" href="#"><i class="fas fa-envelope"></i> Contact</a>
             </nav>
         </div>
     </div>
@@ -151,7 +356,10 @@
     <!-- Hero Section -->
     <section class="hero-section">
         <div class="container text-center">
-            <h1 id="greetingMessage" class="animate__animated animate__fadeIn"></h1>
+            <div class="hero-content">
+                <h1 id="greetingMessage"></h1>
+                <span class="greeting-sub">Welcome to Gospel Springs Ministries</span>
+            </div>
         </div>
     </section>
 
@@ -162,7 +370,7 @@
                 <div class="card shadow-sm mb-4">
                     <div class="card-body">
                         <h3 class="card-title">Welcome to Our Community</h3>
-                        <p class="card-text">Your main content goes here...</p>
+                        <p class="card-text">Your main content will go here...</p>
                     </div>
                 </div>
             </div>
@@ -172,9 +380,29 @@
     <!-- Bottom Navigation -->
     <nav class="bottom-nav">
         <div class="container text-center">
-            <img src="Gospel springs logo.jpg" alt="Logo" class="footer-logo">
+            <img src="Gospel springs logo.jpg" alt="Gospel Springs Logo" class="footer-logo">
         </div>
     </nav>
+
+    <!-- Chat Toggle Button -->
+    <div class="chat-toggle">
+        <i class="fas fa-comment-dots"></i>
+    </div>
+
+    <!-- Chat Container -->
+    <div class="chat-container">
+        <div class="chat-header">
+            <h5 class="mb-0">Messages</h5>
+            <i class="fas fa-times chat-close"></i>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+            <!-- Messages will appear here -->
+        </div>
+        <div class="chat-input">
+            <input type="text" id="messageInput" placeholder="Type your message...">
+            <button id="sendMessageBtn"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
 
     <!-- Modals -->
     <div class="modal fade" id="updatePasswordModal" tabindex="-1" aria-hidden="true">
@@ -227,13 +455,15 @@
         </div>
     </div>
 
-    <!-- Scripts -->
+    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
+        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyDJJqxh3UOsTcBPAXLeEWeLoQRmIy_6hNU",
             authDomain: "web-app-ae5b6.firebaseapp.com",
@@ -243,94 +473,243 @@
             appId: "1:921251501161:web:316ff3fc4345735762bef8"
         };
 
+        // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
 
+        // DOM Elements
         const greetingMessage = document.getElementById('greetingMessage');
         const profileIcon = document.querySelector('.profile-icon');
         const menuToggle = document.querySelector('.menu-toggle');
         const sidebar = document.querySelector('.sidebar');
+        const sidebarClose = document.querySelector('.sidebar-close');
+        const chatToggle = document.querySelector('.chat-toggle');
+        const chatContainer = document.querySelector('.chat-container');
+        const chatClose = document.querySelector('.chat-close');
+        const chatMessages = document.getElementById('chatMessages');
+        const messageInput = document.getElementById('messageInput');
+        const sendMessageBtn = document.getElementById('sendMessageBtn');
+        const openChatBtn = document.getElementById('openChatBtn');
 
-        // Sidebar Toggle
-        menuToggle.addEventListener('click', () => sidebar.classList.toggle('active'));
+        // Initialize Bootstrap Modals
+        const updatePasswordModal = new bootstrap.Modal(document.getElementById('updatePasswordModal'));
+        const successModal = new bootstrap.Modal(document.getElementById('successModal'));
 
-        // Auth State
-        auth.onAuthStateChanged(user => {
+        // Toggle Sidebar
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.add('active');
+        });
+
+        sidebarClose.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+        });
+
+        // Toggle Chat
+        chatToggle.addEventListener('click', () => {
+            chatContainer.classList.toggle('active');
+        });
+
+        chatClose.addEventListener('click', () => {
+            chatContainer.classList.remove('active');
+        });
+
+        openChatBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            chatContainer.classList.add('active');
+        });
+
+        // Auth State Listener
+        auth.onAuthStateChanged((user) => {
             if (user) {
-                db.collection('users').where('email', '==', user.email).get()
-                    .then(snapshot => {
-                        const userData = snapshot.docs[0].data();
-                        updateUI(userData);
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        setFallbackGreeting(user);
-                    });
+                // User is signed in
+                getUserData(user.email);
+                setupChat(user.uid);
             } else {
+                // No user is signed in, redirect to login
                 window.location.href = 'login.html';
             }
         });
 
-        function updateUI(userData) {
-            profileIcon.textContent = userData.fullName.charAt(0).toUpperCase();
-            
-            const hour = new Date().getHours();
-            let greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
-            let title = '';
-            
-            if (userData.gender) {
-                title = userData.gender.toLowerCase() === 'male' ? 'sir' :
-                        userData.gender.toLowerCase() === 'female' ? 'madam' : '';
-            }
-
-            greetingMessage.innerHTML = `${greeting} ${title ? `<span class="text-warning">${title}</span>` : ''}<br>
-                                        <span class="fs-4">${userData.fullName}</span><br>
-                                        <small class="text-light">Welcome to Gospel Springs</small>`;
+        // Get user data from Firestore
+        function getUserData(email) {
+            db.collection('users').where('email', '==', email).get()
+                .then((querySnapshot) => {
+                    if (!querySnapshot.empty) {
+                        const userData = querySnapshot.docs[0].data();
+                        updateUI(userData);
+                    } else {
+                        console.log('No user data found');
+                        setGenericGreeting();
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error getting user data:', error);
+                    setGenericGreeting();
+                });
         }
 
-        function setFallbackGreeting(user) {
-            const emailPrefix = user.email.split('@')[0];
-            profileIcon.textContent = emailPrefix.charAt(0).toUpperCase();
-            greetingMessage.textContent = `Welcome to Gospel Springs, ${emailPrefix}!`;
+        // Update UI with user data
+        function updateUI(userData) {
+            // Set profile icon with first letter of name
+            const nameParts = userData.fullName ? userData.fullName.split(' ') : ['U'];
+            const initials = nameParts.length > 1 ? 
+                nameParts[0].charAt(0) + nameParts[nameParts.length-1].charAt(0) : 
+                nameParts[0].charAt(0);
+            profileIcon.textContent = initials;
+            
+            // Set greeting message based on time of day and gender
+            const hour = new Date().getHours();
+            let greeting;
+            
+            if (hour < 12) {
+                greeting = 'Good morning';
+            } else if (hour < 18) {
+                greeting = 'Good afternoon';
+            } else {
+                greeting = 'Good evening';
+            }
+            
+            // Add gender-specific title
+            let title = '';
+            if (userData.gender) {
+                title = userData.gender.toLowerCase() === 'male' ? 'sir' : 
+                       userData.gender.toLowerCase() === 'female' ? 'madam' : '';
+            }
+            
+            greetingMessage.innerHTML = `${greeting} <span class="text-warning">${title}</span>`;
+        }
+
+        // Fallback greeting
+        function setGenericGreeting() {
+            const hour = new Date().getHours();
+            let greeting;
+            
+            if (hour < 12) {
+                greeting = 'Good morning';
+            } else if (hour < 18) {
+                greeting = 'Good afternoon';
+            } else {
+                greeting = 'Good evening';
+            }
+            
+            greetingMessage.textContent = greeting;
+            profileIcon.textContent = 'U';
+        }
+
+        // Chat Functionality
+        function setupChat(userId) {
+            // Reference to the user's messages collection
+            const messagesRef = db.collection('users').doc(userId).collection('messages');
+            
+            // Listen for new messages
+            messagesRef.orderBy('timestamp').onSnapshot((snapshot) => {
+                chatMessages.innerHTML = '';
+                snapshot.forEach((doc) => {
+                    const message = doc.data();
+                    displayMessage(message.text, message.sender === userId);
+                });
+                scrollToBottom();
+            });
+
+            // Send message
+            sendMessageBtn.addEventListener('click', sendMessage);
+            messageInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') sendMessage();
+            });
+
+            function sendMessage() {
+                const text = messageInput.value.trim();
+                if (text) {
+                    // Add message to user's collection
+                    messagesRef.add({
+                        text: text,
+                        sender: userId,
+                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                    }).then(() => {
+                        messageInput.value = '';
+                    }).catch((error) => {
+                        console.error('Error sending message:', error);
+                    });
+                }
+            }
+
+            function displayMessage(text, isSent) {
+                const messageDiv = document.createElement('div');
+                messageDiv.classList.add('message');
+                messageDiv.classList.add(isSent ? 'sent' : 'received');
+                messageDiv.textContent = text;
+                chatMessages.appendChild(messageDiv);
+                scrollToBottom();
+            }
+
+            function scrollToBottom() {
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
         }
 
         // Password Update
-        document.getElementById('updatePasswordForm').addEventListener('submit', e => {
+        document.getElementById('updatePasswordForm').addEventListener('submit', (e) => {
             e.preventDefault();
-            const user = auth.currentUser;
+            
             const oldPassword = document.getElementById('oldPassword').value;
             const newPassword = document.getElementById('newPassword').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
-
+            
             if (newPassword !== confirmPassword) {
-                alert("Passwords don't match!");
+                alert('New password and confirm password do not match');
                 return;
             }
-
-            const credential = firebase.auth.EmailAuthProvider.credential(user.email, oldPassword);
             
+            const user = auth.currentUser;
+            const credential = firebase.auth.EmailAuthProvider.credential(
+                user.email, 
+                oldPassword
+            );
+            
+            // Reauthenticate user
             user.reauthenticateWithCredential(credential)
-                .then(() => user.updatePassword(newPassword))
                 .then(() => {
-                    new bootstrap.Modal(document.getElementById('successModal')).show();
+                    // Update password
+                    return user.updatePassword(newPassword);
+                })
+                .then(() => {
+                    // Password updated successfully
+                    updatePasswordModal.hide();
+                    successModal.show();
+                    
+                    // Clear form
                     document.getElementById('updatePasswordForm').reset();
                 })
-                .catch(error => alert('Error: ' + error.message));
+                .catch((error) => {
+                    console.error('Error updating password:', error);
+                    alert('Error updating password: ' + error.message);
+                });
         });
 
-        // Password Toggles
+        // Password Toggle Visibility
         document.querySelectorAll('.password-toggle').forEach(toggle => {
             toggle.addEventListener('click', () => {
-                const target = document.getElementById(toggle.dataset.target);
-                target.type = target.type === 'password' ? 'text' : 'password';
-                toggle.classList.toggle('fa-eye-slash');
-                toggle.classList.toggle('fa-eye');
+                const targetId = toggle.getAttribute('data-target');
+                const passwordInput = document.getElementById(targetId);
+                
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    toggle.classList.replace('fa-eye-slash', 'fa-eye');
+                } else {
+                    passwordInput.type = 'password';
+                    toggle.classList.replace('fa-eye', 'fa-eye-slash');
+                }
             });
         });
 
         // Logout
-        document.getElementById('logoutBtn').addEventListener('click', () => auth.signOut());
+        document.getElementById('logoutBtn').addEventListener('click', (e) => {
+            e.preventDefault();
+            auth.signOut().then(() => {
+                window.location.href = 'login.html';
+            });
+        });
     </script>
 </body>
 </html>
