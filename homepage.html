@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gospel Springs - Home</title>
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -26,7 +24,6 @@
             padding-bottom: 60px;
         }
 
-        /* Top Navigation */
         .top-nav {
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             box-shadow: 0 4px 20px rgba(0,0,0,0.1);
@@ -36,7 +33,6 @@
             z-index: 1050;
         }
 
-        /* Sidebar */
         .sidebar {
             width: 300px;
             height: 100vh;
@@ -55,71 +51,21 @@
             left: 0;
         }
 
-        .sidebar-close {
-            position: absolute;
-            right: 15px;
-            top: 15px;
-            font-size: 1.5rem;
-            color: var(--dark-color);
-            cursor: pointer;
-            transition: transform 0.3s;
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.3);
+            z-index: 1039;
+            display: none;
         }
 
-        .sidebar-close:hover {
-            transform: rotate(90deg);
-            color: var(--accent-color);
-        }
-
-        .sidebar-nav .nav-link {
-            padding: 12px 25px;
-            margin: 5px 15px;
-            border-radius: 8px;
-            color: var(--dark-color);
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-
-        .sidebar-nav .nav-link:hover {
-            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            transform: translateX(10px);
-            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
-        }
-
-        .sidebar-nav .nav-link i {
-            width: 25px;
-            text-align: center;
-            margin-right: 10px;
-        }
-
-        /* Hero Section */
-        .hero-section {
-            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
-                        url('APG.jpg') no-repeat center center/cover;
-            color: white;
-            padding: 7rem 0;
-            margin-bottom: 2rem;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .hero-content h1 {
-            font-size: 3.5rem;
-            font-weight: 800;
-            text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
-            animation: fadeInUp 1s ease;
-            line-height: 1.2;
-        }
-
-        .hero-content .greeting-sub {
-            font-size: 1.5rem;
-            font-weight: 300;
+        .sidebar-overlay.active {
             display: block;
-            margin-top: 1rem;
-            opacity: 0.9;
         }
 
-        /* Profile Icon */
         .profile-icon {
             width: 45px;
             height: 45px;
@@ -136,36 +82,6 @@
             box-shadow: 0 4px 10px rgba(247, 37, 133, 0.3);
         }
 
-        .profile-icon:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 15px rgba(247, 37, 133, 0.4);
-        }
-
-        /* Bottom Navigation */
-        .bottom-nav {
-            background-color: white;
-            padding: 0.75rem 0;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            z-index: 1030;
-            box-shadow: 0 -2px 15px rgba(0,0,0,0.08);
-            height: 60px;
-            display: flex;
-            align-items: center;
-        }
-
-        .footer-logo {
-            height: 40px;
-            width: auto;
-            transition: transform 0.3s;
-        }
-
-        .footer-logo:hover {
-            transform: scale(1.05);
-        }
-
-        /* Chat Interface */
         .chat-container {
             position: fixed;
             bottom: 70px;
@@ -188,130 +104,59 @@
             opacity: 1;
         }
 
-        .chat-header {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            padding: 15px;
-            border-top-left-radius: 15px;
-            border-top-right-radius: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .chat-close {
-            cursor: pointer;
-            font-size: 1.2rem;
-        }
-
-        .chat-messages {
-            flex: 1;
-            padding: 15px;
-            overflow-y: auto;
-            background-color: #f8f9fa;
-        }
-
-        .message {
-            margin-bottom: 10px;
-            padding: 8px 12px;
-            border-radius: 15px;
+        .message-bubble {
             max-width: 80%;
-            word-wrap: break-word;
+            border-radius: 15px;
+            padding: 10px 15px;
+            margin-bottom: 10px;
+            position: relative;
         }
 
-        .received {
-            background-color: #e9ecef;
-            align-self: flex-start;
-            border-bottom-left-radius: 5px;
-        }
-
-        .sent {
+        .sent-message {
             background-color: var(--primary-color);
             color: white;
-            align-self: flex-end;
+            margin-left: auto;
             border-bottom-right-radius: 5px;
         }
 
-        .chat-input {
-            display: flex;
-            padding: 10px;
-            border-top: 1px solid #dee2e6;
-            background-color: white;
-            border-bottom-left-radius: 15px;
-            border-bottom-right-radius: 15px;
+        .received-message {
+            background-color: #e9ecef;
+            margin-right: auto;
+            border-bottom-left-radius: 5px;
         }
 
-        .chat-input input {
-            flex: 1;
-            border: 1px solid #dee2e6;
-            border-radius: 20px;
-            padding: 8px 15px;
-            outline: none;
+        .message-time {
+            font-size: 0.75rem;
+            color: #6c757d;
         }
 
-        .chat-input button {
-            margin-left: 10px;
-            border: none;
-            background: var(--primary-color);
-            color: white;
-            border-radius: 50%;
+        .user-avatar {
             width: 40px;
             height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-        }
-
-        .chat-toggle {
-            position: fixed;
-            bottom: 80px;
-            right: 20px;
-            width: 60px;
-            height: 60px;
-            background: var(--accent-color);
-            color: white;
             border-radius: 50%;
+            background-color: var(--accent-color);
+            color: white;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
+            font-weight: 500;
+        }
+
+        .conversation-list {
             cursor: pointer;
-            box-shadow: 0 4px 15px rgba(247, 37, 133, 0.4);
-            z-index: 1010;
-            transition: all 0.3s;
+            transition: all 0.2s;
         }
 
-        .chat-toggle:hover {
-            transform: scale(1.1);
+        .conversation-list:hover {
+            background-color: #f8f9fa;
         }
 
-        /* Animations */
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .hero-content h1 {
-                font-size: 2.5rem;
-            }
-            .hero-content .greeting-sub {
-                font-size: 1.2rem;
-            }
-            .sidebar {
-                width: 250px;
-            }
-            .chat-container {
-                width: 300px;
-                height: 400px;
-            }
+        .hero-section {
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
+                        url('APG.jpg') no-repeat center center/cover;
+            color: white;
+            padding: 7rem 0;
+            margin-bottom: 2rem;
         }
     </style>
 </head>
@@ -329,7 +174,7 @@
                 </div>
                 <ul class="dropdown-menu dropdown-menu-end">
                     <li><a class="dropdown-item" href="#" id="updatePasswordBtn"><i class="fas fa-key me-2"></i>Update Password</a></li>
-                    <li><a class="dropdown-item" href="#" id="openChatBtn"><i class="fas fa-comments me-2"></i>Messages</a></li>
+                    <li><a class="dropdown-item" href="#" id="openConversationsBtn"><i class="fas fa-comments me-2"></i>Messages</a></li>
                     <li><hr class="dropdown-divider"></li>
                     <li><a class="dropdown-item" href="#" id="logoutBtn"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
                 </ul>
@@ -352,6 +197,7 @@
             </nav>
         </div>
     </div>
+    <div class="sidebar-overlay"></div>
 
     <!-- Hero Section -->
     <section class="hero-section">
@@ -378,338 +224,311 @@
     </main>
 
     <!-- Bottom Navigation -->
-    <nav class="bottom-nav">
+    <nav class="bottom-nav fixed-bottom bg-white shadow-sm">
         <div class="container text-center">
-            <img src="Gospel springs logo.jpg" alt="Gospel Springs Logo" class="footer-logo">
+            <img src="Gospel springs logo.jpg" alt="Gospel Springs Logo" class="footer-logo" style="height: 40px;">
         </div>
     </nav>
 
-    <!-- Chat Toggle Button -->
-    <div class="chat-toggle">
-        <i class="fas fa-comment-dots"></i>
-    </div>
-
     <!-- Chat Container -->
     <div class="chat-container">
-        <div class="chat-header">
-            <h5 class="mb-0">Messages</h5>
-            <i class="fas fa-times chat-close"></i>
+        <div class="chat-header bg-primary text-white p-3 d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+                <div class="user-avatar me-2" id="currentChatAvatar"></div>
+                <h5 class="mb-0" id="currentChatUserName"></h5>
+            </div>
+            <div>
+                <button class="btn btn-sm btn-light me-2" id="deleteConversationBtn">
+                    <i class="fas fa-trash"></i>
+                </button>
+                <button class="btn btn-sm btn-light" id="closeChatBtn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
         </div>
-        <div class="chat-messages" id="chatMessages">
-            <!-- Messages will appear here -->
-        </div>
-        <div class="chat-input">
-            <input type="text" id="messageInput" placeholder="Type your message...">
-            <button id="sendMessageBtn"><i class="fas fa-paper-plane"></i></button>
+        <div class="chat-messages" id="chatMessages"></div>
+        <div class="chat-input p-2 bg-white">
+            <div class="input-group">
+                <input type="text" id="messageInput" class="form-control" placeholder="Type your message...">
+                <button class="btn btn-primary" id="sendMessageBtn">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
         </div>
     </div>
 
     <!-- Modals -->
-    <div class="modal fade" id="updatePasswordModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
+    <div class="modal fade" id="conversationsModal">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title">Update Password</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="modal-header">
+                    <h5 class="modal-title">Conversations</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="updatePasswordForm">
-                        <div class="mb-3 position-relative">
-                            <label for="oldPassword" class="form-label">Old Password</label>
-                            <input type="password" class="form-control" id="oldPassword" required>
-                            <i class="fas fa-eye-slash password-toggle" data-target="oldPassword"></i>
-                        </div>
-                        <div class="mb-3 position-relative">
-                            <label for="newPassword" class="form-label">New Password</label>
-                            <input type="password" class="form-control" id="newPassword" required>
-                            <i class="fas fa-eye-slash password-toggle" data-target="newPassword"></i>
-                        </div>
-                        <div class="mb-3 position-relative">
-                            <label for="confirmPassword" class="form-label">Confirm Password</label>
-                            <input type="password" class="form-control" id="confirmPassword" required>
-                            <i class="fas fa-eye-slash password-toggle" data-target="confirmPassword"></i>
-                        </div>
-                        <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-primary">Update Password</button>
-                        </div>
-                    </form>
+                    <button class="btn btn-primary w-100 mb-3" id="newChatBtn">
+                        <i class="fas fa-plus me-2"></i>New Conversation
+                    </button>
+                    <div id="conversationsList"></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
+    <div class="modal fade" id="newChatModal">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header bg-success text-white">
-                    <h5 class="modal-title">Success</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="modal-header">
+                    <h5 class="modal-title">New Conversation</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <p class="mb-0">Password updated successfully!</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">Continue</button>
+                    <input type="text" id="searchUsers" class="form-control mb-3" placeholder="Search users...">
+                    <div id="usersList" style="max-height: 300px; overflow-y: auto;"></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Firebase SDK -->
+    <!-- Firebase and Bootstrap JS -->
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        // Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyDJJqxh3UOsTcBPAXLeEWeLoQRmIy_6hNU",
             authDomain: "web-app-ae5b6.firebaseapp.com",
             projectId: "web-app-ae5b6",
-            storageBucket: "web-app-ae5b6.firebasestorage.app",
+            storageBucket: "web-app-ae5b6.appspot.com",
             messagingSenderId: "921251501161",
             appId: "1:921251501161:web:316ff3fc4345735762bef8"
         };
 
-        // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.firestore();
 
+        let currentChatUserId = null;
+        let unsubscribeMessages = null;
+
         // DOM Elements
-        const greetingMessage = document.getElementById('greetingMessage');
-        const profileIcon = document.querySelector('.profile-icon');
-        const menuToggle = document.querySelector('.menu-toggle');
-        const sidebar = document.querySelector('.sidebar');
-        const sidebarClose = document.querySelector('.sidebar-close');
-        const chatToggle = document.querySelector('.chat-toggle');
-        const chatContainer = document.querySelector('.chat-container');
-        const chatClose = document.querySelector('.chat-close');
-        const chatMessages = document.getElementById('chatMessages');
-        const messageInput = document.getElementById('messageInput');
-        const sendMessageBtn = document.getElementById('sendMessageBtn');
-        const openChatBtn = document.getElementById('openChatBtn');
+        const elements = {
+            menuToggle: document.querySelector('.menu-toggle'),
+            sidebar: document.querySelector('.sidebar'),
+            sidebarClose: document.querySelector('.sidebar-close'),
+            sidebarOverlay: document.querySelector('.sidebar-overlay'),
+            profileIcon: document.querySelector('.profile-icon'),
+            greetingMessage: document.getElementById('greetingMessage'),
+            openConversationsBtn: document.getElementById('openConversationsBtn'),
+            chatContainer: document.querySelector('.chat-container'),
+            closeChatBtn: document.getElementById('closeChatBtn'),
+            conversationsModal: new bootstrap.Modal('#conversationsModal'),
+            newChatModal: new bootstrap.Modal('#newChatModal'),
+            searchUsers: document.getElementById('searchUsers'),
+            usersList: document.getElementById('usersList'),
+            conversationsList: document.getElementById('conversationsList'),
+            chatMessages: document.getElementById('chatMessages'),
+            messageInput: document.getElementById('messageInput'),
+            sendMessageBtn: document.getElementById('sendMessageBtn'),
+            deleteConversationBtn: document.getElementById('deleteConversationBtn'),
+            newChatBtn: document.getElementById('newChatBtn')
+        };
 
-        // Initialize Bootstrap Modals
-        const updatePasswordModal = new bootstrap.Modal(document.getElementById('updatePasswordModal'));
-        const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+        // Event Listeners
+        elements.menuToggle.addEventListener('click', toggleSidebar);
+        elements.sidebarClose.addEventListener('click', toggleSidebar);
+        elements.sidebarOverlay.addEventListener('click', toggleSidebar);
+        elements.openConversationsBtn.addEventListener('click', () => elements.conversationsModal.show());
+        elements.closeChatBtn.addEventListener('click', () => elements.chatContainer.classList.remove('active'));
+        elements.sendMessageBtn.addEventListener('click', sendMessage);
+        elements.messageInput.addEventListener('keypress', e => e.key === 'Enter' && sendMessage());
+        elements.deleteConversationBtn.addEventListener('click', deleteConversation);
+        elements.newChatBtn.addEventListener('click', () => elements.newChatModal.show());
+        elements.searchUsers.addEventListener('input', searchUsers);
 
-        // Toggle Sidebar
-        menuToggle.addEventListener('click', () => {
-            sidebar.classList.add('active');
-        });
-
-        sidebarClose.addEventListener('click', () => {
-            sidebar.classList.remove('active');
-        });
-
-        // Toggle Chat
-        chatToggle.addEventListener('click', () => {
-            chatContainer.classList.toggle('active');
-        });
-
-        chatClose.addEventListener('click', () => {
-            chatContainer.classList.remove('active');
-        });
-
-        openChatBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            chatContainer.classList.add('active');
-        });
-
-        // Auth State Listener
-        auth.onAuthStateChanged((user) => {
+        auth.onAuthStateChanged(user => {
             if (user) {
-                // User is signed in
-                getUserData(user.email);
-                setupChat(user.uid);
+                initUser(user);
+                loadConversations();
             } else {
-                // No user is signed in, redirect to login
                 window.location.href = 'login.html';
             }
         });
 
-        // Get user data from Firestore
-        function getUserData(email) {
-            db.collection('users').where('email', '==', email).get()
-                .then((querySnapshot) => {
-                    if (!querySnapshot.empty) {
-                        const userData = querySnapshot.docs[0].data();
-                        updateUI(userData);
-                    } else {
-                        console.log('No user data found');
-                        setGenericGreeting();
-                    }
-                })
-                .catch((error) => {
-                    console.error('Error getting user data:', error);
-                    setGenericGreeting();
-                });
+        function toggleSidebar() {
+            elements.sidebar.classList.toggle('active');
+            elements.sidebarOverlay.classList.toggle('active');
         }
 
-        // Update UI with user data
-        function updateUI(userData) {
-            // Set profile icon with first letter of name
-            const nameParts = userData.fullName ? userData.fullName.split(' ') : ['U'];
-            const initials = nameParts.length > 1 ? 
-                nameParts[0].charAt(0) + nameParts[nameParts.length-1].charAt(0) : 
-                nameParts[0].charAt(0);
-            profileIcon.textContent = initials;
+        async function initUser(user) {
+            const userDoc = await db.collection('users').doc(user.uid).get();
+            const userData = userDoc.data();
             
-            // Set greeting message based on time of day and gender
+            // Set profile icon
+            const initials = getInitials(userData?.fullName || 'User');
+            elements.profileIcon.textContent = initials;
+            
+            // Set greeting
             const hour = new Date().getHours();
-            let greeting;
-            
-            if (hour < 12) {
-                greeting = 'Good morning';
-            } else if (hour < 18) {
-                greeting = 'Good afternoon';
-            } else {
-                greeting = 'Good evening';
-            }
-            
-            // Add gender-specific title
-            let title = '';
-            if (userData.gender) {
-                title = userData.gender.toLowerCase() === 'male' ? 'sir' : 
-                       userData.gender.toLowerCase() === 'female' ? 'madam' : '';
-            }
-            
-            greetingMessage.innerHTML = `${greeting} <span class="text-warning">${title}</span>`;
+            const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
+            const title = userData?.gender === 'male' ? 'sir' : userData?.gender === 'female' ? 'madam' : '';
+            elements.greetingMessage.innerHTML = `${greeting} <span class="text-warning">${title}</span>`;
         }
 
-        // Fallback greeting
-        function setGenericGreeting() {
-            const hour = new Date().getHours();
-            let greeting;
-            
-            if (hour < 12) {
-                greeting = 'Good morning';
-            } else if (hour < 18) {
-                greeting = 'Good afternoon';
-            } else {
-                greeting = 'Good evening';
-            }
-            
-            greetingMessage.textContent = greeting;
-            profileIcon.textContent = 'U';
-        }
-
-        // Chat Functionality
-        function setupChat(userId) {
-            // Reference to the user's messages collection
-            const messagesRef = db.collection('users').doc(userId).collection('messages');
-            
-            // Listen for new messages
-            messagesRef.orderBy('timestamp').onSnapshot((snapshot) => {
-                chatMessages.innerHTML = '';
-                snapshot.forEach((doc) => {
-                    const message = doc.data();
-                    displayMessage(message.text, message.sender === userId);
-                });
-                scrollToBottom();
-            });
-
-            // Send message
-            sendMessageBtn.addEventListener('click', sendMessage);
-            messageInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') sendMessage();
-            });
-
-            function sendMessage() {
-                const text = messageInput.value.trim();
-                if (text) {
-                    // Add message to user's collection
-                    messagesRef.add({
-                        text: text,
-                        sender: userId,
-                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                    }).then(() => {
-                        messageInput.value = '';
-                    }).catch((error) => {
-                        console.error('Error sending message:', error);
+        async function loadConversations() {
+            const userId = auth.currentUser.uid;
+            db.collection('users').doc(userId).collection('conversations')
+                .orderBy('lastMessageTime', 'desc')
+                .onSnapshot(snapshot => {
+                    elements.conversationsList.innerHTML = '';
+                    snapshot.forEach(doc => {
+                        const convo = doc.data();
+                        const item = document.createElement('div');
+                        item.className = 'd-flex align-items-center p-2 conversation-list';
+                        item.innerHTML = `
+                            <div class="user-avatar me-3">${getInitials(convo.userName)}</div>
+                            <div class="flex-grow-1">
+                                <h6 class="mb-0">${convo.userName}</h6>
+                                <small class="text-muted">${convo.lastMessage || ''}</small>
+                            </div>
+                            <small class="message-time">${formatTime(convo.lastMessageTime?.toDate())}</small>
+                        `;
+                        item.addEventListener('click', () => openChat(doc.id, convo.userName));
+                        elements.conversationsList.appendChild(item);
                     });
+                });
+        }
+
+        async function openChat(userId, userName) {
+            currentChatUserId = userId;
+            document.getElementById('currentChatUserName').textContent = userName;
+            document.getElementById('currentChatAvatar').textContent = getInitials(userName);
+            
+            if (unsubscribeMessages) unsubscribeMessages();
+            
+            elements.chatMessages.innerHTML = '';
+            elements.chatContainer.classList.add('active');
+            elements.conversationsModal.hide();
+
+            unsubscribeMessages = db.collection('users').doc(auth.currentUser.uid)
+                .collection('conversations').doc(userId)
+                .collection('messages').orderBy('timestamp')
+                .onSnapshot(snapshot => {
+                    elements.chatMessages.innerHTML = '';
+                    snapshot.forEach(doc => {
+                        const message = doc.data();
+                        displayMessage(message);
+                    });
+                    scrollToBottom();
+                });
+        }
+
+        function displayMessage(message) {
+            const isSent = message.sender === auth.currentUser.uid;
+            const bubble = document.createElement('div');
+            bubble.className = `message-bubble ${isSent ? 'sent-message' : 'received-message'}`;
+            bubble.innerHTML = `
+                <div class="message-text">${message.text}</div>
+                <div class="message-time">${formatTime(message.timestamp?.toDate())}</div>
+            `;
+            elements.chatMessages.appendChild(bubble);
+            scrollToBottom();
+        }
+
+        async function sendMessage() {
+            const text = elements.messageInput.value.trim();
+            if (!text || !currentChatUserId) return;
+
+            const currentUser = auth.currentUser.uid;
+            const timestamp = firebase.firestore.FieldValue.serverTimestamp();
+
+            // Save message for both users
+            await Promise.all([
+                saveMessage(currentUser, currentChatUserId, text, timestamp),
+                saveMessage(currentChatUserId, currentUser, text, timestamp)
+            ]);
+
+            elements.messageInput.value = '';
+        }
+
+        async function saveMessage(userId, partnerId, text, timestamp) {
+            const userRef = db.collection('users').doc(userId);
+            const partnerName = await getUserName(partnerId);
+
+            await userRef.collection('conversations').doc(partnerId).collection('messages').add({
+                text,
+                sender: userId,
+                timestamp
+            });
+
+            await userRef.collection('conversations').doc(partnerId).set({
+                userId: partnerId,
+                userName: partnerName,
+                lastMessage: text,
+                lastMessageTime: timestamp
+            }, { merge: true });
+        }
+
+        async function searchUsers() {
+            const searchTerm = elements.searchUsers.value.toLowerCase();
+            const snapshot = await db.collection('users').get();
+            elements.usersList.innerHTML = '';
+
+            snapshot.docs.forEach(doc => {
+                if (doc.id !== auth.currentUser.uid) {
+                    const user = doc.data();
+                    if (user.fullName?.toLowerCase().includes(searchTerm)) {
+                        const item = document.createElement('div');
+                        item.className = 'd-flex align-items-center p-2 conversation-list';
+                        item.innerHTML = `
+                            <div class="user-avatar me-3">${getInitials(user.fullName)}</div>
+                            <div class="flex-grow-1">
+                                <h6 class="mb-0">${user.fullName}</h6>
+                                <small class="text-muted">${user.email}</small>
+                            </div>
+                        `;
+                        item.addEventListener('click', () => {
+                            elements.newChatModal.hide();
+                            openChat(doc.id, user.fullName);
+                        });
+                        elements.usersList.appendChild(item);
+                    }
                 }
-            }
+            });
+        }
 
-            function displayMessage(text, isSent) {
-                const messageDiv = document.createElement('div');
-                messageDiv.classList.add('message');
-                messageDiv.classList.add(isSent ? 'sent' : 'received');
-                messageDiv.textContent = text;
-                chatMessages.appendChild(messageDiv);
-                scrollToBottom();
-            }
-
-            function scrollToBottom() {
-                chatMessages.scrollTop = chatMessages.scrollHeight;
+        async function deleteConversation() {
+            if (!currentChatUserId) return;
+            
+            if (confirm('Delete this conversation?')) {
+                await db.collection('users').doc(auth.currentUser.uid)
+                    .collection('conversations').doc(currentChatUserId).delete();
+                
+                elements.chatContainer.classList.remove('active');
+                currentChatUserId = null;
             }
         }
 
-        // Password Update
-        document.getElementById('updatePasswordForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            const oldPassword = document.getElementById('oldPassword').value;
-            const newPassword = document.getElementById('newPassword').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-            
-            if (newPassword !== confirmPassword) {
-                alert('New password and confirm password do not match');
-                return;
-            }
-            
-            const user = auth.currentUser;
-            const credential = firebase.auth.EmailAuthProvider.credential(
-                user.email, 
-                oldPassword
-            );
-            
-            // Reauthenticate user
-            user.reauthenticateWithCredential(credential)
-                .then(() => {
-                    // Update password
-                    return user.updatePassword(newPassword);
-                })
-                .then(() => {
-                    // Password updated successfully
-                    updatePasswordModal.hide();
-                    successModal.show();
-                    
-                    // Clear form
-                    document.getElementById('updatePasswordForm').reset();
-                })
-                .catch((error) => {
-                    console.error('Error updating password:', error);
-                    alert('Error updating password: ' + error.message);
-                });
-        });
+        // Helper Functions
+        function getInitials(name) {
+            return name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+        }
 
-        // Password Toggle Visibility
-        document.querySelectorAll('.password-toggle').forEach(toggle => {
-            toggle.addEventListener('click', () => {
-                const targetId = toggle.getAttribute('data-target');
-                const passwordInput = document.getElementById(targetId);
-                
-                if (passwordInput.type === 'password') {
-                    passwordInput.type = 'text';
-                    toggle.classList.replace('fa-eye-slash', 'fa-eye');
-                } else {
-                    passwordInput.type = 'password';
-                    toggle.classList.replace('fa-eye', 'fa-eye-slash');
-                }
-            });
-        });
+        function formatTime(date) {
+            if (!date) return '';
+            return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
 
-        // Logout
-        document.getElementById('logoutBtn').addEventListener('click', (e) => {
-            e.preventDefault();
-            auth.signOut().then(() => {
-                window.location.href = 'login.html';
-            });
-        });
+        function scrollToBottom() {
+            elements.chatMessages.scrollTop = elements.chatMessages.scrollHeight;
+        }
+
+        async function getUserName(userId) {
+            const doc = await db.collection('users').doc(userId).get();
+            return doc.exists ? doc.data().fullName : 'Unknown User';
+        }
     </script>
 </body>
 </html>
