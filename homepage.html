@@ -51,21 +51,6 @@
             left: 0;
         }
 
-        .sidebar-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0,0,0,0.3);
-            z-index: 1039;
-            display: none;
-        }
-
-        .sidebar-overlay.active {
-            display: block;
-        }
-
         .profile-icon {
             width: 45px;
             height: 45px;
@@ -79,7 +64,6 @@
             font-weight: bold;
             font-size: 1.2rem;
             transition: all 0.3s;
-            box-shadow: 0 4px 10px rgba(247, 37, 133, 0.3);
         }
 
         .chat-container {
@@ -110,12 +94,17 @@
             padding: 10px 15px;
             margin-bottom: 10px;
             position: relative;
-            animation: messageAppear 0.3s ease;
         }
 
-        @keyframes messageAppear {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .sent-message {
+            background-color: var(--primary-color);
+            color: white;
+            margin-left: auto;
+        }
+
+        .received-message {
+            background-color: #e9ecef;
+            margin-right: auto;
         }
 
         .user-avatar {
@@ -129,46 +118,6 @@
             justify-content: center;
             font-weight: 500;
         }
-
-        .conversation-list {
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .conversation-list:hover {
-            background-color: #f8f9fa;
-        }
-
-        .hero-section {
-            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
-                        url('APG.jpg') no-repeat center center/cover;
-            color: white;
-            padding: 7rem 0;
-            margin-bottom: 2rem;
-        }
-
-        .loading-users {
-            padding: 1rem;
-            text-align: center;
-            color: #666;
-        }
-
-        .user-item {
-            cursor: pointer;
-            padding: 10px;
-            border-bottom: 1px solid #eee;
-            transition: background 0.2s;
-        }
-
-        .user-item:hover {
-            background: #f8f9fa;
-        }
-
-        .error-message {
-            color: #dc3545;
-            padding: 1rem;
-            text-align: center;
-        }
     </style>
 </head>
 <body>
@@ -178,66 +127,12 @@
             <div class="d-flex justify-content-between align-items-center">
                 <div class="d-flex align-items-center">
                     <i class="fas fa-bars menu-toggle me-3" style="font-size: 1.5rem; color: white; cursor: pointer;"></i>
-                    <span class="text-white fw-bold d-none d-md-block">Gospel Springs</span>
+                    <span class="text-white fw-bold">Gospel Springs</span>
                 </div>
-                <div class="profile-icon dropdown-toggle" id="profileDropdown" data-bs-toggle="dropdown">
-                    <!-- Initial will be inserted here -->
-                </div>
-                <ul class="dropdown-menu dropdown-menu-end">
-                    <li><a class="dropdown-item" href="#" id="updatePasswordBtn"><i class="fas fa-key me-2"></i>Update Password</a></li>
-                    <li><a class="dropdown-item" href="#" id="openConversationsBtn"><i class="fas fa-comments me-2"></i>Messages</a></li>
-                    <li><hr class="dropdown-divider"></li>
-                    <li><a class="dropdown-item" href="#" id="logoutBtn"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <i class="fas fa-times sidebar-close"></i>
-        <div class="sidebar-nav">
-            <nav class="nav flex-column">
-                <a class="nav-link active" href="#"><i class="fas fa-home"></i> Home</a>
-                <a class="nav-link" href="#"><i class="fas fa-info-circle"></i> About Us</a>
-                <a class="nav-link" href="#"><i class="fas fa-video"></i> Live Events</a>
-                <a class="nav-link" href="#"><i class="fas fa-calendar-alt"></i> Events</a>
-                <a class="nav-link" href="#"><i class="fas fa-praying-hands"></i> Prayer Requests</a>
-                <a class="nav-link" href="#"><i class="fas fa-images"></i> Gallery</a>
-                <a class="nav-link" href="#"><i class="fas fa-envelope"></i> Contact</a>
-            </nav>
-        </div>
-    </div>
-    <div class="sidebar-overlay"></div>
-
-    <!-- Hero Section -->
-    <section class="hero-section">
-        <div class="container text-center">
-            <div class="hero-content">
-                <h1 id="greetingMessage"></h1>
-                <span class="greeting-sub">Welcome to Gospel Springs Ministries</span>
-            </div>
-        </div>
-    </section>
-
-    <!-- Main Content -->
-    <main class="container my-5">
-        <div class="row">
-            <div class="col-12">
-                <div class="card shadow-sm mb-4">
-                    <div class="card-body">
-                        <h3 class="card-title">Welcome to Our Community</h3>
-                        <p class="card-text">Your main content will go here...</p>
-                    </div>
+                <div class="profile-icon" id="profileDropdown">
+                    <!-- Initials will be inserted here -->
                 </div>
             </div>
-        </div>
-    </main>
-
-    <!-- Bottom Navigation -->
-    <nav class="bottom-nav fixed-bottom bg-white shadow-sm">
-        <div class="container text-center">
-            <img src="Gospel springs logo.jpg" alt="Gospel Springs Logo" class="footer-logo" style="height: 40px;">
         </div>
     </nav>
 
@@ -248,17 +143,12 @@
                 <div class="user-avatar me-2" id="currentChatAvatar"></div>
                 <h5 class="mb-0" id="currentChatUserName"></h5>
             </div>
-            <div>
-                <button class="btn btn-sm btn-light me-2" id="deleteConversationBtn">
-                    <i class="fas fa-trash"></i>
-                </button>
-                <button class="btn btn-sm btn-light" id="closeChatBtn">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
+            <button class="btn btn-sm btn-light" id="closeChatBtn">
+                <i class="fas fa-times"></i>
+            </button>
         </div>
-        <div class="chat-messages" id="chatMessages"></div>
-        <div class="chat-input p-2 bg-white">
+        <div class="chat-messages p-3" id="chatMessages" style="flex: 1; overflow-y: auto;"></div>
+        <div class="chat-input p-3">
             <div class="input-group">
                 <input type="text" id="messageInput" class="form-control" placeholder="Type your message...">
                 <button class="btn btn-primary" id="sendMessageBtn">
@@ -270,7 +160,7 @@
 
     <!-- Modals -->
     <div class="modal fade" id="conversationsModal">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Conversations</h5>
@@ -286,16 +176,15 @@
         </div>
     </div>
 
-    <div class="modal fade" id="newChatModal">
-        <div class="modal-dialog modal-dialog-centered">
+    <div class="modal fade" id="usersModal">
+        <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">New Conversation</h5>
+                    <h5 class="modal-title">Select User</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <input type="text" id="searchUsers" class="form-control mb-3" placeholder="Search users...">
-                    <div id="usersList" style="max-height: 300px; overflow-y: auto;"></div>
+                    <div id="usersList" style="max-height: 400px; overflow-y: auto;"></div>
                 </div>
             </div>
         </div>
@@ -321,112 +210,72 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
+        let currentUser = null;
         let currentChatUserId = null;
         let unsubscribeMessages = null;
 
         // DOM Elements
         const elements = {
-            menuToggle: document.querySelector('.menu-toggle'),
-            sidebar: document.querySelector('.sidebar'),
-            sidebarClose: document.querySelector('.sidebar-close'),
-            sidebarOverlay: document.querySelector('.sidebar-overlay'),
-            profileIcon: document.querySelector('.profile-icon'),
-            greetingMessage: document.getElementById('greetingMessage'),
-            openConversationsBtn: document.getElementById('openConversationsBtn'),
             chatContainer: document.querySelector('.chat-container'),
-            closeChatBtn: document.getElementById('closeChatBtn'),
-            conversationsModal: new bootstrap.Modal('#conversationsModal'),
-            newChatModal: new bootstrap.Modal('#newChatModal'),
-            searchUsers: document.getElementById('searchUsers'),
-            usersList: document.getElementById('usersList'),
-            conversationsList: document.getElementById('conversationsList'),
             chatMessages: document.getElementById('chatMessages'),
             messageInput: document.getElementById('messageInput'),
             sendMessageBtn: document.getElementById('sendMessageBtn'),
-            deleteConversationBtn: document.getElementById('deleteConversationBtn'),
-            newChatBtn: document.getElementById('newChatBtn')
+            newChatBtn: document.getElementById('newChatBtn'),
+            usersList: document.getElementById('usersList'),
+            conversationsList: document.getElementById('conversationsList'),
+            profileDropdown: document.getElementById('profileDropdown')
         };
 
-        // Event Listeners
-        elements.menuToggle.addEventListener('click', toggleSidebar);
-        elements.sidebarClose.addEventListener('click', toggleSidebar);
-        elements.sidebarOverlay.addEventListener('click', toggleSidebar);
-        elements.openConversationsBtn.addEventListener('click', () => elements.conversationsModal.show());
-        elements.closeChatBtn.addEventListener('click', () => elements.chatContainer.classList.remove('active'));
-        elements.sendMessageBtn.addEventListener('click', sendMessage);
-        elements.messageInput.addEventListener('keypress', e => e.key === 'Enter' && sendMessage());
-        elements.deleteConversationBtn.addEventListener('click', deleteConversation);
-        elements.newChatBtn.addEventListener('click', () => {
-            elements.newChatModal.show();
-            loadAllUsers();
-        });
-        elements.searchUsers.addEventListener('input', searchUsers);
-
+        // Initialize
         auth.onAuthStateChanged(user => {
             if (user) {
-                initUser(user);
+                currentUser = user;
+                initUser();
                 loadConversations();
             } else {
                 window.location.href = 'login.html';
             }
         });
 
-        function toggleSidebar() {
-            elements.sidebar.classList.toggle('active');
-            elements.sidebarOverlay.classList.toggle('active');
-        }
-
-        async function initUser(user) {
-            const userDoc = await db.collection('users').doc(user.uid).get();
+        // User Initialization
+        async function initUser() {
+            const userDoc = await db.collection('users').doc(currentUser.uid).get();
             const userData = userDoc.data();
-            
-            // Set profile icon
-            const initials = getInitials(userData?.fullName || 'User');
-            elements.profileIcon.textContent = initials;
-            
-            // Set greeting
-            const hour = new Date().getHours();
-            const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
-            const title = userData?.gender === 'male' ? 'sir' : userData?.gender === 'female' ? 'madam' : '';
-            elements.greetingMessage.innerHTML = `${greeting} <span class="text-warning">${title}</span>`;
+            elements.profileDropdown.textContent = getInitials(userData.fullName);
         }
 
+        // Load Conversations
         async function loadConversations() {
-            const userId = auth.currentUser.uid;
-            db.collection('users').doc(userId).collection('conversations')
-                .orderBy('lastMessageTime', 'desc')
+            db.collection('users').doc(currentUser.uid).collection('conversations')
                 .onSnapshot(snapshot => {
                     elements.conversationsList.innerHTML = '';
                     snapshot.forEach(doc => {
-                        const convo = doc.data();
+                        const conversation = doc.data();
                         const item = document.createElement('div');
-                        item.className = 'd-flex align-items-center p-2 conversation-list';
+                        item.className = 'd-flex align-items-center p-2 border-bottom';
                         item.innerHTML = `
-                            <div class="user-avatar me-3">${getInitials(convo.userName)}</div>
-                            <div class="flex-grow-1">
-                                <h6 class="mb-0">${convo.userName}</h6>
-                                <small class="text-muted">${convo.lastMessage || ''}</small>
+                            <div class="user-avatar me-3">${getInitials(conversation.userName)}</div>
+                            <div>
+                                <h6 class="mb-0">${conversation.userName}</h6>
+                                <small class="text-muted">${conversation.lastMessage || ''}</small>
                             </div>
-                            <small class="message-time">${formatTime(convo.lastMessageTime?.toDate())}</small>
                         `;
-                        item.addEventListener('click', () => openChat(doc.id, convo.userName));
+                        item.addEventListener('click', () => openChat(doc.id, conversation.userName));
                         elements.conversationsList.appendChild(item);
                     });
                 });
         }
 
+        // Open Chat
         async function openChat(userId, userName) {
             currentChatUserId = userId;
             document.getElementById('currentChatUserName').textContent = userName;
             document.getElementById('currentChatAvatar').textContent = getInitials(userName);
-            
+            elements.chatContainer.classList.add('active');
+
             if (unsubscribeMessages) unsubscribeMessages();
             
-            elements.chatMessages.innerHTML = '';
-            elements.chatContainer.classList.add('active');
-            elements.conversationsModal.hide();
-
-            unsubscribeMessages = db.collection('users').doc(auth.currentUser.uid)
+            unsubscribeMessages = db.collection('users').doc(currentUser.uid)
                 .collection('conversations').doc(userId)
                 .collection('messages').orderBy('timestamp')
                 .onSnapshot(snapshot => {
@@ -435,214 +284,100 @@
                         const message = doc.data();
                         displayMessage(message);
                     });
-                    scrollToBottom();
                 });
         }
 
+        // Display Message
         function displayMessage(message) {
-            const isSent = message.sender === auth.currentUser.uid;
+            const isSent = message.sender === currentUser.uid;
             const bubble = document.createElement('div');
             bubble.className = `message-bubble ${isSent ? 'sent-message' : 'received-message'}`;
             bubble.innerHTML = `
                 <div class="message-text">${message.text}</div>
-                <div class="message-time">${formatTime(message.timestamp?.toDate())}</div>
+                <div class="text-end small text-muted mt-1">
+                    ${new Date(message.timestamp?.toDate()).toLocaleTimeString()}
+                </div>
             `;
             elements.chatMessages.appendChild(bubble);
-            scrollToBottom();
         }
 
+        // Send Message
         async function sendMessage() {
             const text = elements.messageInput.value.trim();
             if (!text || !currentChatUserId) return;
 
-            const currentUser = auth.currentUser.uid;
-            const timestamp = firebase.firestore.FieldValue.serverTimestamp();
+            const messageData = {
+                text: text,
+                sender: currentUser.uid,
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            };
 
-            try {
-                await Promise.all([
-                    saveMessage(currentUser, currentChatUserId, text, timestamp),
-                    saveMessage(currentChatUserId, currentUser, text, timestamp)
-                ]);
-                elements.messageInput.value = '';
-            } catch (error) {
-                console.error('Error sending message:', error);
-                alert('Failed to send message. Please try again.');
-            }
+            // Save message for both users
+            await Promise.all([
+                db.collection('users').doc(currentUser.uid)
+                    .collection('conversations').doc(currentChatUserId)
+                    .collection('messages').add(messageData),
+                
+                db.collection('users').doc(currentChatUserId)
+                    .collection('conversations').doc(currentUser.uid)
+                    .collection('messages').add(messageData)
+            ]);
+
+            elements.messageInput.value = '';
         }
 
-        async function saveMessage(userId, partnerId, text, timestamp) {
-            const userRef = db.collection('users').doc(userId);
-            const partnerName = await getUserName(partnerId);
+        // Load Users
+        async function loadUsers() {
+            elements.usersList.innerHTML = 'Loading...';
+            const snapshot = await db.collection('users').get();
+            elements.usersList.innerHTML = '';
 
-            // Create message document
-            await userRef.collection('conversations').doc(partnerId)
-                .collection('messages').add({
-                    text,
-                    sender: userId,
-                    timestamp
+            snapshot.forEach(doc => {
+                if (doc.id === currentUser.uid) return;
+                const user = doc.data();
+                const item = document.createElement('div');
+                item.className = 'd-flex align-items-center p-2 border-bottom';
+                item.innerHTML = `
+                    <div class="user-avatar me-3">${getInitials(user.fullName)}</div>
+                    <div>
+                        <h6 class="mb-0">${user.fullName}</h6>
+                        <small class="text-muted">${user.email || ''}</small>
+                    </div>
+                `;
+                item.addEventListener('click', () => startConversation(doc.id, user.fullName));
+                elements.usersList.appendChild(item);
+            });
+        }
+
+        // Start New Conversation
+        async function startConversation(userId, userName) {
+            await db.collection('users').doc(currentUser.uid)
+                .collection('conversations').doc(userId).set({
+                    userId: userId,
+                    userName: userName,
+                    lastMessage: '',
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
                 });
-
-            // Update conversation metadata
-            await userRef.collection('conversations').doc(partnerId).set({
-                userId: partnerId,
-                userName: partnerName,
-                lastMessage: text,
-                lastMessageTime: timestamp
-            }, { merge: true });
-        }
-
-        async function loadAllUsers() {
-            const currentUserId = auth.currentUser.uid;
-            const usersList = document.getElementById('usersList');
             
-            try {
-                usersList.innerHTML = '<div class="loading-users">Loading users...</div>';
-                const snapshot = await db.collection('users').get();
-                usersList.innerHTML = '';
-
-                snapshot.forEach(doc => {
-                    if (doc.id === currentUserId) return;
-                    const userData = doc.data();
-                    if (!userData.fullName) return;
-
-                    const userItem = document.createElement('div');
-                    userItem.className = 'user-item';
-                    userItem.innerHTML = `
-                        <div class="d-flex align-items-center">
-                            <div class="user-avatar me-3">
-                                ${getInitials(userData.fullName)}
-                            </div>
-                            <div>
-                                <h6 class="mb-0">${userData.fullName}</h6>
-                                ${userData.email ? `<small class="text-muted">${userData.email}</small>` : ''}
-                            </div>
-                        </div>
-                    `;
-
-                    userItem.addEventListener('click', async () => {
-                        await createConversation(doc.id, userData.fullName);
-                        elements.newChatModal.hide();
-                        openChat(doc.id, userData.fullName);
-                    });
-
-                    usersList.appendChild(userItem);
-                });
-
-                if (usersList.children.length === 0) {
-                    usersList.innerHTML = '<div class="error-message">No users found</div>';
-                }
-
-            } catch (error) {
-                console.error('Error loading users:', error);
-                usersList.innerHTML = '<div class="error-message">Failed to load users</div>';
-            }
+            new bootstrap.Modal(document.getElementById('usersModal')).hide();
+            openChat(userId, userName);
         }
 
-        async function createConversation(userId, userName) {
-            const currentUser = auth.currentUser.uid;
-            const userRef = db.collection('users').doc(currentUser);
-            
-            try {
-                const conversationDoc = await userRef.collection('conversations').doc(userId).get();
-                if (!conversationDoc.exists) {
-                    await userRef.collection('conversations').doc(userId).set({
-                        userId: userId,
-                        userName: userName,
-                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                        lastMessage: '',
-                        lastMessageTime: null
-                    });
-                }
-            } catch (error) {
-                console.error('Error creating conversation:', error);
-                throw error;
-            }
-        }
-
-        async function searchUsers() {
-            const searchTerm = elements.searchUsers.value.toLowerCase().trim();
-            const currentUserId = auth.currentUser.uid;
-            
-            try {
-                const snapshot = await db.collection('users').get();
-                elements.usersList.innerHTML = '';
-
-                snapshot.forEach(doc => {
-                    if (doc.id === currentUserId) return;
-                    const user = doc.data();
-                    const fullName = user.fullName?.toLowerCase() || '';
-                    
-                    if (fullName.includes(searchTerm)) {
-                        const item = document.createElement('div');
-                        item.className = 'user-item';
-                        item.innerHTML = `
-                            <div class="d-flex align-items-center">
-                                <div class="user-avatar me-3">
-                                    ${getInitials(user.fullName)}
-                                </div>
-                                <div>
-                                    <h6 class="mb-0">${user.fullName}</h6>
-                                    ${user.email ? `<small class="text-muted">${user.email}</small>` : ''}
-                                </div>
-                            </div>
-                        `;
-                        item.addEventListener('click', () => {
-                            elements.newChatModal.hide();
-                            openChat(doc.id, user.fullName);
-                        });
-                        elements.usersList.appendChild(item);
-                    }
-                });
-
-                if (elements.usersList.children.length === 0) {
-                    elements.usersList.innerHTML = '<div class="error-message">No matching users found</div>';
-                }
-
-            } catch (error) {
-                console.error('Search error:', error);
-                elements.usersList.innerHTML = '<div class="error-message">Search failed</div>';
-            }
-        }
-
-        async function deleteConversation() {
-            if (!currentChatUserId) return;
-            
-            if (confirm('Delete this conversation?')) {
-                try {
-                    await db.collection('users').doc(auth.currentUser.uid)
-                        .collection('conversations').doc(currentChatUserId).delete();
-                    elements.chatContainer.classList.remove('active');
-                    currentChatUserId = null;
-                } catch (error) {
-                    console.error('Error deleting conversation:', error);
-                    alert('Failed to delete conversation');
-                }
-            }
-        }
-
-        // Helper Functions
+        // Helpers
         function getInitials(name) {
             return name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
         }
 
-        function formatTime(date) {
-            if (!date) return '';
-            return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        }
-
-        function scrollToBottom() {
-            elements.chatMessages.scrollTop = elements.chatMessages.scrollHeight;
-        }
-
-        async function getUserName(userId) {
-            try {
-                const doc = await db.collection('users').doc(userId).get();
-                return doc.exists ? doc.data().fullName : 'Unknown User';
-            } catch (error) {
-                console.error('Error getting user name:', error);
-                return 'Unknown User';
-            }
-        }
+        // Event Listeners
+        elements.sendMessageBtn.addEventListener('click', sendMessage);
+        elements.messageInput.addEventListener('keypress', e => e.key === 'Enter' && sendMessage());
+        elements.newChatBtn.addEventListener('click', () => {
+            new bootstrap.Modal(document.getElementById('usersModal')).show();
+            loadUsers();
+        });
+        document.getElementById('closeChatBtn').addEventListener('click', () => {
+            elements.chatContainer.classList.remove('active');
+        });
     </script>
 </body>
 </html>
