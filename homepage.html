@@ -32,11 +32,13 @@
         .logo {
             width: 50px;
             height: auto;
+            display: block;
+            margin: 0 auto;
         }
         
         .hero-section {
             background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
-                        url('https://via.placeholder.com/1920x600') no-repeat center center;
+                        url('APG.jpg') no-repeat center center;
             background-size: cover;
             color: white;
             padding: 8rem 0;
@@ -76,17 +78,100 @@
         .modal-content {
             border-radius: 0.5rem;
         }
+        
+        .sidebar {
+            height: 100%;
+            width: 250px;
+            position: fixed;
+            top: 0;
+            left: -250px;
+            background-color: #fff;
+            box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            transition: 0.3s;
+            z-index: 999;
+            padding-top: 60px;
+        }
+        
+        .sidebar.active {
+            left: 0;
+        }
+        
+        .sidebar-nav {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .sidebar-nav li {
+            padding: 10px 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .sidebar-nav li a {
+            color: var(--dark-color);
+            text-decoration: none;
+        }
+        
+        .sidebar-nav li a:hover {
+            color: var(--primary-color);
+        }
+        
+        .sidebar-toggle {
+            font-size: 1.5rem;
+            cursor: pointer;
+            margin-right: 20px;
+        }
+        
+        .main-content {
+            transition: 0.3s;
+        }
+        
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 998;
+        }
+        
+        .overlay.active {
+            display: block;
+        }
+        
+        .bottom-nav {
+            background-color: white;
+            box-shadow: 0 -0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+            padding: 1rem 0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            z-index: 1000;
+        }
     </style>
 </head>
 <body>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <ul class="sidebar-nav">
+            <li><a href="#"><i class="fas fa-home me-2"></i>Home</a></li>
+            <li><a href="#"><i class="fas fa-info-circle me-2"></i>About Us</a></li>
+            <li><a href="#"><i class="fas fa-video me-2"></i>Live Events</a></li>
+        </ul>
+    </div>
+    
+    <!-- Overlay -->
+    <div class="overlay" id="overlay"></div>
+    
     <!-- Header Section -->
     <header class="header">
         <div class="container-fluid">
             <div class="row align-items-center">
-                <div class="col-md-6">
-                    <img src="Gospel springs logo.jpg" alt="Gospel Springs Logo" class="logo">
+                <div class="col-6">
+                    <i class="fas fa-bars sidebar-toggle" id="sidebarToggle"></i>
                 </div>
-                <div class="col-md-6 text-end">
+                <div class="col-6 text-end">
                     <div class="dropdown d-inline-block">
                         <div class="profile-icon dropdown-toggle" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                             <!-- Initial will be inserted here by JavaScript -->
@@ -112,7 +197,7 @@
     </section>
 
     <!-- Main Content -->
-    <main class="container my-5">
+    <main class="container my-5 main-content" id="mainContent">
         <!-- Your main content will go here -->
         <div class="row">
             <div class="col-12">
@@ -124,6 +209,13 @@
             </div>
         </div>
     </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <div class="container">
+            <img src="Gospel springs logo.jpg" alt="Gospel Springs Logo" class="logo">
+        </div>
+    </nav>
 
     <!-- Update Password Modal -->
     <div class="modal fade" id="updatePasswordModal" tabindex="-1" aria-labelledby="updatePasswordModalLabel" aria-hidden="true">
@@ -185,24 +277,17 @@
     <!-- Bootstrap JS Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
-    <script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDJJqxh3UOsTcBPAXLeEWeLoQRmIy_6hNU",
+            authDomain: "web-app-ae5b6.firebaseapp.com",
+            projectId: "web-app-ae5b6",
+            storageBucket: "web-app-ae5b6.firebasestorage.app",
+            messagingSenderId: "921251501161",
+            appId: "1:921251501161:web:316ff3fc4345735762bef8"
+        };
 
-  // Your web app's Firebase configuration
-  const firebaseConfig = {
-    apiKey: "AIzaSyDJJqxh3UOsTcBPAXLeEWeLoQRmIy_6hNU",
-    authDomain: "web-app-ae5b6.firebaseapp.com",
-    projectId: "web-app-ae5b6",
-    storageBucket: "web-app-ae5b6.firebasestorage.app",
-    messagingSenderId: "921251501161",
-    appId: "1:921251501161:web:316ff3fc4345735762bef8"
-  };
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
@@ -217,6 +302,22 @@
         const updatePasswordModal = new bootstrap.Modal(document.getElementById('updatePasswordModal'));
         const successModal = new bootstrap.Modal(document.getElementById('successModal'));
         const passwordToggles = document.querySelectorAll('.password-toggle');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const overlay = document.getElementById('overlay');
+        const mainContent = document.getElementById('mainContent');
+
+        // Toggle sidebar
+        sidebarToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('active');
+            overlay.classList.toggle('active');
+        });
+
+        // Close sidebar when clicking on overlay
+        overlay.addEventListener('click', () => {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
 
         // Check authentication state
         auth.onAuthStateChanged((user) => {
@@ -268,7 +369,7 @@
                 greeting = 'Good evening';
             }
             
-            greetingMessage.textContent = `${greeting}, ${fullName}. Welcome back!`;
+            greetingMessage.textContent = `${greeting}, ${fullName}. Welcome to Gospel Springs!`;
         }
 
         // Update password
