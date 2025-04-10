@@ -146,6 +146,29 @@
             padding: 7rem 0;
             margin-bottom: 2rem;
         }
+
+        .loading-users {
+            padding: 1rem;
+            text-align: center;
+            color: #666;
+        }
+
+        .user-item {
+            cursor: pointer;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            transition: background 0.2s;
+        }
+
+        .user-item:hover {
+            background: #f8f9fa;
+        }
+
+        .error-message {
+            color: #dc3545;
+            padding: 1rem;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -451,12 +474,15 @@
             const userRef = db.collection('users').doc(userId);
             const partnerName = await getUserName(partnerId);
 
-            await userRef.collection('conversations').doc(partnerId).collection('messages').add({
-                text,
-                sender: userId,
-                timestamp
-            });
+            // Create message document
+            await userRef.collection('conversations').doc(partnerId)
+                .collection('messages').add({
+                    text,
+                    sender: userId,
+                    timestamp
+                });
 
+            // Update conversation metadata
             await userRef.collection('conversations').doc(partnerId).set({
                 userId: partnerId,
                 userName: partnerName,
@@ -466,23 +492,98 @@
         }
 
         async function loadAllUsers() {
-            elements.usersList.innerHTML = 'Loading users...';
+            const currentUserId = auth.currentUser.uid;
+            const usersList = document.getElementById('usersList');
+            
+            try {
+                usersList.innerHTML = '<div class="loading-users">Loading users...</div>';
+                const snapshot = await db.collection('users').get();
+                usersList.innerHTML = '';
+
+                snapshot.forEach(doc => {
+                    if (doc.id === currentUserId) return;
+                    const userData = doc.data();
+                    if (!userData.fullName) return;
+
+                    const userItem = document.createElement('div');
+                    userItem.className = 'user-item';
+                    userItem.innerHTML = `
+                        <div class="d-flex align-items-center">
+                            <div class="user-avatar me-3">
+                                ${getInitials(userData.fullName)}
+                            </div>
+                            <div>
+                                <h6 class="mb-0">${userData.fullName}</h6>
+                                ${userData.email ? `<small class="text-muted">${userData.email}</small>` : ''}
+                            </div>
+                        </div>
+                    `;
+
+                    userItem.addEventListener('click', async () => {
+                        await createConversation(doc.id, userData.fullName);
+                        elements.newChatModal.hide();
+                        openChat(doc.id, userData.fullName);
+                    });
+
+                    usersList.appendChild(userItem);
+                });
+
+                if (usersList.children.length === 0) {
+                    usersList.innerHTML = '<div class="error-message">No users found</div>';
+                }
+
+            } catch (error) {
+                console.error('Error loading users:', error);
+                usersList.innerHTML = '<div class="error-message">Failed to load users</div>';
+            }
+        }
+
+        async function createConversation(userId, userName) {
+            const currentUser = auth.currentUser.uid;
+            const userRef = db.collection('users').doc(currentUser);
+            
+            try {
+                const conversationDoc = await userRef.collection('conversations').doc(userId).get();
+                if (!conversationDoc.exists) {
+                    await userRef.collection('conversations').doc(userId).set({
+                        userId: userId,
+                        userName: userName,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        lastMessage: '',
+                        lastMessageTime: null
+                    });
+                }
+            } catch (error) {
+                console.error('Error creating conversation:', error);
+                throw error;
+            }
+        }
+
+        async function searchUsers() {
+            const searchTerm = elements.searchUsers.value.toLowerCase().trim();
             const currentUserId = auth.currentUser.uid;
             
             try {
                 const snapshot = await db.collection('users').get();
                 elements.usersList.innerHTML = '';
-                
+
                 snapshot.forEach(doc => {
-                    if (doc.id !== currentUserId) {
-                        const user = doc.data();
+                    if (doc.id === currentUserId) return;
+                    const user = doc.data();
+                    const fullName = user.fullName?.toLowerCase() || '';
+                    
+                    if (fullName.includes(searchTerm)) {
                         const item = document.createElement('div');
-                        item.className = 'd-flex align-items-center p-2 conversation-list';
+                        item.className = 'user-item';
                         item.innerHTML = `
-                            <div class="user-avatar me-3">${getInitials(user.fullName)}</div>
-                            <div class="flex-grow-1">
-                                <h6 class="mb-0">${user.fullName}</h6>
-                                <small class="text-muted">${user.email}</small>
+                            <div class="d-flex align-items-center">
+                                <div class="user-avatar me-3">
+                                    ${getInitials(user.fullName)}
+                                </div>
+                                <div>
+                                    <h6 class="mb-0">${user.fullName}</h6>
+                                    ${user.email ? `<small class="text-muted">${user.email}</small>` : ''}
+                                </div>
                             </div>
                         `;
                         item.addEventListener('click', () => {
@@ -492,43 +593,14 @@
                         elements.usersList.appendChild(item);
                     }
                 });
-            } catch (error) {
-                console.error('Error loading users:', error);
-                elements.usersList.innerHTML = 'Failed to load users';
-            }
-        }
 
-        async function searchUsers() {
-            const searchTerm = elements.searchUsers.value.toLowerCase();
-            const currentUserId = auth.currentUser.uid;
-            
-            try {
-                const snapshot = await db.collection('users').get();
-                elements.usersList.innerHTML = '';
-                
-                snapshot.forEach(doc => {
-                    if (doc.id !== currentUserId) {
-                        const user = doc.data();
-                        if (user.fullName.toLowerCase().includes(searchTerm)) {
-                            const item = document.createElement('div');
-                            item.className = 'd-flex align-items-center p-2 conversation-list';
-                            item.innerHTML = `
-                                <div class="user-avatar me-3">${getInitials(user.fullName)}</div>
-                                <div class="flex-grow-1">
-                                    <h6 class="mb-0">${user.fullName}</h6>
-                                    <small class="text-muted">${user.email}</small>
-                                </div>
-                            `;
-                            item.addEventListener('click', () => {
-                                elements.newChatModal.hide();
-                                openChat(doc.id, user.fullName);
-                            });
-                            elements.usersList.appendChild(item);
-                        }
-                    }
-                });
+                if (elements.usersList.children.length === 0) {
+                    elements.usersList.innerHTML = '<div class="error-message">No matching users found</div>';
+                }
+
             } catch (error) {
-                console.error('Error searching users:', error);
+                console.error('Search error:', error);
+                elements.usersList.innerHTML = '<div class="error-message">Search failed</div>';
             }
         }
 
