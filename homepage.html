@@ -110,24 +110,12 @@
             padding: 10px 15px;
             margin-bottom: 10px;
             position: relative;
+            animation: messageAppear 0.3s ease;
         }
 
-        .sent-message {
-            background-color: var(--primary-color);
-            color: white;
-            margin-left: auto;
-            border-bottom-right-radius: 5px;
-        }
-
-        .received-message {
-            background-color: #e9ecef;
-            margin-right: auto;
-            border-bottom-left-radius: 5px;
-        }
-
-        .message-time {
-            font-size: 0.75rem;
-            color: #6c757d;
+        @keyframes messageAppear {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .user-avatar {
@@ -447,13 +435,16 @@
             const currentUser = auth.currentUser.uid;
             const timestamp = firebase.firestore.FieldValue.serverTimestamp();
 
-            // Save message for both users
-            await Promise.all([
-                saveMessage(currentUser, currentChatUserId, text, timestamp),
-                saveMessage(currentChatUserId, currentUser, text, timestamp)
-            ]);
-
-            elements.messageInput.value = '';
+            try {
+                await Promise.all([
+                    saveMessage(currentUser, currentChatUserId, text, timestamp),
+                    saveMessage(currentChatUserId, currentUser, text, timestamp)
+                ]);
+                elements.messageInput.value = '';
+            } catch (error) {
+                console.error('Error sending message:', error);
+                alert('Failed to send message. Please try again.');
+            }
         }
 
         async function saveMessage(userId, partnerId, text, timestamp) {
@@ -475,51 +466,85 @@
         }
 
         async function loadAllUsers() {
-            elements.usersList.innerHTML = '';
+            elements.usersList.innerHTML = 'Loading users...';
             const currentUserId = auth.currentUser.uid;
             
-            const snapshot = await db.collection('users').get();
-            snapshot.forEach(doc => {
-                if (doc.id !== currentUserId) {
-                    const user = doc.data();
-                    const item = document.createElement('div');
-                    item.className = 'd-flex align-items-center p-2 conversation-list';
-                    item.innerHTML = `
-                        <div class="user-avatar me-3">${getInitials(user.fullName)}</div>
-                        <div class="flex-grow-1">
-                            <h6 class="mb-0">${user.fullName}</h6>
-                            <small class="text-muted">${user.email}</small>
-                        </div>
-                    `;
-                    item.addEventListener('click', () => {
-                        elements.newChatModal.hide();
-                        openChat(doc.id, user.fullName);
-                    });
-                    elements.usersList.appendChild(item);
-                }
-            });
+            try {
+                const snapshot = await db.collection('users').get();
+                elements.usersList.innerHTML = '';
+                
+                snapshot.forEach(doc => {
+                    if (doc.id !== currentUserId) {
+                        const user = doc.data();
+                        const item = document.createElement('div');
+                        item.className = 'd-flex align-items-center p-2 conversation-list';
+                        item.innerHTML = `
+                            <div class="user-avatar me-3">${getInitials(user.fullName)}</div>
+                            <div class="flex-grow-1">
+                                <h6 class="mb-0">${user.fullName}</h6>
+                                <small class="text-muted">${user.email}</small>
+                            </div>
+                        `;
+                        item.addEventListener('click', () => {
+                            elements.newChatModal.hide();
+                            openChat(doc.id, user.fullName);
+                        });
+                        elements.usersList.appendChild(item);
+                    }
+                });
+            } catch (error) {
+                console.error('Error loading users:', error);
+                elements.usersList.innerHTML = 'Failed to load users';
+            }
         }
 
         async function searchUsers() {
             const searchTerm = elements.searchUsers.value.toLowerCase();
-            await loadAllUsers();
+            const currentUserId = auth.currentUser.uid;
             
-            // Filter existing users in the list
-            Array.from(elements.usersList.children).forEach(item => {
-                const userName = item.querySelector('h6').textContent.toLowerCase();
-                item.style.display = userName.includes(searchTerm) ? 'flex' : 'none';
-            });
+            try {
+                const snapshot = await db.collection('users').get();
+                elements.usersList.innerHTML = '';
+                
+                snapshot.forEach(doc => {
+                    if (doc.id !== currentUserId) {
+                        const user = doc.data();
+                        if (user.fullName.toLowerCase().includes(searchTerm)) {
+                            const item = document.createElement('div');
+                            item.className = 'd-flex align-items-center p-2 conversation-list';
+                            item.innerHTML = `
+                                <div class="user-avatar me-3">${getInitials(user.fullName)}</div>
+                                <div class="flex-grow-1">
+                                    <h6 class="mb-0">${user.fullName}</h6>
+                                    <small class="text-muted">${user.email}</small>
+                                </div>
+                            `;
+                            item.addEventListener('click', () => {
+                                elements.newChatModal.hide();
+                                openChat(doc.id, user.fullName);
+                            });
+                            elements.usersList.appendChild(item);
+                        }
+                    }
+                });
+            } catch (error) {
+                console.error('Error searching users:', error);
+            }
         }
 
         async function deleteConversation() {
             if (!currentChatUserId) return;
             
             if (confirm('Delete this conversation?')) {
-                await db.collection('users').doc(auth.currentUser.uid)
-                    .collection('conversations').doc(currentChatUserId).delete();
-                
-                elements.chatContainer.classList.remove('active');
-                currentChatUserId = null;
+                try {
+                    await db.collection('users').doc(auth.currentUser.uid)
+                        .collection('conversations').doc(currentChatUserId).delete();
+                    elements.chatContainer.classList.remove('active');
+                    currentChatUserId = null;
+                } catch (error) {
+                    console.error('Error deleting conversation:', error);
+                    alert('Failed to delete conversation');
+                }
             }
         }
 
@@ -538,8 +563,13 @@
         }
 
         async function getUserName(userId) {
-            const doc = await db.collection('users').doc(userId).get();
-            return doc.exists ? doc.data().fullName : 'Unknown User';
+            try {
+                const doc = await db.collection('users').doc(userId).get();
+                return doc.exists ? doc.data().fullName : 'Unknown User';
+            } catch (error) {
+                console.error('Error getting user name:', error);
+                return 'Unknown User';
+            }
         }
     </script>
 </body>
