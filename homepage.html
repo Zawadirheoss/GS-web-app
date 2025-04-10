@@ -3,340 +3,1465 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gospel Springs Chat</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>Gospel Springs Mission</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        /* CSS will be placed here for this example */
         :root {
-            --primary: #4361ee;
-            --secondary: #3a0ca3;
-            --accent: #f72585;
-            --light: #f8f9fa;
-            --dark: #14213d;
+            --primary-color: #4a6fa5;
+            --secondary-color: #166088;
+            --accent-color: #4fc3f7;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --warning-color: #ffc107;
+            --info-color: #17a2b8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
         }
 
         body {
-            font-family: 'Arial', sans-serif;
-            background: #f8f9fc;
+            background-color: #f5f5f5;
+            color: #333;
             min-height: 100vh;
-            padding-bottom: 80px;
-        }
-
-        .chat-container {
-            position: fixed;
-            bottom: 80px;
-            right: 20px;
-            width: 350px;
-            height: 500px;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 5px 25px rgba(0,0,0,0.1);
-            display: none;
-            flex-direction: column;
-            z-index: 1000;
-        }
-
-        .chat-container.active {
             display: flex;
+            flex-direction: column;
         }
 
-        .message {
-            max-width: 80%;
-            padding: 10px 15px;
-            border-radius: 15px;
-            margin: 5px;
-            animation: fadeIn 0.3s;
+        /* Header Styles */
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .menu-toggle {
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--primary-color);
         }
 
-        .user-avatar {
+        .profile-container {
+            position: relative;
+        }
+
+        .profile-icon {
             width: 40px;
             height: 40px;
             border-radius: 50%;
-            background: var(--accent);
+            background-color: var(--primary-color);
             color: white;
             display: flex;
-            align-items: center;
             justify-content: center;
+            align-items: center;
+            cursor: pointer;
             font-weight: bold;
+            overflow: hidden;
         }
+
+        .profile-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-dropdown {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            width: 200px;
+            overflow: hidden;
+            display: none;
+            z-index: 1001;
+        }
+
+        .profile-dropdown.show {
+            display: block;
+        }
+
+        .profile-dropdown a {
+            display: block;
+            padding: 10px 15px;
+            color: var(--dark-color);
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .profile-dropdown a:hover {
+            background-color: #f8f9fa;
+            color: var(--primary-color);
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: -300px;
+            width: 300px;
+            height: 100vh;
+            background-color: white;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 999;
+            transition: all 0.3s;
+            padding-top: 70px;
+            overflow-y: auto;
+        }
+
+        .sidebar.show {
+            left: 0;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+        }
+
+        .sidebar-nav li a {
+            display: block;
+            padding: 15px 20px;
+            color: var(--dark-color);
+            text-decoration: none;
+            border-bottom: 1px solid #eee;
+            transition: all 0.3s;
+        }
+
+        .sidebar-nav li a:hover {
+            background-color: #f8f9fa;
+            color: var(--primary-color);
+            padding-left: 25px;
+        }
+
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+            display: none;
+        }
+
+        .sidebar-overlay.show {
+            display: block;
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            height: 300px;
+            margin-top: 70px;
+            overflow: hidden;
+            height: 70hv;
+        }
+
+        .hero-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            text-align: center;
+            padding: 18px;
+        }
+
+        .hero-title {
+            font-size: 1.9rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .hero-subtitle {
+            font-size: 1.2rem;
+            max-width: 800px;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            margin-bottom: 70px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background-color: var(--accent-color);
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: white;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            padding: 10px 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+        }
+
+        .logo-container {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid var(--primary-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .logo-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1100;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            overflow: hidden;
+            animation: modalFadeIn 0.3s;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            padding: 15px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            font-size: 1.2rem;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(74, 111, 165, 0.2);
+        }
+
+        .password-toggle {
+            position: relative;
+        }
+
+        .password-toggle-icon {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #777;
+        }
+
+        .modal-footer {
+            padding: 15px 20px;
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 8px 15px;
+            border-radius: 5px;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
+
+        .alert {
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 250px;
+                left: -250px;
+            }
+
+            .hero-title {
+                font-size: 2rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero {
+                height: 250px;
+            }
+
+            .hero-title {
+                font-size: 1.8rem;
+            }
+        }
+        /* Fancy Modern Styles */
+.fancy-content {
+    position: relative;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+    overflow: hidden;
+    font-family: 'Poppins', 'Segoe UI', sans-serif;
+    color: #333;
+    background-color: #fafafa;
+}
+
+.bg-shapes {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.shape-1 {
+    position: absolute;
+    top: -150px;
+    right: -150px;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(46, 204, 113, 0.1) 0%, rgba(46, 204, 113, 0) 70%);
+    animation: float 15s infinite ease-in-out;
+}
+
+.shape-2 {
+    position: absolute;
+    bottom: -100px;
+    left: -100px;
+    width: 400px;
+    height: 400px;
+    border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+    background: radial-gradient(circle, rgba(52, 152, 219, 0.1) 0%, rgba(52, 152, 219, 0) 70%);
+    animation: float 12s infinite ease-in-out reverse;
+    animation-delay: 2s;
+}
+
+.shape-3 {
+    position: absolute;
+    top: 50%;
+    right: 50%;
+    width: 300px;
+    height: 300px;
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+    background: radial-gradient(circle, rgba(155, 89, 182, 0.1) 0%, rgba(155, 89, 182, 0) 70%);
+    animation: float 18s infinite ease-in-out;
+    animation-delay: 4s;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(5deg); }
+}
+
+.fancy-container {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 5rem;
+}
+
+/* Welcome Section */
+.fancy-welcome {
+    text-align: center;
+    padding: 2rem 0 4rem;
+    position: relative;
+}
+
+.welcome-title {
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    font-weight: 700;
+    margin-bottom: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.title-word {
+    background: linear-gradient(135deg, #3498db, #2ecc71);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.8s forwards;
+}
+
+.title-word-1 { animation-delay: 0.1s; }
+.title-word-2 { animation-delay: 0.3s; }
+.title-word-3 { animation-delay: 0.5s; }
+.title-word-4 { animation-delay: 0.7s; }
+.title-word-5 { animation-delay: 0.9s; }
+
+.welcome-subtitle {
+    font-size: 1.5rem;
+    color: #7f8c8d;
+    font-weight: 300;
+    margin-bottom: 2rem;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.8s forwards;
+    animation-delay: 1.1s;
+}
+
+.welcome-underline {
+    width: 100px;
+    height: 4px;
+    background: linear-gradient(90deg, #3498db, #2ecc71);
+    margin: 0 auto;
+    border-radius: 2px;
+    opacity: 0;
+    transform: scaleX(0);
+    animation: scaleIn 0.8s forwards;
+    animation-delay: 1.3s;
+}
+
+@keyframes fadeInUp {
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scaleIn {
+    to { opacity: 1; transform: scaleX(1); }
+}
+
+/* About Section */
+.fancy-about {
+    position: relative;
+    background: white;
+    border-radius: 20px;
+    padding: 3rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    transition: transform 0.5s ease;
+}
+
+.fancy-about:hover {
+    transform: translateY(-10px);
+}
+
+.about-content {
+    position: relative;
+    z-index: 2;
+}
+
+.section-title {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+    display: inline-block;
+}
+
+.section-title span {
+    position: relative;
+    z-index: 2;
+    background: linear-gradient(90deg, #2c3e50, #4a6491);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 50px;
+    height: 4px;
+    background: linear-gradient(90deg, #3498db, #2ecc71);
+    border-radius: 2px;
+}
+
+.about-text {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #555;
+    max-width: 800px;
+}
+
+.water-wave {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100px;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none"><path d="M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z" opacity=".25" fill="%232ecc71"></path><path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5" fill="%232ecc71"></path><path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" fill="%232ecc71"></path></svg>');
+    background-size: cover;
+    opacity: 0.1;
+    animation: wave 10s linear infinite;
+}
+
+@keyframes wave {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+}
+
+/* Location Section */
+.fancy-location {
+    position: relative;
+}
+
+.fancy-title span {
+    background: linear-gradient(90deg, #3498db, #9b59b6);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.location-address {
+    font-size: 1.2rem;
+    color: #555;
+    margin-bottom: 2rem;
+    text-align: center;
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.7);
+    display: inline-block;
+    border-radius: 50px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.fancy-map-container {
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+    height: 500px;
+}
+
+.map-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.2) 0%, rgba(46, 204, 113, 0.2) 100%);
+    pointer-events: none;
+    mix-blend-mode: overlay;
+}
+
+/* Community Section */
+.fancy-community {
+    position: relative;
+    background: linear-gradient(135deg, #3498db, #2ecc71);
+    border-radius: 20px;
+    padding: 4rem 2rem;
+    color: white;
+    overflow: hidden;
+    box-shadow: 0 25px 50px -12px rgba(46, 204, 113, 0.3);
+}
+
+.community-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.community-text {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    line-height: 1.8;
+    opacity: 0.9;
+}
+
+/* Mission Section */
+.fancy-mission {
+    position: relative;
+    padding: 4rem 2rem;
+    text-align: center;
+}
+
+.mission-items {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 3rem;
+}
+
+.mission-item {
+    flex: 1;
+    min-width: 250px;
+    max-width: 300px;
+    background: white;
+    padding: 2rem;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    transition: all 0.5s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.mission-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 5px;
+    background: linear-gradient(90deg, #3498db, #2ecc71);
+}
+
+.mission-item:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+}
+
+.mission-icon {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #3498db, #2ecc71);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    font-weight: bold;
+    margin: 0 auto 1.5rem;
+}
+
+.mission-heading {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: #2c3e50;
+}
+
+.mission-desc {
+    color: #7f8c8d;
+    line-height: 1.6;
+}
+
+/* Spiritual Section */
+.fancy-spiritual {
+    position: relative;
+    text-align: center;
+    margin-top: 3rem;
+}
+
+.bible-verse {
+    position: relative;
+    background: white;
+    padding: 3rem;
+    border-radius: 20px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+    max-width: 800px;
+    margin: 0 auto 3rem;
+}
+
+.verse-content {
+    position: relative;
+    z-index: 2;
+}
+
+.verse-text {
+    font-size: 1.5rem;
+    font-style: italic;
+    color: #2c3e50;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+.verse-ref {
+    font-weight: bold;
+    color: #7f8c8d;
+}
+
+.verse-decoration {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%232ecc71" opacity="0.1"><path d="M18,2H6C4.9,2,4,2.9,4,4v16c0,1.1,0.9,2,2,2h12c1.1,0,2-0.9,2-2V4C20,2.9,19.1,2,18,2z M13,4v7l-2.5-1.5L8,11V4H13z M18,20H6V4h1v7l2.5-1.5L12,11V4h6V20z"/></svg>');
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+/* Fancy Buttons */
+.fancy-button {
+    position: relative;
+    display: inline-block;
+    padding: 1rem 2.5rem;
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-radius: 50px;
+    overflow: hidden;
+    z-index: 1;
+    transition: all 0.4s ease;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    border: none;
+    cursor: pointer;
+}
+
+.join-now-btn {
+    background: white;
+    color: #2ecc71;
+}
+
+.watch-live-btn {
+    background: linear-gradient(135deg, #9b59b6, #3498db);
+}
+
+.liquid {
+    position: absolute;
+    top: -80px;
+    left: 0;
+    width: 100%;
+    height: 200px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.1));
+    z-index: -1;
+    transition: 0.6s;
+}
+
+.fancy-button:hover .liquid {
+    top: -120px;
+}
+
+.fancy-button:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive Design */
+@media (max-width: 992px) {
+    .mission-items {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .mission-item {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .fancy-container {
+        gap: 3rem;
+    }
+    
+    .fancy-about, .bible-verse {
+        padding: 2rem;
+    }
+    
+    .welcome-title {
+        flex-direction: column;
+        gap: 0;
+    }
+    
+    .fancy-map-container {
+        height: 350px;
+    }
+}
     </style>
 </head>
 <body>
-    <!-- Top Navigation -->
-    <nav class="navbar bg-primary text-white">
-        <div class="container-fluid">
-            <span class="navbar-brand text-white">Gospel Springs</span>
-            <div class="d-flex align-items-center">
-                <button class="btn btn-link text-white" id="openConversations">
-                    <i class="fas fa-comments"></i>
-                </button>
-                <div class="user-avatar ms-3" id="userAvatar"></div>
+    <!-- Header -->
+    <header>
+        <div class="menu-toggle">
+            <i class="fas fa-bars"></i>
+        </div>
+        <div class="profile-container">
+            <div class="profile-icon" id="profileIcon">GSM</div>
+            <div class="profile-dropdown" id="profileDropdown">
+                <a href="#" id="updatePasswordBtn">Update Password</a>
+                <a href="#" id="logoutBtn">Logout</a>
             </div>
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <ul class="sidebar-nav">
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Ministries</a></li>
+            <li><a href="">Events</a></li>
+            <li><a href="">Gallery</a></li>
+            <li><a href="">Donations</a></li>
+            <li><a href="">Contact Us</a></li>
+        </ul>
+    </div>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <img src="APG.jpg" alt="Gospel Springs Mission" class="hero-image">
+        <div class="hero-overlay">
+            <h2 class="hero-title" id="greetingMessage"></h2>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <section class="fancy-content">
+            <!-- Animated Background Elements -->
+            <div class="bg-shapes">
+                <div class="shape-1"></div>
+                <div class="shape-2"></div>
+                <div class="shape-3"></div>
+            </div>
+        
+            <div class="fancy-container">
+                <!-- Welcome Message with Animation -->
+                <div class="fancy-welcome">
+                    <h1 class="welcome-title">
+                        <span class="title-word title-word-1">Welcome</span>
+                        <span class="title-word title-word-2">to</span>
+                        <span class="title-word title-word-3">Gospel</span>
+                        <span class="title-word title-word-4">Springs</span>
+                        <span class="title-word title-word-5">Mission</span>
+                    </h1>
+                    <p class="welcome-subtitle">Where Living Waters Flow</p>
+                    <div class="welcome-underline"></div>
+                </div>
+        
+                <!-- About Section with Floating Animation -->
+                <div class="fancy-about">
+                    <div class="about-content">
+                        <h2 class="section-title">
+                            <span>About Our Church</span>
+                        </h2>
+                        <p class="about-text">Gospel Springs Mission is a dynamic spiritual oasis where lives are transformed through the power of God's Word. We are a multicultural family united in worship, service, and love.</p>
+                        <div class="water-wave"></div>
+                    </div>
+                </div>
+        
+                <!-- Location Section with Interactive Map -->
+                <div class="fancy-location">
+                    <h2 class="section-title fancy-title">
+                        <span>Our Location</span>
+                    </h2>
+                    <p class="location-address">Along Isongo Ingoste Road, 50m off the road in Isongo, Navakholo Constituency</p>
+                    <div class="fancy-map-container">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3989.123456789012!2d34.12345678901234!3d0.1234567890123456!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMMKwMDcnMjQuNCJOIDM0wrAwNyczNi4wIkU!5e0!3m2!1sen!2ske!4v1234567890123!5m2!1sen!2ske" 
+                        width="100%" height="400" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                        <div class="map-overlay"></div>
+                    </div>
+                </div>
+        
+                <!-- Community Section with Gradient Mesh Background -->
+                <div class="fancy-community">
+                    <div class="community-content">
+                        <h2 class="section-title">
+                            <span>Join Our Vibrant Community</span>
+                        </h2>
+                        <p class="community-text">Become part of a thriving spiritual family where you can grow, serve, and experience authentic relationships.</p>
+                        <a href="/join" class="fancy-button join-now-btn">
+                            <span>Join Now</span>
+                            <div class="liquid"></div>
+                        </a>
+                    </div>
+                </div>
+        
+                <!-- Mission Section with Animated List -->
+                <div class="fancy-mission">
+                    <h2 class="section-title">
+                        <span>Our Mission</span>
+                    </h2>
+                    <div class="mission-items">
+                        <div class="mission-item">
+                            <div class="mission-icon">W</div>
+                            <h3 class="mission-heading">Winning</h3>
+                            <p class="mission-desc">Leading people to Christ through evangelism</p>
+                        </div>
+                        <div class="mission-item">
+                            <div class="mission-icon">D</div>
+                            <h3 class="mission-heading">Discipling</h3>
+                            <p class="mission-desc">Nurturing believers in spiritual growth</p>
+                        </div>
+                        <div class="mission-item">
+                            <div class="mission-icon">S</div>
+                            <h3 class="mission-heading">Sending</h3>
+                            <p class="mission-desc">Equipping saints for ministry service</p>
+                        </div>
+                    </div>
+                </div>
+        
+                <!-- Spiritual Focus with Scripture Animation -->
+                <div class="fancy-spiritual">
+                    <div class="bible-verse">
+                        <div class="verse-content">
+                            <p class="verse-text">"Go therefore and make disciples of all nations, baptizing them in the name of the Father and of the Son and of the Holy Spirit."</p>
+                            <p class="verse-ref">Matthew 28:19</p>
+                        </div>
+                        <div class="verse-decoration"></div>
+                    </div>
+                    <a href="/live" class="fancy-button watch-live-btn">
+                        <span>Watch Live</span>
+                        <div class="liquid"></div>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <div class="logo-container">
+            <img src="Gospel springs logo.jpg" alt="Gospel Springs Logo">
         </div>
     </nav>
 
-    <!-- Main Content -->
-    <main class="container mt-4">
-        <h1 id="greeting"></h1>
-        <!-- Your main content here -->
-    </main>
-
-    <!-- Chat Container -->
-    <div class="chat-container">
-        <div class="chat-header bg-primary text-white p-3 d-flex justify-content-between align-items-center">
-            <div class="d-flex align-items-center">
-                <div class="user-avatar me-2" id="chatPartnerAvatar"></div>
-                <h5 class="mb-0" id="chatPartnerName"></h5>
+    <!-- Update Password Modal -->
+    <div class="modal" id="updatePasswordModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Update Password</h3>
+                <button class="modal-close" id="closeUpdatePasswordModal">&times;</button>
             </div>
-            <button class="btn btn-sm btn-light" id="closeChat">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        <div class="chat-messages p-3 flex-grow-1 overflow-auto" id="chatMessages"></div>
-        <div class="chat-input p-3">
-            <div class="input-group">
-                <input type="text" class="form-control" id="messageInput" placeholder="Type your message...">
-                <button class="btn btn-primary" id="sendMessage">
-                    <i class="fas fa-paper-plane"></i>
-                </button>
+            <div class="modal-body">
+                <form id="updatePasswordForm">
+                    <div class="form-group">
+                        <label for="oldPassword">Old Password</label>
+                        <div class="password-toggle">
+                            <input type="password" id="oldPassword" class="form-control" required>
+                            <i class="fas fa-eye password-toggle-icon" id="toggleOldPassword"></i>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="newPassword">New Password</label>
+                        <div class="password-toggle">
+                            <input type="password" id="newPassword" class="form-control" required>
+                            <i class="fas fa-eye password-toggle-icon" id="toggleNewPassword"></i>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">Confirm New Password</label>
+                        <div class="password-toggle">
+                            <input type="password" id="confirmPassword" class="form-control" required>
+                            <i class="fas fa-eye password-toggle-icon" id="toggleConfirmPassword"></i>
+                        </div>
+                    </div>
+                    <div class="alert alert-danger" id="passwordError" style="display: none;"></div>
+                </form>
             </div>
-        </div>
-    </div>
-
-    <!-- Modals -->
-    <div class="modal fade" id="conversationsModal">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Conversations</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <button class="btn btn-primary w-100 mb-3" id="startNewChat">
-                        <i class="fas fa-plus me-2"></i>New Chat
-                    </button>
-                    <div id="conversationsList"></div>
-                </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelUpdatePassword">Cancel</button>
+                <button class="btn btn-primary" id="submitUpdatePassword">Update</button>
             </div>
         </div>
     </div>
 
-    <div class="modal fade" id="usersModal">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Select User</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div id="usersList" style="max-height: 400px; overflow-y: auto;"></div>
-                </div>
+    <!-- Success Modal -->
+    <div class="modal" id="successModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Success</h3>
+                <button class="modal-close" id="closeSuccessModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-success" id="successMessage">Password updated successfully!</div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" id="okSuccessModal">OK</button>
             </div>
         </div>
     </div>
 
-    <!-- Firebase & Bootstrap -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Logout Confirmation Modal -->
+    <div class="modal" id="logoutModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Confirm Logout</h3>
+                <button class="modal-close" id="closeLogoutModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to logout?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="cancelLogout">Cancel</button>
+                <button class="btn btn-danger" id="confirmLogout">Logout</button>
+            </div>
+        </div>
+    </div>
 
-    <script>
+    <!-- Firebase SDKs -->
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+        import { 
+            getAuth, 
+            onAuthStateChanged, 
+            signOut, 
+            updatePassword,
+            reauthenticateWithCredential,
+            EmailAuthProvider
+        } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+        import { 
+            getFirestore, 
+            doc, 
+            getDoc 
+        } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+
+        // Your web app's Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyDJJqxh3UOsTcBPAXLeEWeLoQRmIy_6hNU",
             authDomain: "web-app-ae5b6.firebaseapp.com",
             projectId: "web-app-ae5b6",
-            storageBucket: "web-app-ae5b6.appspot.com",
+            storageBucket: "web-app-ae5b6.firebasestorage.app",
             messagingSenderId: "921251501161",
             appId: "1:921251501161:web:316ff3fc4345735762bef8"
         };
 
-        const app = firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
 
-        let currentUser = null;
-        let activeChat = null;
-        let unsubscribeMessages = null;
+        // Session timeout (30 minutes)
+        let sessionTimeout;
+        const SESSION_TIMEOUT_DURATION = 30 * 60 * 1000; // 30 minutes in milliseconds
 
-        // Initialize Auth
-        auth.onAuthStateChanged(user => {
-            if (user) {
-                currentUser = user;
-                initUser();
-                loadConversations();
+        function resetSessionTimer() {
+            clearTimeout(sessionTimeout);
+            sessionTimeout = setTimeout(() => {
+                signOut(auth).then(() => {
+                    window.location.href = 'Login.html';
+                });
+            }, SESSION_TIMEOUT_DURATION);
+        }
+
+        // Check authentication state
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                // User is not signed in, redirect to login page
+                window.location.href = 'Login.html';
             } else {
-                window.location.href = 'login.html';
+                // User is signed in
+                resetSessionTimer();
+                fetchUserData(user.uid, user.email);
             }
         });
 
-        // User Initialization
-        async function initUser() {
-            const userDoc = await db.collection('users').doc(currentUser.uid).get();
-            const userData = userDoc.data();
-            document.getElementById('userAvatar').textContent = getInitials(userData.fullName);
-            setGreeting(userData);
-        }
-
-        // Load Conversations
-        async function loadConversations() {
-            db.collection('users').doc(currentUser.uid).collection('conversations')
-                .onSnapshot(snapshot => {
-                    const list = document.getElementById('conversationsList');
-                    list.innerHTML = '';
-                    
-                    snapshot.forEach(doc => {
-                        const convo = doc.data();
-                        const item = document.createElement('div');
-                        item.className = 'd-flex align-items-center p-2 border-bottom';
-                        item.innerHTML = `
-                            <div class="user-avatar me-3">${getInitials(convo.userName)}</div>
-                            <div class="flex-grow-1">
-                                <h6 class="mb-0">${convo.userName}</h6>
-                                <small class="text-muted">${convo.lastMessage || 'No messages yet'}</small>
-                            </div>
-                        `;
-                        item.addEventListener('click', () => openChat(doc.id, convo.userName));
-                        list.appendChild(item);
-                    });
-                });
-        }
-
-        // Open Chat
-        async function openChat(userId, userName) {
-            activeChat = userId;
-            document.getElementById('chatPartnerName').textContent = userName;
-            document.getElementById('chatPartnerAvatar').textContent = getInitials(userName);
-            document.getElementById('chat-container').classList.add('active');
-
-            if (unsubscribeMessages) unsubscribeMessages();
-            
-            unsubscribeMessages = db.collection('users').doc(currentUser.uid)
-                .collection('conversations').doc(userId)
-                .collection('messages').orderBy('timestamp')
-                .onSnapshot(snapshot => {
-                    const messagesDiv = document.getElementById('chatMessages');
-                    messagesDiv.innerHTML = '';
-                    
-                    snapshot.forEach(doc => {
-                        const msg = doc.data();
-                        const messageDiv = document.createElement('div');
-                        messageDiv.className = `message ${msg.sender === currentUser.uid ? 'bg-primary text-white' : 'bg-light'}`;
-                        messageDiv.innerHTML = `
-                            <div>${msg.text}</div>
-                            <div class="small text-end mt-1">${formatTime(msg.timestamp?.toDate())}</div>
-                        `;
-                        messagesDiv.appendChild(messageDiv);
-                    });
-                    messagesDiv.scrollTop = messagesDiv.scrollHeight;
-                });
-        }
-
-        // Send Message
-        async function sendMessage() {
-            const input = document.getElementById('messageInput');
-            const text = input.value.trim();
-            if (!text || !activeChat) return;
-
-            const message = {
-                text: text,
-                sender: currentUser.uid,
-                timestamp: firebase.firestore.FieldValue.serverTimestamp()
-            };
-
-            // Save message for both users
-            await Promise.all([
-                db.collection('users').doc(currentUser.uid)
-                    .collection('conversations').doc(activeChat)
-                    .collection('messages').add(message),
+        // Fetch user data from Firestore
+        async function fetchUserData(uid, email) {
+            try {
+                const userDocRef = doc(db, "users", uid);
+                const userDoc = await getDoc(userDocRef);
                 
-                db.collection('users').doc(activeChat)
-                    .collection('conversations').doc(currentUser.uid)
-                    .collection('messages').add(message)
-            ]);
-
-            input.value = '';
+                if (userDoc.exists()) {
+                    const userData = userDoc.data();
+                    updateUIWithUserData(userData, email);
+                } else {
+                    console.log("No user data found");
+                    // Use email to create a default display
+                    updateUIWithDefaultData(email);
+                }
+            } catch (error) {
+                console.error("Error fetching user data:", error);
+                updateUIWithDefaultData(email);
+            }
         }
 
-        // Load Users
-        async function loadUsers() {
-            const usersList = document.getElementById('usersList');
-            usersList.innerHTML = 'Loading...';
+        function updateUIWithUserData(userData, email) {
+            // Update greeting message based on time of day
+            updateGreetingMessage(userData.fullname);
             
-            const snapshot = await db.collection('users').get();
-            usersList.innerHTML = '';
+            // Update profile icon
+            updateProfileIcon(userData);
+        }
+
+        function updateUIWithDefaultData(email) {
+            // Use email prefix as a fallback
+            const emailPrefix = email.split('@')[0];
+            updateGreetingMessage(emailPrefix);
             
-            snapshot.forEach(doc => {
-                if (doc.id === currentUser.uid) return;
-                const user = doc.data();
-                const item = document.createElement('div');
-                item.className = 'd-flex align-items-center p-2 border-bottom';
-                item.innerHTML = `
-                    <div class="user-avatar me-3">${getInitials(user.fullName)}</div>
-                    <div>
-                        <h6 class="mb-0">${user.fullName}</h6>
-                        <small class="text-muted">${user.email || ''}</small>
-                    </div>
-                `;
-                item.addEventListener('click', () => startConversation(doc.id, user.fullName));
-                usersList.appendChild(item);
-            });
+            // Default profile icon with GSM
+            document.getElementById('profileIcon').textContent = 'GSM';
         }
 
-        // Start New Conversation
-        async function startConversation(userId, userName) {
-            await db.collection('users').doc(currentUser.uid)
-                .collection('conversations').doc(userId).set({
-                    userId: userId,
-                    userName: userName,
-                    lastMessage: '',
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                });
+        function updateGreetingMessage(fullname) {
+            const now = new Date();
+            const hour = now.getHours();
+            let greeting;
             
-            new bootstrap.Modal(document.getElementById('usersModal')).hide();
-            openChat(userId, userName);
+            if (hour < 12) {
+                greeting = 'Good morning';
+            } else if (hour < 18) {
+                greeting = 'Good afternoon';
+            } else {
+                greeting = 'Good evening';
+            }
+            
+            document.getElementById('greetingMessage').textContent = `Hello ${fullname}, ${greeting}!`;
         }
 
-        // Helpers
-        function getInitials(name) {
-            return name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+        function updateProfileIcon(userData) {
+            const profileIcon = document.getElementById('profileIcon');
+            
+            if (userData.gender === 'male') {
+                // Male avatar (using initials as fallback)
+                profileIcon.textContent = userData.fullname.split(' ').map(n => n[0]).join('').toUpperCase();
+                profileIcon.style.backgroundColor = '#4a6fa5'; // Blue for male
+            } else if (userData.gender === 'female') {
+                // Female avatar (using initials as fallback)
+                profileIcon.textContent = userData.fullname.split(' ').map(n => n[0]).join('').toUpperCase();
+                profileIcon.style.backgroundColor = '#e91e63'; // Pink for female
+            } else {
+                // Default
+                profileIcon.textContent = 'GSM';
+                profileIcon.style.backgroundColor = '#4a6fa5';
+            }
         }
 
-        function formatTime(date) {
-            return date?.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) || '';
-        }
-
-        function setGreeting(userData) {
-            const hour = new Date().getHours();
-            const greeting = hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : 'Good evening';
-            const title = userData.gender === 'male' ? 'sir' : userData.gender === 'female' ? 'madam' : '';
-            document.getElementById('greeting').innerHTML = `${greeting} <span class="text-primary">${title}</span>`;
-        }
+        // DOM Elements
+        const menuToggle = document.querySelector('.menu-toggle');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        const profileIcon = document.getElementById('profileIcon');
+        const profileDropdown = document.getElementById('profileDropdown');
+        const updatePasswordBtn = document.getElementById('updatePasswordBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const updatePasswordModal = document.getElementById('updatePasswordModal');
+        const closeUpdatePasswordModal = document.getElementById('closeUpdatePasswordModal');
+        const cancelUpdatePassword = document.getElementById('cancelUpdatePassword');
+        const submitUpdatePassword = document.getElementById('submitUpdatePassword');
+        const updatePasswordForm = document.getElementById('updatePasswordForm');
+        const oldPasswordInput = document.getElementById('oldPassword');
+        const newPasswordInput = document.getElementById('newPassword');
+        const confirmPasswordInput = document.getElementById('confirmPassword');
+        const passwordError = document.getElementById('passwordError');
+        const toggleOldPassword = document.getElementById('toggleOldPassword');
+        const toggleNewPassword = document.getElementById('toggleNewPassword');
+        const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+        const successModal = document.getElementById('successModal');
+        const closeSuccessModal = document.getElementById('closeSuccessModal');
+        const okSuccessModal = document.getElementById('okSuccessModal');
+        const logoutModal = document.getElementById('logoutModal');
+        const closeLogoutModal = document.getElementById('closeLogoutModal');
+        const cancelLogout = document.getElementById('cancelLogout');
+        const confirmLogout = document.getElementById('confirmLogout');
 
         // Event Listeners
-        document.getElementById('openConversations').addEventListener('click', () => {
-            new bootstrap.Modal(document.getElementById('conversationsModal')).show();
+        menuToggle.addEventListener('click', () => {
+            sidebar.classList.add('show');
+            sidebarOverlay.classList.add('show');
         });
 
-        document.getElementById('startNewChat').addEventListener('click', () => {
-            new bootstrap.Modal(document.getElementById('usersModal')).show();
-            loadUsers();
+        sidebarOverlay.addEventListener('click', () => {
+            sidebar.classList.remove('show');
+            sidebarOverlay.classList.remove('show');
         });
 
-        document.getElementById('sendMessage').addEventListener('click', sendMessage);
-        document.getElementById('messageInput').addEventListener('keypress', e => {
-            if (e.key === 'Enter') sendMessage();
+        profileIcon.addEventListener('click', (e) => {
+            e.stopPropagation();
+            profileDropdown.classList.toggle('show');
         });
 
-        document.getElementById('closeChat').addEventListener('click', () => {
-            document.getElementById('chat-container').classList.remove('active');
-            activeChat = null;
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!profileDropdown.contains(e.target) && !profileIcon.contains(e.target)) {
+                profileDropdown.classList.remove('show');
+            }
         });
+
+        // Update Password
+        updatePasswordBtn.addEventListener('click', () => {
+            profileDropdown.classList.remove('show');
+            updatePasswordModal.classList.add('show');
+        });
+
+        closeUpdatePasswordModal.addEventListener('click', () => {
+            updatePasswordModal.classList.remove('show');
+            resetPasswordForm();
+        });
+
+        cancelUpdatePassword.addEventListener('click', () => {
+            updatePasswordModal.classList.remove('show');
+            resetPasswordForm();
+        });
+
+        // Toggle password visibility
+        toggleOldPassword.addEventListener('click', () => {
+            togglePasswordVisibility(oldPasswordInput, toggleOldPassword);
+        });
+
+        toggleNewPassword.addEventListener('click', () => {
+            togglePasswordVisibility(newPasswordInput, toggleNewPassword);
+        });
+
+        toggleConfirmPassword.addEventListener('click', () => {
+            togglePasswordVisibility(confirmPasswordInput, toggleConfirmPassword);
+        });
+
+        function togglePasswordVisibility(input, toggleIcon) {
+            if (input.type === 'password') {
+                input.type = 'text';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            }
+        }
+
+        submitUpdatePassword.addEventListener('click', async () => {
+            const oldPassword = oldPasswordInput.value;
+            const newPassword = newPasswordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+
+            // Validate form
+            if (!oldPassword || !newPassword || !confirmPassword) {
+                showPasswordError('Please fill in all fields');
+                return;
+            }
+
+            if (newPassword !== confirmPassword) {
+                showPasswordError('New passwords do not match');
+                return;
+            }
+
+            if (newPassword.length < 6) {
+                showPasswordError('Password should be at least 6 characters');
+                return;
+            }
+
+            const user = auth.currentUser;
+
+            try {
+                // Reauthenticate user
+                const credential = EmailAuthProvider.credential(user.email, oldPassword);
+                await reauthenticateWithCredential(user, credential);
+                
+                // Update password
+                await updatePassword(user, newPassword);
+                
+                // Show success message
+                updatePasswordModal.classList.remove('show');
+                successModal.classList.add('show');
+                resetPasswordForm();
+            } catch (error) {
+                console.error('Error updating password:', error);
+                if (error.code === 'auth/wrong-password') {
+                    showPasswordError('Incorrect old password');
+                } else {
+                    showPasswordError('Error updating password. Please try again.');
+                }
+            }
+        });
+
+        function showPasswordError(message) {
+            passwordError.textContent = message;
+            passwordError.style.display = 'block';
+        }
+
+        function resetPasswordForm() {
+            updatePasswordForm.reset();
+            passwordError.style.display = 'none';
+            oldPasswordInput.type = 'password';
+            newPasswordInput.type = 'password';
+            confirmPasswordInput.type = 'password';
+            toggleOldPassword.classList.remove('fa-eye-slash');
+            toggleOldPassword.classList.add('fa-eye');
+            toggleNewPassword.classList.remove('fa-eye-slash');
+            toggleNewPassword.classList.add('fa-eye');
+            toggleConfirmPassword.classList.remove('fa-eye-slash');
+            toggleConfirmPassword.classList.add('fa-eye');
+        }
+
+        // Success Modal
+        closeSuccessModal.addEventListener('click', () => {
+            successModal.classList.remove('show');
+        });
+
+        okSuccessModal.addEventListener('click', () => {
+            successModal.classList.remove('show');
+            // Redirect to login page after successful password update
+            window.location.href = 'Login.html';
+        });
+
+        // Logout
+        logoutBtn.addEventListener('click', () => {
+            profileDropdown.classList.remove('show');
+            logoutModal.classList.add('show');
+        });
+
+        closeLogoutModal.addEventListener('click', () => {
+            logoutModal.classList.remove('show');
+        });
+
+        cancelLogout.addEventListener('click', () => {
+            logoutModal.classList.remove('show');
+        });
+
+        confirmLogout.addEventListener('click', () => {
+            signOut(auth).then(() => {
+                window.location.href = 'Login.html';
+            }).catch((error) => {
+                console.error('Error signing out:', error);
+            });
+        });
+
+        // Reset session timer on user activity
+        document.addEventListener('mousemove', resetSessionTimer);
+        document.addEventListener('keypress', resetSessionTimer);
+        document.addEventListener('click', resetSessionTimer);
+        document.addEventListener('scroll', resetSessionTimer);
     </script>
 </body>
-</html>
+</html>/
