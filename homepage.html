@@ -345,7 +345,10 @@
         elements.sendMessageBtn.addEventListener('click', sendMessage);
         elements.messageInput.addEventListener('keypress', e => e.key === 'Enter' && sendMessage());
         elements.deleteConversationBtn.addEventListener('click', deleteConversation);
-        elements.newChatBtn.addEventListener('click', () => elements.newChatModal.show());
+        elements.newChatBtn.addEventListener('click', () => {
+            elements.newChatModal.show();
+            loadAllUsers();
+        });
         elements.searchUsers.addEventListener('input', searchUsers);
 
         auth.onAuthStateChanged(user => {
@@ -471,31 +474,40 @@
             }, { merge: true });
         }
 
+        async function loadAllUsers() {
+            elements.usersList.innerHTML = '';
+            const currentUserId = auth.currentUser.uid;
+            
+            const snapshot = await db.collection('users').get();
+            snapshot.forEach(doc => {
+                if (doc.id !== currentUserId) {
+                    const user = doc.data();
+                    const item = document.createElement('div');
+                    item.className = 'd-flex align-items-center p-2 conversation-list';
+                    item.innerHTML = `
+                        <div class="user-avatar me-3">${getInitials(user.fullName)}</div>
+                        <div class="flex-grow-1">
+                            <h6 class="mb-0">${user.fullName}</h6>
+                            <small class="text-muted">${user.email}</small>
+                        </div>
+                    `;
+                    item.addEventListener('click', () => {
+                        elements.newChatModal.hide();
+                        openChat(doc.id, user.fullName);
+                    });
+                    elements.usersList.appendChild(item);
+                }
+            });
+        }
+
         async function searchUsers() {
             const searchTerm = elements.searchUsers.value.toLowerCase();
-            const snapshot = await db.collection('users').get();
-            elements.usersList.innerHTML = '';
-
-            snapshot.docs.forEach(doc => {
-                if (doc.id !== auth.currentUser.uid) {
-                    const user = doc.data();
-                    if (user.fullName?.toLowerCase().includes(searchTerm)) {
-                        const item = document.createElement('div');
-                        item.className = 'd-flex align-items-center p-2 conversation-list';
-                        item.innerHTML = `
-                            <div class="user-avatar me-3">${getInitials(user.fullName)}</div>
-                            <div class="flex-grow-1">
-                                <h6 class="mb-0">${user.fullName}</h6>
-                                <small class="text-muted">${user.email}</small>
-                            </div>
-                        `;
-                        item.addEventListener('click', () => {
-                            elements.newChatModal.hide();
-                            openChat(doc.id, user.fullName);
-                        });
-                        elements.usersList.appendChild(item);
-                    }
-                }
+            await loadAllUsers();
+            
+            // Filter existing users in the list
+            Array.from(elements.usersList.children).forEach(item => {
+                const userName = item.querySelector('h6').textContent.toLowerCase();
+                item.style.display = userName.includes(searchTerm) ? 'flex' : 'none';
             });
         }
 
