@@ -3,72 +3,73 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gospel Springs Community</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Gospel Springs Chat</title>
+    <script type="module" src="https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js"></script>
+    <script type="module" src="https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js"></script>
     <style>
+        :root {
+            --primary-color: #25D366;
+            --secondary-color: #128C7E;
+            --bg-color: #e5ddd5;
+            --chat-bg-sent: #DCF8C6;
+            --chat-bg-received: #FFFFFF;
+            --text-color: #333;
+            --header-height: 60px;
+            --footer-height: 70px;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        
+
         body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
             height: 100vh;
             display: flex;
             flex-direction: column;
-            background-color: #f0f2f5;
         }
-        
-        /* Header Styles */
+
         .header {
             background-color: white;
-            padding: 10px 16px;
+            height: var(--header-height);
             display: flex;
             align-items: center;
             justify-content: space-between;
+            padding: 0 15px;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            z-index: 1;
+            position: relative;
+            z-index: 10;
         }
-        
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        
-        .header-center {
-            flex: 1;
-            text-align: center;
-        }
-        
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        
+
         .logo {
-            width: 50px;
             height: 50px;
-            border-radius: 50%;
-            object-fit: cover;
+            width: auto;
         }
-        
+
+        .profile {
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
         .profile-icon {
             width: 40px;
             height: 40px;
-            border-radius: 50%;
-            background-color: #25D366;
+            background-color: var(--secondary-color);
             color: white;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: bold;
             cursor: pointer;
-            position: relative;
         }
-        
+
         .profile-dropdown {
             position: absolute;
             top: 50px;
@@ -78,170 +79,35 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
             padding: 10px;
             display: none;
-            z-index: 10;
+            min-width: 200px;
         }
-        
-        .profile-dropdown.show {
+
+        .profile:hover .profile-dropdown {
             display: block;
         }
-        
+
         .greeting {
-            font-size: 14px;
-            color: #555;
+            flex-grow: 1;
+            text-align: center;
+            font-size: 18px;
+            color: var(--secondary-color);
         }
-        
-        /* Main Container */
-        .container {
-            display: flex;
+
+        .chat-container {
             flex: 1;
             overflow: hidden;
-        }
-        
-        /* Sidebar */
-        .sidebar {
-            width: 30%;
-            background-color: white;
-            border-right: 1px solid #e9edef;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
         }
-        
-        .search-bar {
-            padding: 10px;
-            background-color: #f0f2f5;
-            border-bottom: 1px solid #e9edef;
-        }
-        
-        .search-input {
-            width: 100%;
-            padding: 8px 12px;
-            border-radius: 8px;
-            border: none;
-            background-color: white;
-            font-size: 14px;
-        }
-        
+
         .chat-list {
             flex: 1;
             overflow-y: auto;
-        }
-        
-        .chat-item {
-            display: flex;
             padding: 10px;
-            border-bottom: 1px solid #e9edef;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        
-        .chat-item:hover {
-            background-color: #f5f5f5;
-        }
-        
-        .chat-item.active {
-            background-color: #e9edef;
-        }
-        
-        .chat-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background-color: #ddd;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            margin-right: 10px;
-        }
-        
-        .chat-info {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        
-        .chat-name {
-            font-weight: 500;
-            margin-bottom: 3px;
-        }
-        
-        .chat-last-message {
-            font-size: 13px;
-            color: #667781;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        
-        .chat-time {
-            font-size: 11px;
-            color: #667781;
-            margin-top: 3px;
-        }
-        
-        /* Chat Area */
-        .chat-area {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            background-color: #e5ddd5;
-            background-image: url('https://web.whatsapp.com/img/bg-chat-tile-dark_a4be512e7195b6b733d9110b408f075d.png');
+            background-image: url('https://web.whatsapp.com/img/bg-chat-tile-light_a4be512e7195b6b733d9110b408f075d.png');
             background-repeat: repeat;
-            position: relative;
         }
-        
-        .chat-header {
-            background-color: #f0f2f5;
-            padding: 10px 16px;
-            display: flex;
-            align-items: center;
-            border-bottom: 1px solid #e9edef;
-        }
-        
-        .chat-header-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: #ddd;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            margin-right: 10px;
-        }
-        
-        .chat-header-info {
-            flex: 1;
-        }
-        
-        .chat-header-name {
-            font-weight: 500;
-        }
-        
-        .chat-header-status {
-            font-size: 12px;
-            color: #667781;
-        }
-        
-        .messages-container {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .no-messages {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #667781;
-            font-size: 14px;
-        }
-        
+
         .message {
             max-width: 70%;
             margin-bottom: 10px;
@@ -249,888 +115,549 @@
             border-radius: 7.5px;
             position: relative;
             word-wrap: break-word;
+            animation: fadeIn 0.3s ease;
         }
-        
-        .received {
-            align-self: flex-start;
-            background-color: white;
-            border-top-left-radius: 0;
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        
+
         .sent {
-            align-self: flex-end;
-            background-color: #d9fdd3;
+            background-color: var(--chat-bg-sent);
+            margin-left: auto;
             border-top-right-radius: 0;
         }
-        
-        .message-sender {
-            font-size: 12px;
-            font-weight: bold;
-            margin-bottom: 3px;
-            color: #54656f;
+
+        .received {
+            background-color: var(--chat-bg-received);
+            margin-right: auto;
+            border-top-left-radius: 0;
         }
-        
-        .message-text {
-            font-size: 14px;
-        }
-        
-        .message-time {
+
+        .message-info {
+            display: flex;
+            justify-content: space-between;
             font-size: 11px;
-            color: #667781;
-            text-align: right;
+            color: #666;
             margin-top: 3px;
         }
-        
-        .message-reply {
-            font-size: 12px;
-            padding: 5px;
+
+        .sender-name {
+            font-weight: bold;
+            color: var(--secondary-color);
+            margin-bottom: 3px;
+        }
+
+        .reply-indicator {
             background-color: rgba(0, 0, 0, 0.05);
-            border-left: 3px solid #25D366;
+            border-left: 3px solid var(--secondary-color);
+            padding: 5px 8px;
             margin-bottom: 5px;
             border-radius: 3px;
+            font-size: 13px;
         }
-        
-        .message-deleted {
-            font-style: italic;
-            color: #667781;
+
+        .reply-sender {
+            font-weight: bold;
+            color: var(--secondary-color);
         }
-        
+
         .input-area {
-            background-color: #f0f2f5;
+            background-color: white;
             padding: 10px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            height: var(--footer-height);
+            border-top: 1px solid #ddd;
         }
-        
+
         .message-input {
             flex: 1;
-            padding: 10px 15px;
-            border-radius: 8px;
+            padding: 12px 15px;
             border: none;
-            font-size: 14px;
-            resize: none;
-            max-height: 100px;
+            border-radius: 21px;
+            background-color: #f0f0f0;
             outline: none;
+            font-size: 15px;
+            margin: 0 10px;
         }
-        
+
         .send-button {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: #25D366;
+            background-color: var(--primary-color);
             color: white;
             border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            opacity: 0.5;
-            transition: opacity 0.2s;
+            transition: background-color 0.2s;
         }
-        
-        .send-button.active {
-            opacity: 1;
+
+        .send-button:hover {
+            background-color: var(--secondary-color);
         }
-        
-        .reply-preview {
-            padding: 8px 12px;
-            background-color: #f0f2f5;
-            border-left: 3px solid #25D366;
-            margin-bottom: 5px;
-            display: none;
+
+        .send-button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
         }
-        
-        .reply-preview-text {
-            font-size: 13px;
-            color: #54656f;
-        }
-        
-        .cancel-reply {
-            color: #25D366;
-            cursor: pointer;
-            font-size: 12px;
-            margin-top: 3px;
-        }
-        
-        /* New Chat Modal */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
-            display: none;
-        }
-        
-        .modal {
-            background-color: white;
-            border-radius: 8px;
-            width: 400px;
-            max-width: 90%;
-            max-height: 80vh;
-            overflow: hidden;
+
+        .empty-state {
             display: flex;
             flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #666;
+            text-align: center;
+            padding: 20px;
         }
-        
-        .modal-header {
-            padding: 15px;
-            background-color: #f0f2f5;
-            border-bottom: 1px solid #e9edef;
+
+        .empty-state img {
+            width: 100px;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .delete-btn {
+            background: none;
+            border: none;
+            color: #999;
+            font-size: 12px;
+            cursor: pointer;
+            margin-left: 5px;
+        }
+
+        .delete-btn:hover {
+            color: #f44336;
+        }
+
+        .deleted-message {
+            font-style: italic;
+            color: #999;
+        }
+
+        .timestamp {
+            white-space: nowrap;
+        }
+
+        .community-chat {
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            background-color: white;
+            cursor: pointer;
+            transition: background-color 0.2s;
         }
-        
-        .modal-title {
-            font-weight: 500;
+
+        .community-chat:hover {
+            background-color: #f5f5f5;
         }
-        
-        .close-modal {
+
+        .community-icon {
+            width: 40px;
+            height: 40px;
+            background-color: var(--secondary-color);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 20px;
+        }
+
+        .community-info {
+            flex: 1;
+        }
+
+        .community-name {
+            font-weight: bold;
+            margin-bottom: 3px;
+        }
+
+        .community-desc {
+            font-size: 13px;
+            color: #666;
+        }
+
+        .chat-interface {
+            display: none;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .back-button {
             background: none;
             border: none;
             font-size: 20px;
             cursor: pointer;
-            color: #54656f;
+            margin-right: 15px;
+            display: none;
         }
-        
-        .modal-search {
-            padding: 10px;
-            border-bottom: 1px solid #e9edef;
-        }
-        
-        .modal-search-input {
-            width: 100%;
-            padding: 8px 12px;
-            border-radius: 8px;
-            border: 1px solid #e9edef;
-            font-size: 14px;
-        }
-        
-        .modal-users {
-            flex: 1;
-            overflow-y: auto;
-        }
-        
-        .modal-user {
-            display: flex;
-            padding: 10px 15px;
-            align-items: center;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        
-        .modal-user:hover {
-            background-color: #f5f5f5;
-        }
-        
-        .modal-user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: #ddd;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            margin-right: 10px;
-        }
-        
-        .modal-user-name {
-            flex: 1;
-        }
-        
-        /* Floating Button */
-        .floating-button {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background-color: #25D366;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            cursor: pointer;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-            z-index: 10;
-        }
-        
-        /* Responsive */
+
         @media (max-width: 768px) {
-            .sidebar {
-                width: 100%;
-                display: none;
-            }
-            
-            .sidebar.show {
-                display: flex;
-            }
-            
-            .chat-area {
-                display: none;
-            }
-            
-            .chat-area.show {
-                display: flex;
+            .back-button {
+                display: block;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
     <div class="header">
-        <div class="header-left">
-            <img src="Gospel springs logo.jpg" alt="Logo" class="logo">
-            <h4>Gospel Springs Community</h4>
-        </div>
-        <div class="header-center">
-            <div class="greeting" id="greeting"></div>
-        </div>
-        <div class="header-right">
-            <div class="profile-icon" id="profileIcon">
-                <div class="profile-dropdown" id="profileDropdown">
-                    <div id="userEmail"></div>
-                </div>
+        <button class="back-button">←</button>
+        <img src="Gospel springs logo.jpg" alt="Gospel Springs Logo" class="logo">
+        <div class="greeting" id="greeting"></div>
+        <div class="profile">
+            <div class="profile-icon" id="profileIcon"></div>
+            <div class="profile-dropdown">
+                <div id="userEmail"></div>
             </div>
         </div>
     </div>
-    
-    <!-- Main Container -->
-    <div class="container">
-        <!-- Sidebar -->
-        <div class="sidebar" id="sidebar">
-            <div class="search-bar">
-                <input type="text" class="search-input" placeholder="Search or start new chat">
-            </div>
-            <div class="chat-list" id="chatList">
-                <!-- Chats will be loaded here -->
+
+    <div class="chat-container">
+        <div class="community-chat" id="communityChat">
+            <div class="community-icon">👥</div>
+            <div class="community-info">
+                <div class="community-name">Community</div>
+                <div class="community-desc">Group chat with all members</div>
             </div>
         </div>
-        
-        <!-- Chat Area -->
-        <div class="chat-area" id="chatArea">
-            <div class="chat-header">
-                <div class="chat-header-avatar" id="chatHeaderAvatar"></div>
-                <div class="chat-header-info">
-                    <div class="chat-header-name" id="chatHeaderName">Gospel Springs Community</div>
-                    <div class="chat-header-status" id="chatHeaderStatus">Online</div>
+
+        <div class="chat-interface" id="chatInterface">
+            <div class="chat-list" id="chatList">
+                <div class="empty-state">
+                    <img src="https://cdn-icons-png.flaticon.com/512/4210/4210933.png" alt="No messages">
+                    <h3>No messages yet</h3>
+                    <p>Be the first to send a message to the community!</p>
                 </div>
             </div>
-            
-            <div class="messages-container" id="messagesContainer">
-                <div class="no-messages" id="noMessages">No messages yet</div>
-                <!-- Messages will be loaded here -->
-            </div>
-            
-            <div class="reply-preview" id="replyPreview">
-                <div class="reply-preview-text" id="replyPreviewText"></div>
-                <div class="cancel-reply" id="cancelReply">Cancel</div>
-            </div>
-            
             <div class="input-area">
-                <textarea class="message-input" id="messageInput" placeholder="Type a message" rows="1"></textarea>
-                <button class="send-button" id="sendButton">
-                    <i class="fas fa-paper-plane"></i>
+                <input type="text" class="message-input" id="messageInput" placeholder="Type a message...">
+                <button class="send-button" id="sendButton" disabled>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
                 </button>
             </div>
         </div>
     </div>
-    
-    <!-- New Chat Modal -->
-    <div class="modal-overlay" id="newChatModal">
-        <div class="modal">
-            <div class="modal-header">
-                <div class="modal-title">New Chat</div>
-                <button class="close-modal" id="closeModal">&times;</button>
-            </div>
-            <div class="modal-search">
-                <input type="text" class="modal-search-input" placeholder="Search users" id="userSearch">
-            </div>
-            <div class="modal-users" id="modalUsers">
-                <!-- Users will be loaded here -->
-            </div>
-        </div>
-    </div>
-    
-    <!-- Floating Button -->
-    <div class="floating-button" id="floatingButton">
-        <i class="fas fa-comment-alt"></i>
-    </div>
-    
-    <!-- Firebase SDK -->
+
     <script type="module">
-        // Import the functions you need from the SDKs you need
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-app.js";
-        import { 
-            getAuth, 
-            onAuthStateChanged, 
-            signOut 
-        } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-auth.js";
-        import { 
-            getFirestore, 
-            collection, 
-            doc, 
-            setDoc, 
-            addDoc, 
-            getDoc, 
-            getDocs, 
-            query, 
-            where, 
-            orderBy, 
-            onSnapshot, 
-            serverTimestamp,
-            updateDoc,
-            deleteDoc
-        } from "https://www.gstatic.com/firebasejs/10.11.1/firebase-firestore.js";
-        
-        // Your web app's Firebase configuration
+        // Import Firebase services
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, where, orderBy, serverTimestamp, doc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+
+        // Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyDJJqxh3UOsTcBPAXLeEWeLoQRmIy_6hNU",
             authDomain: "web-app-ae5b6.firebaseapp.com",
             projectId: "web-app-ae5b6",
-            storageBucket: "web-app-ae5b6.appspot.com",
+            storageBucket: "web-app-ae5b6.firebasestorage.app",
             messagingSenderId: "921251501161",
             appId: "1:921251501161:web:316ff3fc4345735762bef8"
         };
-        
+
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
         const db = getFirestore(app);
-        
-        // DOM Elements
-        const greetingElement = document.getElementById('greeting');
-        const profileIcon = document.getElementById('profileIcon');
-        const profileDropdown = document.getElementById('profileDropdown');
-        const userEmailElement = document.getElementById('userEmail');
+        const auth = getAuth(app);
+
+        // DOM elements
         const chatList = document.getElementById('chatList');
-        const messagesContainer = document.getElementById('messagesContainer');
-        const noMessages = document.getElementById('noMessages');
         const messageInput = document.getElementById('messageInput');
         const sendButton = document.getElementById('sendButton');
-        const replyPreview = document.getElementById('replyPreview');
-        const replyPreviewText = document.getElementById('replyPreviewText');
-        const cancelReply = document.getElementById('cancelReply');
-        const newChatModal = document.getElementById('newChatModal');
-        const floatingButton = document.getElementById('floatingButton');
-        const modalUsers = document.getElementById('modalUsers');
-        const userSearch = document.getElementById('userSearch');
-        const closeModal = document.getElementById('closeModal');
-        const chatHeaderAvatar = document.getElementById('chatHeaderAvatar');
-        const chatHeaderName = document.getElementById('chatHeaderName');
-        const chatHeaderStatus = document.getElementById('chatHeaderStatus');
-        
-        // Global variables
+        const greeting = document.getElementById('greeting');
+        const profileIcon = document.getElementById('profileIcon');
+        const userEmail = document.getElementById('userEmail');
+        const communityChat = document.getElementById('communityChat');
+        const chatInterface = document.getElementById('chatInterface');
+        const backButton = document.querySelector('.back-button');
+
+        // Variables
         let currentUser = null;
-        let currentChatId = 'community'; // Default to community chat
-        let currentChatType = 'community';
-        let replyingToMessage = null;
-        let selectedUserId = null;
-        
-        // Initialize the app
-        function init() {
-            setupEventListeners();
-            checkAuthState();
-        }
-        
-        // Set up event listeners
-        function setupEventListeners() {
-            // Profile dropdown
-            profileIcon.addEventListener('click', toggleProfileDropdown);
-            
-            // Message input
-            messageInput.addEventListener('input', handleMessageInput);
-            messageInput.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    sendMessage();
-                }
-            });
-            
-            // Send button
-            sendButton.addEventListener('click', sendMessage);
-            
-            // Reply cancel
-            cancelReply.addEventListener('click', cancelReplyMessage);
-            
-            // New chat modal
-            floatingButton.addEventListener('click', openNewChatModal);
-            closeModal.addEventListener('click', closeNewChatModal);
-            
-            // User search
-            userSearch.addEventListener('input', searchUsers);
-        }
-        
+        let selectedMessageForReply = null;
+        let userJoinTime = null;
+
         // Check authentication state
-        function checkAuthState() {
-            onAuthStateChanged(auth, (user) => {
-                if (user) {
-                    // User is signed in
-                    currentUser = user;
-                    setupUserProfile(user);
-                    updateGreeting();
-                    loadChats();
-                    loadCommunityMessages();
-                    
-                    // Set up real-time listener for community chat
-                    setupCommunityChatListener();
-                } else {
-                    // User is signed out
-                    window.location.href = 'login.html';
-                }
-            });
-        }
-        
-        // Set up user profile
-        function setupUserProfile(user) {
-            const email = user.email;
-            userEmailElement.textContent = email;
-            
-            // Set profile icon with first letter of email
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+                setupUserProfile();
+                setupGreeting();
+                userJoinTime = new Date();
+                showCommunityChat();
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+
+        // Setup user profile
+        function setupUserProfile() {
+            const email = currentUser.email;
             const firstLetter = email.charAt(0).toUpperCase();
             profileIcon.textContent = firstLetter;
+            userEmail.textContent = email;
         }
-        
-        // Toggle profile dropdown
-        function toggleProfileDropdown() {
-            profileDropdown.classList.toggle('show');
-            
-            // Close dropdown when clicking outside
-            document.addEventListener('click', (e) => {
-                if (!profileIcon.contains(e.target) && !profileDropdown.contains(e.target)) {
-                    profileDropdown.classList.remove('show');
-                }
-            }, { once: true });
-        }
-        
-        // Update greeting based on time of day
-        function updateGreeting() {
+
+        // Setup greeting based on time of day
+        function setupGreeting() {
             const hour = new Date().getHours();
-            let greeting = '';
+            let timeGreeting = '';
             
             if (hour < 12) {
-                greeting = `Good morning, ${currentUser.email.split('@')[0]}`;
+                timeGreeting = 'Good morning';
             } else if (hour < 18) {
-                greeting = `Good afternoon, ${currentUser.email.split('@')[0]}`;
+                timeGreeting = 'Good afternoon';
             } else {
-                greeting = `Good evening, ${currentUser.email.split('@')[0]}`;
+                timeGreeting = 'Good evening';
             }
             
-            greetingElement.textContent = greeting;
+            greeting.textContent = `Hi ${currentUser.email.split('@')[0]}, ${timeGreeting}, nice to have you again!`;
         }
-        
-        // Load user chats
-        async function loadChats() {
-            // Clear existing chats
-            chatList.innerHTML = '';
-            
-            // Add community chat as first pinned chat
-            addCommunityChatItem();
-            
-            // Load individual chats (implementation would depend on your database structure)
-            // This is a placeholder for actual implementation
-        }
-        
-        // Add community chat item to sidebar
-        function addCommunityChatItem() {
-            const chatItem = document.createElement('div');
-            chatItem.className = 'chat-item active';
-            chatItem.id = 'community-chat';
-            chatItem.innerHTML = `
-                <div class="chat-avatar">GS</div>
-                <div class="chat-info">
-                    <div class="chat-name">Gospel Springs Community</div>
-                    <div class="chat-last-message">Group chat</div>
-                </div>
-            `;
-            
-            chatItem.addEventListener('click', () => {
-                // Remove active class from all chat items
-                document.querySelectorAll('.chat-item').forEach(item => {
-                    item.classList.remove('active');
-                });
-                
-                // Add active class to clicked item
-                chatItem.classList.add('active');
-                
-                // Set current chat to community
-                currentChatId = 'community';
-                currentChatType = 'community';
-                
-                // Update chat header
-                chatHeaderName.textContent = 'Gospel Springs Community';
-                chatHeaderStatus.textContent = 'Online';
-                chatHeaderAvatar.textContent = 'GS';
-                
-                // Load community messages
+
+        // Show community chat interface
+        function showCommunityChat() {
+            communityChat.addEventListener('click', () => {
+                communityChat.style.display = 'none';
+                chatInterface.style.display = 'flex';
                 loadCommunityMessages();
             });
-            
-            chatList.appendChild(chatItem);
+
+            backButton.addEventListener('click', () => {
+                communityChat.style.display = 'flex';
+                chatInterface.style.display = 'none';
+            });
         }
-        
+
         // Load community messages
-        async function loadCommunityMessages() {
-            messagesContainer.innerHTML = '';
-            noMessages.style.display = 'flex';
-            
-            const messagesRef = collection(db, 'conversations', 'community', 'messages');
-            const q = query(messagesRef, orderBy('timestamp', 'asc'));
-            
-            const querySnapshot = await getDocs(q);
-            
-            if (querySnapshot.size > 0) {
-                noMessages.style.display = 'none';
-                
-                querySnapshot.forEach((doc) => {
+        function loadCommunityMessages() {
+            const messagesQuery = query(
+                collection(db, "conversations"),
+                orderBy("createdAt")
+            );
+
+            onSnapshot(messagesQuery, (snapshot) => {
+                if (snapshot.empty) {
+                    chatList.innerHTML = `
+                        <div class="empty-state">
+                            <img src="https://cdn-icons-png.flaticon.com/512/4210/4210933.png" alt="No messages">
+                            <h3>No messages yet</h3>
+                            <p>Be the first to send a message to the community!</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                chatList.innerHTML = '';
+                snapshot.forEach((doc) => {
                     const message = doc.data();
                     displayMessage(message, doc.id);
                 });
-                
+
                 // Scroll to bottom
-                setTimeout(() => {
-                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                }, 100);
-            }
-        }
-        
-        // Set up real-time listener for community chat
-        function setupCommunityChatListener() {
-            const messagesRef = collection(db, 'conversations', 'community', 'messages');
-            const q = query(messagesRef, orderBy('timestamp', 'asc'));
-            
-            onSnapshot(q, (snapshot) => {
-                snapshot.docChanges().forEach((change) => {
-                    if (change.type === 'added') {
-                        const message = change.doc.data();
-                        displayMessage(message, change.doc.id);
-                        
-                        // Scroll to bottom
-                        setTimeout(() => {
-                            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                        }, 100);
-                    } else if (change.type === 'modified') {
-                        // Handle message updates (like deletion)
-                        const message = change.doc.data();
-                        updateMessageDisplay(change.doc.id, message);
-                    }
-                });
-                
-                // Hide "no messages" if there are messages
-                if (snapshot.size > 0) {
-                    noMessages.style.display = 'none';
-                }
+                chatList.scrollTop = chatList.scrollHeight;
             });
         }
-        
-        // Display a message in the chat area
+
+        // Display a message in the chat
         function displayMessage(message, messageId) {
-            if (noMessages.style.display !== 'none') {
-                noMessages.style.display = 'none';
+            // Skip messages that were created before the user joined
+            if (message.createdAt && userJoinTime && message.createdAt.toDate() < userJoinTime) {
+                return;
             }
-            
-            const messageElement = document.createElement('div');
-            messageElement.className = `message ${message.sender === currentUser.email ? 'sent' : 'received'}`;
-            messageElement.id = `message-${messageId}`;
-            
-            let messageContent = '';
-            
+
+            // Check if message is deleted
             if (message.deleted) {
-                messageContent = `
-                    <div class="message-deleted">This message was deleted</div>
-                    <div class="message-time">${formatTime(message.timestamp?.toDate())}</div>
+                const deletedMessageElement = document.createElement('div');
+                deletedMessageElement.className = 'message';
+                deletedMessageElement.innerHTML = `
+                    <div class="deleted-message">This message was deleted</div>
+                    <div class="message-info">
+                        <span class="timestamp">${formatTimestamp(message.createdAt)}</span>
+                    </div>
                 `;
-            } else {
-                // Add reply preview if this is a reply
-                if (message.replyTo) {
-                    const repliedMessage = message.replyTo;
-                    messageContent += `
-                        <div class="message-reply">
-                            Replying to ${repliedMessage.sender === currentUser.email ? 'you' : repliedMessage.sender.split('@')[0]}: 
-                            ${repliedMessage.text}
-                        </div>
-                    `;
-                }
-                
-                // Add sender name for received messages
-                if (message.sender !== currentUser.email) {
-                    messageContent += `<div class="message-sender">${message.sender.split('@')[0]}</div>`;
-                }
-                
-                // Add message text
-                messageContent += `
-                    <div class="message-text">${message.text}</div>
-                    <div class="message-time">
-                        ${message.sender === currentUser.email ? 'You' : message.sender.split('@')[0]} • 
-                        ${formatTime(message.timestamp?.toDate())}
+                chatList.appendChild(deletedMessageElement);
+                return;
+            }
+
+            const isCurrentUser = message.sender === currentUser.email;
+            const messageElement = document.createElement('div');
+            messageElement.className = `message ${isCurrentUser ? 'sent' : 'received'}`;
+            
+            let replySection = '';
+            if (message.replyTo) {
+                replySection = `
+                    <div class="reply-indicator">
+                        Replying to <span class="reply-sender">${message.replyTo.sender}</span>: 
+                        ${message.replyTo.text}
                     </div>
                 `;
             }
-            
-            messageElement.innerHTML = messageContent;
-            
-            // Add event listeners for message interactions
-            if (!message.deleted) {
-                // Long press to reply (simulated with mouse events)
-                let pressTimer;
-                
-                messageElement.addEventListener('mousedown', () => {
-                    pressTimer = setTimeout(() => {
-                        setReplyingToMessage(message, messageId);
-                    }, 1000);
-                });
-                
-                messageElement.addEventListener('mouseup', () => {
-                    clearTimeout(pressTimer);
-                });
-                
-                messageElement.addEventListener('mouseleave', () => {
-                    clearTimeout(pressTimer);
-                });
-                
-                // Click to show options (like delete for own messages)
-                messageElement.addEventListener('click', (e) => {
-                    if (e.target.tagName !== 'A' && !pressTimer) {
-                        if (message.sender === currentUser.email) {
-                            showMessageOptions(messageId);
+
+            let deleteButton = '';
+            if (isCurrentUser && !message.deleted) {
+                deleteButton = `<button class="delete-btn" data-id="${messageId}">Delete</button>`;
+            }
+
+            messageElement.innerHTML = `
+                ${!isCurrentUser ? `<div class="sender-name">${message.sender}</div>` : ''}
+                ${replySection}
+                <div>${message.text}</div>
+                <div class="message-info">
+                    <span class="timestamp">${formatTimestamp(message.createdAt)}</span>
+                    ${deleteButton}
+                </div>
+            `;
+
+            // Add swipe to reply functionality
+            if (!isCurrentUser) {
+                let startX, startY, distX, distY;
+                const threshold = 50; // minimum distance for swipe
+
+                messageElement.addEventListener('touchstart', (e) => {
+                    const touch = e.touches[0];
+                    startX = touch.clientX;
+                    startY = touch.clientY;
+                }, false);
+
+                messageElement.addEventListener('touchmove', (e) => {
+                    if (!startX || !startY) return;
+                    const touch = e.touches[0];
+                    distX = touch.clientX - startX;
+                    distY = touch.clientY - startY;
+                    
+                    // Prevent vertical scrolling during horizontal swipe
+                    if (Math.abs(distX) > Math.abs(distY)) {
+                        e.preventDefault();
+                    }
+                }, false);
+
+                messageElement.addEventListener('touchend', (e) => {
+                    if (!distX || !distY) return;
+                    
+                    if (Math.abs(distX) > Math.abs(distY) && Math.abs(distX) > threshold) {
+                        if (distX > 0) {
+                            // Right swipe - reply to message
+                            selectedMessageForReply = {
+                                id: messageId,
+                                sender: message.sender,
+                                text: message.text
+                            };
+                            messageInput.placeholder = `Replying to ${message.sender}: ${message.text}`;
+                            messageInput.focus();
                         }
                     }
+                    
+                    // Reset values
+                    startX = startY = distX = distY = null;
+                }, false);
+            }
+
+            // Add click to reply functionality for desktop
+            if (!isCurrentUser) {
+                messageElement.addEventListener('click', () => {
+                    selectedMessageForReply = {
+                        id: messageId,
+                        sender: message.sender,
+                        text: message.text
+                    };
+                    messageInput.placeholder = `Replying to ${message.sender}: ${message.text}`;
+                    messageInput.focus();
                 });
             }
-            
-            messagesContainer.appendChild(messageElement);
-        }
-        
-        // Update message display (for edits/deletions)
-        function updateMessageDisplay(messageId, message) {
-            const messageElement = document.getElementById(`message-${messageId}`);
-            if (messageElement) {
-                if (message.deleted) {
-                    messageElement.innerHTML = `
-                        <div class="message-deleted">This message was deleted</div>
-                        <div class="message-time">${formatTime(message.timestamp?.toDate())}</div>
-                    `;
-                }
+
+            chatList.appendChild(messageElement);
+
+            // Add delete event listener
+            if (deleteButton) {
+                const deleteBtn = messageElement.querySelector('.delete-btn');
+                deleteBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    deleteMessage(messageId);
+                });
             }
         }
-        
-        // Format time for display
-        function formatTime(date) {
-            if (!date) return '';
-            
+
+        // Format timestamp
+        function formatTimestamp(timestamp) {
+            if (!timestamp) return '';
+            const date = timestamp.toDate();
             return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         }
-        
-        // Handle message input
-        function handleMessageInput() {
-            if (messageInput.value.trim() !== '') {
-                sendButton.classList.add('active');
-            } else {
-                sendButton.classList.remove('active');
-            }
-            
-            // Auto-resize textarea
-            messageInput.style.height = 'auto';
-            messageInput.style.height = `${messageInput.scrollHeight}px`;
-        }
-        
+
         // Send message
-        async function sendMessage() {
-            const text = messageInput.value.trim();
-            if (text === '') return;
-            
-            if (currentChatType === 'community') {
-                await sendCommunityMessage(text);
-            } else {
-                // Handle individual chat messages
-                await sendIndividualMessage(text);
+        sendButton.addEventListener('click', sendMessage);
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
             }
-            
-            // Clear input
-            messageInput.value = '';
-            messageInput.style.height = 'auto';
-            sendButton.classList.remove('active');
-            
-            // Cancel reply if there was one
-            cancelReplyMessage();
-        }
-        
-        // Send message to community chat
-        async function sendCommunityMessage(text) {
-            const messagesRef = collection(db, 'conversations', 'community', 'messages');
-            
+        });
+
+        // Enable/disable send button based on input
+        messageInput.addEventListener('input', () => {
+            sendButton.disabled = messageInput.value.trim() === '';
+        });
+
+        function sendMessage() {
+            const text = messageInput.value.trim();
+            if (!text) return;
+
             const messageData = {
                 text: text,
                 sender: currentUser.email,
-                timestamp: serverTimestamp(),
+                createdAt: serverTimestamp(),
                 deleted: false
             };
-            
-            // Add reply info if replying to a message
-            if (replyingToMessage) {
+
+            if (selectedMessageForReply) {
                 messageData.replyTo = {
-                    text: replyingToMessage.text,
-                    sender: replyingToMessage.sender,
-                    messageId: replyingToMessage.messageId
+                    sender: selectedMessageForReply.sender,
+                    text: selectedMessageForReply.text,
+                    messageId: selectedMessageForReply.id
                 };
             }
-            
-            await addDoc(messagesRef, messageData);
-        }
-        
-        // Send message to individual chat
-        async function sendIndividualMessage(text) {
-            // Implementation would depend on your database structure
-            // This is a placeholder for actual implementation
-            console.log('Sending individual message:', text);
-        }
-        
-        // Set replying to a message
-        function setReplyingToMessage(message, messageId) {
-            replyingToMessage = {
-                text: message.text,
-                sender: message.sender,
-                messageId: messageId
-            };
-            
-            // Show reply preview
-            replyPreviewText.textContent = message.text;
-            replyPreview.style.display = 'block';
-            
-            // Focus on input
-            messageInput.focus();
-        }
-        
-        // Cancel reply
-        function cancelReplyMessage() {
-            replyingToMessage = null;
-            replyPreview.style.display = 'none';
-        }
-        
-        // Show message options (like delete)
-        function showMessageOptions(messageId) {
-            // In a real app, you'd show a menu with options
-            // For simplicity, we'll just implement delete
-            if (confirm('Delete this message?')) {
-                deleteMessage(messageId);
-            }
-        }
-        
-        // Delete a message
-        async function deleteMessage(messageId) {
-            if (currentChatType === 'community') {
-                const messageRef = doc(db, 'conversations', 'community', 'messages', messageId);
-                
-                // Instead of actually deleting, we'll mark as deleted
-                await updateDoc(messageRef, {
-                    deleted: true
+
+            addDoc(collection(db, "conversations"), messageData)
+                .then(() => {
+                    messageInput.value = '';
+                    messageInput.placeholder = 'Type a message...';
+                    selectedMessageForReply = null;
+                })
+                .catch((error) => {
+                    console.error("Error sending message: ", error);
                 });
-            } else {
-                // Handle individual message deletion
-            }
         }
-        
-        // Open new chat modal
-        async function openNewChatModal() {
-            newChatModal.style.display = 'flex';
-            await loadUsers();
-        }
-        
-        // Close new chat modal
-        function closeNewChatModal() {
-            newChatModal.style.display = 'none';
-            userSearch.value = '';
-        }
-        
-        // Load users for new chat
-        async function loadUsers() {
-            modalUsers.innerHTML = '';
-            
-            const usersRef = collection(db, 'users');
-            const q = query(usersRef, where('email', '!=', currentUser.email));
-            
-            const querySnapshot = await getDocs(q);
-            
-            if (querySnapshot.size > 0) {
-                querySnapshot.forEach((doc) => {
-                    const user = doc.data();
-                    addUserToModal(user);
-                });
-            } else {
-                modalUsers.innerHTML = '<div style="padding: 15px; text-align: center;">No other users found</div>';
-            }
-        }
-        
-        // Add user to new chat modal
-        function addUserToModal(user) {
-            const userElement = document.createElement('div');
-            userElement.className = 'modal-user';
-            
-            const firstLetter = user.email.charAt(0).toUpperCase();
-            
-            userElement.innerHTML = `
-                <div class="modal-user-avatar">${firstLetter}</div>
-                <div class="modal-user-name">${user.email}</div>
-            `;
-            
-            userElement.addEventListener('click', () => {
-                // Start chat with this user
-                startNewChat(user);
-                closeNewChatModal();
+
+        // Delete message
+        function deleteMessage(messageId) {
+            const messageRef = doc(db, "conversations", messageId);
+            updateDoc(messageRef, {
+                deleted: true,
+                deletedAt: serverTimestamp()
+            }).catch((error) => {
+                console.error("Error deleting message: ", error);
             });
-            
-            modalUsers.appendChild(userElement);
         }
-        
-        // Search users
-        async function searchUsers() {
-            const searchTerm = userSearch.value.toLowerCase();
-            
-            const usersRef = collection(db, 'users');
-            const q = query(usersRef, where('email', '!=', currentUser.email));
-            
-            const querySnapshot = await getDocs(q);
-            
-            modalUsers.innerHTML = '';
-            
-            if (querySnapshot.size > 0) {
-                let foundUsers = false;
-                
-                querySnapshot.forEach((doc) => {
-                    const user = doc.data();
-                    if (user.email.toLowerCase().includes(searchTerm)) {
-                        addUserToModal(user);
-                        foundUsers = true;
-                    }
-                });
-                
-                if (!foundUsers) {
-                    modalUsers.innerHTML = '<div style="padding: 15px; text-align: center;">No users found</div>';
+
+        // Initialize
+        window.addEventListener('DOMContentLoaded', () => {
+            // Check if user is authenticated
+            onAuthStateChanged(auth, (user) => {
+                if (!user) {
+                    window.location.href = 'login.html';
                 }
-            } else {
-                modalUsers.innerHTML = '<div style="padding: 15px; text-align: center;">No other users found</div>';
-            }
-        }
-        
-        // Start new chat with user
-        function startNewChat(user) {
-            // Implementation would depend on your database structure
-            // This is a placeholder for actual implementation
-            console.log('Starting new chat with:', user.email);
-        }
-        
-        // Initialize the app
-        init();
+            });
+        });
     </script>
 </body>
 </html>
