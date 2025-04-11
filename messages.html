@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Group Chat</title>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+        import { 
+            getFirestore, 
+            collection, 
+            addDoc, 
+            serverTimestamp, 
+            query, 
+            orderBy, 
+            onSnapshot 
+        } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+        import { 
+            getAuth, 
+            onAuthStateChanged 
+        } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDJJqxh3UOsTcBPAXLeEWeLoQRmIy_6hNU",
+            authDomain: "web-app-ae5b6.firebaseapp.com",
+            projectId: "web-app-ae5b6",
+            storageBucket: "web-app-ae5b6.firebasestorage.app",
+            messagingSenderId: "921251501161",
+            appId: "1:921251501161:web:316ff3fc4345735762bef8"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                window.location.href = 'login.html';
+            } else {
+                loadChat();
+                setupMessageSending();
+            }
+        });
+
+        function loadChat() {
+            const q = query(collection(db, "conversation"), orderBy("timestamp"));
+            
+            onSnapshot(q, (snapshot) => {
+                const messagesContainer = document.getElementById('messages');
+                messagesContainer.innerHTML = '';
+                
+                snapshot.forEach((doc) => {
+                    const message = doc.data();
+                    createMessageElement(message, messagesContainer);
+                });
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            });
+        }
+
+        function createMessageElement(message, container) {
+            const currentUser = auth.currentUser;
+            const isSender = message.sender === currentUser.displayName;
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isSender ? 'sent' : 'received'}`;
+            
+            const content = `
+                <div class="message-header">
+                    <span class="sender">${message.sender}</span>
+                    <span class="time">${new Date(message.timestamp?.toDate()).toLocaleTimeString()}</span>
+                </div>
+                <div class="message-body">${message.text}</div>
+            `;
+            
+            messageDiv.innerHTML = content;
+            container.appendChild(messageDiv);
+        }
+
+        function setupMessageSending() {
+            const form = document.getElementById('message-form');
+            const input = document.getElementById('message-input');
+            
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const message = input.value.trim();
+                
+                if (message) {
+                    const user = auth.currentUser;
+                    
+                    // Add to conversation collection
+                    await addDoc(collection(db, "conversation"), {
+                        text: message,
+                        sender: user.displayName,
+                        timestamp: serverTimestamp()
+                    });
+                    
+                    // Add to user's subcollection
+                    const userRef = doc(db, "users", user.uid);
+                    await addDoc(collection(userRef, "messages"), {
+                        text: message,
+                        timestamp: serverTimestamp()
+                    });
+                    
+                    input.value = '';
+                }
+            });
+        }
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #f0f2f5;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-container {
+            max-width: 1200px;
+            margin: 20px auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            width: 95%;
+        }
+
+        #messages {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            max-width: 70%;
+            padding: 15px;
+            border-radius: 15px;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .sent {
+            background: #0084ff;
+            color: white;
+            align-self: flex-end;
+        }
+
+        .received {
+            background: #e4e6eb;
+            color: black;
+            align-self: flex-start;
+        }
+
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .sent .message-header {
+            color: #e3f2fd;
+        }
+
+        .message-body {
+            word-wrap: break-word;
+            line-height: 1.4;
+        }
+
+        #message-form {
+            display: flex;
+            padding: 20px;
+            border-top: 1px solid #ddd;
+            background: #f8f9fa;
+            border-radius: 0 0 15px 15px;
+        }
+
+        #message-input {
+            flex-grow: 1;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            margin-right: 10px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        #message-input:focus {
+            border-color: #0084ff;
+        }
+
+        button {
+            padding: 12px 25px;
+            background: #0084ff;
+            border: none;
+            border-radius: 25px;
+            color: white;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background: #0069d9;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div id="messages"></div>
+        <form id="message-form">
+            <input type="text" id="message-input" placeholder="Type your message...">
+            <button type="submit">Send</button>
+        </form>
+    </div>
+</body>
+</html>
