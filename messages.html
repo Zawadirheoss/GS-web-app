@@ -3,22 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modern Group Chat</title>
+    <title>Gospel Springs Community</title>
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-        import { 
-            getFirestore, 
-            collection, 
-            addDoc, 
-            serverTimestamp, 
-            query, 
-            orderBy, 
-            onSnapshot 
-        } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
-        import { 
-            getAuth, 
-            onAuthStateChanged 
-        } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, query, where, onSnapshot, doc, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDJJqxh3UOsTcBPAXLeEWeLoQRmIy_6hNU",
@@ -33,85 +22,94 @@
         const db = getFirestore(app);
         const auth = getAuth(app);
 
-        onAuthStateChanged(auth, (user) => {
-            if (!user) {
-                window.location.href = 'login.html';
-            } else {
-                loadChat();
-                setupMessageSending();
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) window.location.href = 'login.html';
+            else {
+                let currentUser = auth.currentUser;
+                const messagesContainer = document.getElementById('messages');
+                let replyMessage = null;
+
+                // Load messages
+                const q = query(collection(db, "conversations"), where("createdAt", ">=", currentUser.metadata.creationTime));
+                const unsubscribe = onSnapshot(q, (snapshot) => {
+                    messagesContainer.innerHTML = '';
+                    snapshot.forEach(doc => {
+                        const message = doc.data();
+                        const isCurrentUser = message.senderId === currentUser.uid;
+                        const messageDiv = document.createElement('div');
+                        
+                        messageDiv.className = `message ${isCurrentUser ? 'sent' : 'received'} ${message.deleted ? 'deleted' : ''}`;
+                        messageDiv.innerHTML = `
+                            <div class="message-header">
+                                <span>${isCurrentUser ? 'You' : message.senderEmail}</span>
+                                <small>${new Date(message.timestamp?.toDate()).toLocaleTimeString()}</small>
+                                ${isCurrentUser && !message.deleted ? `<button class="delete-btn" onclick="deleteMessage('${doc.id}')">×</button>` : ''}
+                            </div>
+                            ${message.deleted ? 
+                                `<div class="message-content deleted">This message was deleted</div>` :
+                                `<div class="message-content" onclick="setReply('${doc.id}', '${message.senderId}')">${message.text}</div>`}
+                            ${message.replyTo ? `<div class="reply-preview">Replying to: ${message.replyToText}</div>` : ''}
+                        `;
+                        messagesContainer.appendChild(messageDiv);
+                    });
+                    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                    if (snapshot.empty) messagesContainer.innerHTML = '<div class="empty-state">No messages yet</div>';
+                });
+
+                // Send message
+                window.sendMessage = async () => {
+                    const input = document.getElementById('message-input');
+                    const text = input.value.trim();
+                    if (text) {
+                        await addDoc(collection(db, "conversations"), {
+                            text,
+                            senderId: currentUser.uid,
+                            senderEmail: currentUser.email,
+                            timestamp: new Date(),
+                            createdAt: currentUser.metadata.creationTime,
+                            replyTo: replyMessage?.id,
+                            replyToText: replyMessage?.text,
+                            deleted: false
+                        });
+                        input.value = '';
+                        replyMessage = null;
+                        document.querySelector('.reply-preview').style.display = 'none';
+                    }
+                };
+
+                // Delete message
+                window.deleteMessage = async (messageId) => {
+                    await updateDoc(doc(db, "conversations", messageId), {
+                        deleted: true
+                    });
+                };
+
+                // Set reply
+                window.setReply = (messageId, senderId) => {
+                    const message = snapshot.docs.find(doc => doc.id === messageId)?.data();
+                    if (message) {
+                        replyMessage = { id: messageId, text: message.text, senderId };
+                        document.querySelector('.reply-preview').innerHTML = `
+                            Replying to: ${message.senderId === currentUser.uid ? 'You' : message.senderEmail}: ${message.text}
+                            <button onclick="cancelReply()">×</button>
+                        `;
+                        document.querySelector('.reply-preview').style.display = 'block';
+                    }
+                };
+
+                window.cancelReply = () => {
+                    replyMessage = null;
+                    document.querySelector('.reply-preview').style.display = 'none';
+                };
             }
         });
-
-        function loadChat() {
-            const q = query(collection(db, "conversation"), orderBy("timestamp"));
-            
-            onSnapshot(q, (snapshot) => {
-                const messagesContainer = document.getElementById('messages');
-                messagesContainer.innerHTML = '';
-                
-                snapshot.forEach((doc) => {
-                    const message = doc.data();
-                    createMessageElement(message, messagesContainer);
-                });
-                messagesContainer.scrollTop = messagesContainer.scrollHeight;
-            });
-        }
-
-        function createMessageElement(message, container) {
-            const currentUser = auth.currentUser;
-            const isSender = message.sender === currentUser.displayName;
-            
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${isSender ? 'sent' : 'received'}`;
-            
-            const content = `
-                <div class="message-header">
-                    <span class="sender">${message.sender}</span>
-                    <span class="time">${new Date(message.timestamp?.toDate()).toLocaleTimeString()}</span>
-                </div>
-                <div class="message-body">${message.text}</div>
-            `;
-            
-            messageDiv.innerHTML = content;
-            container.appendChild(messageDiv);
-        }
-
-        function setupMessageSending() {
-            const form = document.getElementById('message-form');
-            const input = document.getElementById('message-input');
-            
-            form.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const message = input.value.trim();
-                
-                if (message) {
-                    const user = auth.currentUser;
-                    
-                    // Add to conversation collection
-                    await addDoc(collection(db, "conversation"), {
-                        text: message,
-                        sender: user.displayName,
-                        timestamp: serverTimestamp()
-                    });
-                    
-                    // Add to user's subcollection
-                    const userRef = doc(db, "users", user.uid);
-                    await addDoc(collection(userRef, "messages"), {
-                        text: message,
-                        timestamp: serverTimestamp()
-                    });
-                    
-                    input.value = '';
-                }
-            });
-        }
     </script>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
 
         body {
@@ -121,112 +119,129 @@
             flex-direction: column;
         }
 
-        .chat-container {
-            max-width: 1200px;
-            margin: 20px auto;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            width: 95%;
+        .header {
+            background: #008069;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
         #messages {
-            flex-grow: 1;
-            padding: 20px;
+            flex: 1;
+            padding: 1rem;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 1rem;
         }
 
         .message {
             max-width: 70%;
-            padding: 15px;
-            border-radius: 15px;
-            animation: fadeIn 0.3s ease-in;
+            padding: 0.8rem;
+            border-radius: 1rem;
+            animation: fadeIn 0.3s ease;
         }
 
         .sent {
-            background: #0084ff;
-            color: white;
+            background: #d9fdd3;
             align-self: flex-end;
         }
 
         .received {
-            background: #e4e6eb;
-            color: black;
+            background: white;
             align-self: flex-start;
         }
 
         .message-header {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 8px;
-            font-size: 0.9em;
-            opacity: 0.9;
+            margin-bottom: 0.5rem;
+            font-size: 0.8rem;
+            color: #666;
         }
 
-        .sent .message-header {
-            color: #e3f2fd;
+        .message-content {
+            word-break: break-word;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
         }
 
-        .message-body {
-            word-wrap: break-word;
-            line-height: 1.4;
+        .deleted .message-content {
+            font-style: italic;
+            color: #999;
         }
 
-        #message-form {
+        .input-container {
+            padding: 1rem;
+            background: white;
             display: flex;
-            padding: 20px;
-            border-top: 1px solid #ddd;
-            background: #f8f9fa;
-            border-radius: 0 0 15px 15px;
+            gap: 0.5rem;
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.05);
         }
 
         #message-input {
-            flex-grow: 1;
-            padding: 12px;
+            flex: 1;
+            padding: 0.8rem;
             border: 1px solid #ddd;
-            border-radius: 25px;
-            margin-right: 10px;
-            font-size: 16px;
+            border-radius: 2rem;
             outline: none;
         }
 
-        #message-input:focus {
-            border-color: #0084ff;
-        }
-
-        button {
-            padding: 12px 25px;
-            background: #0084ff;
-            border: none;
-            border-radius: 25px;
+        .send-btn {
+            background: #008069;
             color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 2rem;
             cursor: pointer;
             transition: background 0.2s;
         }
 
-        button:hover {
-            background: #0069d9;
+        .send-btn:hover {
+            background: #006955;
+        }
+
+        .delete-btn {
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            padding: 0 0.5rem;
+        }
+
+        .reply-preview {
+            background: #f8f8f8;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: #666;
+            display: none;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #666;
+            margin-top: 2rem;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
 <body>
-    <div class="chat-container">
-        <div id="messages"></div>
-        <form id="message-form">
-            <input type="text" id="message-input" placeholder="Type your message...">
-            <button type="submit">Send</button>
-        </form>
+    <header class="header">
+        <h1>Gospel Springs Community</h1>
+    </header>
+    <div id="messages"></div>
+    <div class="reply-preview"></div>
+    <div class="input-container">
+        <input type="text" id="message-input" placeholder="Type a message...">
+        <button class="send-btn" onclick="sendMessage()">Send</button>
     </div>
 </body>
 </html>
