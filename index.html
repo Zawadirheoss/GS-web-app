@@ -3,16 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gospel Springs Mission - Welcome</title>
+    <title>Gospel Springs Mission</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         :root {
             --primary: #4a6fa5;
             --secondary: #166088;
             --accent: #4fc3a1;
-            --light: #f8f9fa;
+            --light: #ffffff;
             --dark: #343a40;
-            --warning: #ffc107;
         }
         
         * {
@@ -28,258 +27,85 @@
             background-color: var(--light);
         }
         
-        .container {
-            width: 90%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 15px;
-        }
-        
-        /* Header Styles */
-        header {
-            background-color: white;
-            padding: 10px 0;
-           
-        }
-        
-       
-        .logo img {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            margin-left: 10px;
-            object-fit: cover;
-            
-        }
-        
         /* Hero Section */
         .hero {
-            height: 53vh;
-            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('APG.jpg') no-repeat center center/cover;
+            height: 70vh;
+            background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('APG.jpg') no-repeat center center/cover;
             display: flex;
             align-items: center;
+            justify-content: center;
             text-align: center;
             color: white;
-            position: relative;
         }
         
         .hero-content {
             max-width: 800px;
-            margin: 0 auto;
             padding: 20px;
-            position: relative;
-            z-index: 2;
         }
         
-        .hero h2 {
-            font-size: 3rem;
+        .hero h1 {
+            font-size: 2.5rem;
             margin-bottom: 20px;
-        }
-        
-        .hero p {
-            font-size: 1.2rem;
-            margin-bottom: 30px;
-        }
-        
-        .hero-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin-top: 30px;
         }
         
         /* Welcome Section */
         .welcome {
-            padding: 80px 0;
-            background-color: white;
-        }
-        
-        .section-title {
+            padding: 60px 20px;
             text-align: center;
-            margin-bottom: 50px;
-            color: var(--primary);
-        }
-        
-        .welcome-content {
-            display: flex;
-            align-items: center;
-            gap: 40px;
-        }
-        
-        .welcome-text {
-            flex: 1;
-        }
-        
-        .welcome-image {
-            flex: 1;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-        
-        .welcome-image img {
-            width: 100%;
-            height: auto;
-            display: block;
-        }
-        
-        /* Services Section */
-        .services {
-            padding: 80px 0;
             background-color: var(--light);
         }
         
-        .services-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-top: 40px;
-        }
-        
-        .service-card {
-            background: white;
-            border-radius: 10px;
-            padding: 30px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-        
-        .service-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-        }
-        
-        .service-icon {
-            font-size: 2.5rem;
-            color: var(--primary);
-            margin-bottom: 20px;
-        }
-        
-        .service-card h3 {
-            margin-bottom: 15px;
-            color: var(--secondary);
-        }
-        
-        /* Mission Section */
-        .mission {
-            padding: 80px 0;
-            background-color: white;
-        }
-        
-        .mission-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-            margin-top: 40px;
-        }
-        
-        .mission-card {
-            text-align: center;
-            padding: 40px 20px;
-            border-radius: 10px;
-            background-color: var(--light);
-            transition: all 0.3s;
-        }
-        
-        .mission-card:hover {
-            background-color: var(--primary);
-            color: white;
-        }
-        
-        .mission-card:hover h3,
-        .mission-card:hover .mission-icon {
-            color: white;
-        }
-        
-        .mission-icon {
-            font-size: 3rem;
-            color: var(--primary);
-            margin-bottom: 20px;
-        }
-        
-        /* CTA Section */
-        .cta {
-            padding: 80px 0;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            text-align: center;
-        }
-        
-        .cta h2 {
-            margin-bottom: 20px;
-        }
-        
-        .cta p {
-            max-width: 700px;
+        .welcome p {
+            max-width: 600px;
             margin: 0 auto 30px;
             font-size: 1.1rem;
         }
         
-        /* Footer */
-        footer {
-            background-color: var(--dark);
-            color: white;
-            padding: 60px 0 20px;
-        }
-        
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 40px;
-            margin-bottom: 40px;
-        }
-        
-        .footer-column h3 {
-            margin-bottom: 20px;
-            color: var(--accent);
-        }
-        
-        .footer-links {
-            list-style: none;
-        }
-        
-        .footer-links li {
-            margin-bottom: 10px;
-        }
-        
-        .footer-links a {
-            color: #ddd;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-        
-        .footer-links a:hover {
-            color: var(--accent);
-        }
-        
-        .social-links {
+        .welcome-buttons {
             display: flex;
-            gap: 15px;
+            justify-content: center;
+            gap: 20px;
             margin-top: 20px;
         }
         
-        .social-links a {
-            color: white;
-            font-size: 1.2rem;
+        /* Footer */
+        footer {
+            background-color: var(--light);
+            padding: 40px 20px;
+            text-align: center;
+            border-top: 1px solid #eee;
+        }
+        
+        .footer-logo img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin-bottom: 20px;
+            object-fit: cover;
+        }
+        
+        .contact-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        
+        .contact-links a {
+            color: var(--dark);
+            font-size: 1.5rem;
             transition: color 0.3s;
         }
         
-        .social-links a:hover {
-            color: var(--accent);
-        }
-        
-        .copyright {
-            text-align: center;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            font-size: 0.9rem;
-            color: #aaa;
+        .contact-links a:hover {
+            color: var(--primary);
         }
         
         /* Button Styles */
         .btn {
             display: inline-block;
-            padding: 12px 25px;
+            padding: 12px 30px;
             border-radius: 50px;
             text-decoration: none;
             font-weight: 600;
@@ -300,214 +126,77 @@
         
         .btn-outline {
             background-color: transparent;
-            color: white;
-            border: 2px solid white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
         }
         
         .btn-outline:hover {
-            background-color: white;
-            color: var(--primary);
-        }
-        
-        .btn-accent {
-            background-color: var(--accent);
+            background-color: var(--primary);
             color: white;
-        }
-        
-        .btn-accent:hover {
-            background-color: #3da389;
-            transform: translateY(-2px);
         }
         
         /* Responsive Design */
         @media (max-width: 768px) {
-            .hero h2 {
-                font-size: 2.2rem;
+            .hero h1 {
+                font-size: 2rem;
             }
             
-            .welcome-content {
-                flex-direction: column;
-            }
-            
-            .hero-buttons {
+            .welcome-buttons {
                 flex-direction: column;
                 align-items: center;
+            }
+            
+            .contact-links {
+                gap: 15px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Simple Header with Logo -->
-    <header>
-        <div class="container">
-            <div class="logo">
-                <img src="Gospel springs logo.jpg" alt="Gospel Springs Mission Logo">
-            </div>
-        </div>
-    </header>
-
-    <!-- Hero Section with Login Buttons -->
-    <section class="hero" id="home">
+    <!-- Hero Section with Time-Based Greeting -->
+    <section class="hero">
         <div class="hero-content">
-            <h2>Welcome to Gospel Springs Mission</h2>
-            <p>A community dedicated to spreading the love of Christ and nurturing spiritual growth</p>
-            <div class="hero-buttons">
-                <a href="login.html" class="btn btn-primary">Login</a>
-                <a href="Signup.html" class="btn btn-outline">Sign Up</a>
-            </div>
+            <h1 id="greeting">Welcome to Gospel Springs Mission</h1>
+            <p>A community dedicated to spreading God's love</p>
         </div>
     </section>
 
     <!-- Welcome Section -->
-    <section class="welcome" id="about">
-        <div class="container">
-            <div class="welcome-content">
-                <div class="welcome-text">
-                    <p>At Gospel Springs Mission, we are committed to creating a vibrant community where individuals can grow in their faith, find support, and discover their purpose in Christ. Our doors are open to everyone seeking spiritual nourishment and fellowship.</p>
-                    <p>Whether you're new to faith or have been walking with Christ for years, you'll find a welcoming family here. Join us as we journey together in love, service, and worship.</p>
-                    <a href="signup.html" class="btn btn-primary" style="margin-top: 20px;">Join Our Community</a>
-                </div>
-                <div class="welcome-image">
-                    <img src="MOTHER.jpg" alt="Gospel Springs Mission Community">
-                </div>
-            </div>
+    <section class="welcome">
+        <p>We welcome you to Gospel Springs Mission, a vibrant Christian community where faith grows through worship, fellowship, and service. Join us as we journey together in Christ's love.</p>
+        <div class="welcome-buttons">
+            <a href="Login.html" class="btn btn-primary">Login</a>
+            <a href="Signup.html" class="btn btn-outline">Sign Up</a>
         </div>
     </section>
 
-    <!-- Services Section -->
-    <section class="services" id="services">
-        <div class="container">
-            <h2 class="section-title">What We Offer</h2>
-            <div class="services-grid">
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class="fas fa-hands-praying"></i>
-                    </div>
-                    <h3>Prayer Requests</h3>
-                    <p>Submit your prayer requests and join us in interceding for one another. Our prayer team is committed to lifting up your needs before God.</p>
-                    <a href="login.html" class="btn btn-primary" style="margin-top: 15px;">Submit Request</a>
-                </div>
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class="fas fa-hands-helping"></i>
-                    </div>
-                    <h3>Pastoral Support</h3>
-                    <p>Our pastoral team is available to provide spiritual guidance, counseling, and support during life's challenges and transitions.</p>
-                    <a href="login.html" class="btn btn-primary" style="margin-top: 15px;">Request Support</a>
-                </div>
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class="fas fa-bible"></i>
-                    </div>
-                    <h3>Bible Studies</h3>
-                    <p>Join our weekly Bible study groups to deepen your understanding of Scripture and grow in your relationship with God.</p>
-                    <a href="login.html" class="btn btn-primary" style="margin-top: 15px;">Join Study</a>
-                </div>
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class="fas fa-users"></i>
-                    </div>
-                    <h3>Fellowship Groups</h3>
-                    <p>Connect with others in small groups designed to foster meaningful relationships and spiritual growth.</p>
-                    <a href="login.html" class="btn btn-primary" style="margin-top: 15px;">Find a Group</a>
-                </div>
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class="fas fa-music"></i>
-                    </div>
-                    <h3>Worship Services</h3>
-                    <p>Experience uplifting worship services that celebrate God's presence and proclaim His word.</p>
-                    <a href="#" class="btn btn-primary" style="margin-top: 15px;">Service Times</a>
-                </div>
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class="fas fa-hands-holding-child"></i>
-                    </div>
-                    <h3>Youth Ministry</h3>
-                    <p>Engaging programs designed to help young people develop a strong foundation in Christ.</p>
-                    <a href="login.html" class="btn btn-primary" style="margin-top: 15px;">Learn More</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Mission Section -->
-    <section class="mission" id="mission">
-        <div class="container">
-            <h2 class="section-title">Our Mission</h2>
-            <div class="mission-cards">
-                <div class="mission-card">
-                    <div class="mission-icon">
-                        <i class="fas fa-cross"></i>
-                    </div>
-                    <h3>Winning</h3>
-                    <p>Leading people to a saving knowledge of Jesus Christ through evangelism and outreach.</p>
-                </div>
-                <div class="mission-card">
-                    <div class="mission-icon">
-                        <i class="fas fa-graduation-cap"></i>
-                    </div>
-                    <h3>Discipling</h3>
-                    <p>Equipping believers to grow in spiritual maturity through biblical teaching and mentoring.</p>
-                </div>
-                <div class="mission-card">
-                    <div class="mission-icon">
-                        <i class="fas fa-paper-plane"></i>
-                    </div>
-                    <h3>Sending</h3>
-                    <p>Preparing and releasing believers into ministry and mission locally and globally.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- CTA Section -->
-    <section class="cta">
-        <div class="container">
-            <h2>Join Our Growing Community</h2>
-            <p>Create an account to access all our resources, submit prayer requests, connect with pastoral support, and join our online community. Members enjoy exclusive access to Bible study materials, event registration, and more.</p>
-            <div style="display: flex; justify-content: center; gap: 20px;">
-                <a href="signup.html" class="btn btn-accent">Sign Up Now</a>
-                <a href="login.html" class="btn btn-outline">Login</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Footer -->
+    <!-- Footer with Logo and Contact Links -->
     <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-column">
-                    <h3>Gospel Springs Mission</h3>
-                    <p>A community of believers committed to winning, discipling, and sending followers of Christ.</p>
-                    <div class="social-links">
-                        <a href="#"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-youtube"></i></a>
-                    </div>
-                </div>
-                <div class="footer-column">
-                    <h3>Quick Links</h3>
-                    <ul class="footer-links">
-                        <li><a href="#">Sunday Services</a></li>
-                        <li><a href="">Visit Our Website</a></li>
-                        <li><a href="#">Events Calendar</a></li>
-                    </ul>
-                </div>
-                <div class="footer-column">
-                    <h3>Contact Us</h3>
-                    <ul class="footer-links">
-                        <li><i class="fas fa-map-marker-alt"></i> Isongo,Navakholo constituency.</li>
-                        <li><i class="fas fa-phone"></i>+254756498314</li>
-                        <li><i class="fas fa-envelope"></i> info@gospelsprings.org</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="copyright">
-                <p>&copy; 2025 Gospel Springs Mission. All Rights Reserved.</p>
-            </div>
+        <div class="footer-logo">
+            <img src="Gospel springs logo.jpg" alt="Gospel Springs Mission Logo">
+        </div>
+        <div class="contact-links">
+            <a href="https://wa.me/254756498314" target="_blank" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+            <a href="mailto:info@gospelsprings.org" title="Email"><i class="fas fa-envelope"></i></a>
+            <a href="https://facebook.com/gospelsprings" target="_blank" title="Facebook"><i class="fab fa-facebook"></i></a>
+            <a href="https://tiktok.com/@gospelsprings" target="_blank" title="TikTok"><i class="fab fa-tiktok"></i></a>
+            <a href="https://twitter.com/gospelsprings" target="_blank" title="Twitter"><i class="fab fa-twitter"></i></a>
+            <a href="tel:+254756498314" title="Call Us"><i class="fas fa-phone"></i></a>
         </div>
     </footer>
+
+    <script>
+        // Time-Based Greeting
+        const greeting = document.getElementById('greeting');
+        const hour = new Date().getHours();
+        
+        if (hour < 12) {
+            greeting.textContent = 'Good Morning! Welcome to Gospel Springs Mission';
+        } else if (hour < 18) {
+            greeting.textContent = 'Good Afternoon! Welcome to Gospel Springs Mission';
+        } else {
+            greeting.textContent = 'Good Evening! Welcome to Gospel Springs Mission';
+        }
+    </script>
 </body>
 </html>
