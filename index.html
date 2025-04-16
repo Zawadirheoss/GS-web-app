@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gospel Springs Mission - Ministry App</title>
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-analytics.js";
+        
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAyiRtkvdxnGWaiG-Xn-50Vm_Pb1J0ya6E",
+            authDomain: "church-cms-96407.firebaseapp.com",
+            projectId: "church-cms-96407",
+            storageBucket: "church-cms-96407.firebasestorage.app",
+            messagingSenderId: "19370427001",
+            appId: "1:19370427001:web:b1d20215c437fc324e4aa8",
+            measurementId: "G-NKDZSFGR4X"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+    </script>
+    <style>
+        :root {
+            --primary: #3a5a78;
+            --secondary: #1b3a4b;
+            --accent: #5ab1bb;
+            --light: #f8f9fa;
+            --dark: #2b2d42;
+            --success: #4caf50;
+            --font-main: 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: var(--font-main);
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .app-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .app-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .app-logo img {
+            width: 60px;
+            height: 60px;
+            border-radius: 60px;
+            object-fit: cover;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+        }
+        
+        .app-name h1 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 3px;
+        }
+        
+        .app-name p {
+            font-size: 0.75rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        
+        .welcome-screen {
+            position: relative;
+            height: 70vh;
+            min-height: 500px;
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+        
+        .welcome-bg {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.6);
+        }
+        
+        .welcome-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: white;
+            width: 90%;
+            max-width: 800px;
+            z-index: 2;
+        }
+        
+        .time-greeting {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.5);
+            animation: fadeIn 1s ease-out;
+        }
+        
+        .welcome-message {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            line-height: 1.5;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        }
+        
+        .ministry-intro {
+            padding: 60px 0;
+            background-color: white;
+            text-align: center;
+        }
+        
+        .ministry-intro h2 {
+            font-size: 2rem;
+            color: var(--secondary);
+            margin-bottom: 25px;
+            font-weight: 600;
+        }
+        
+        .ministry-intro p {
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin: 0 auto 25px;
+            color: var(--dark);
+        }
+        
+        .member-access {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 50px 20px;
+            text-align: center;
+            border-radius: 12px;
+            max-width: 650px;
+            margin: 40px auto;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .member-access h3 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+        
+        .member-access p {
+            margin-bottom: 25px;
+            font-size: 1.05rem;
+            opacity: 0.9;
+        }
+        
+        .auth-btn {
+            display: inline-block;
+            background-color: white;
+            color: var(--primary);
+            padding: 12px 35px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .auth-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            background-color: var(--accent);
+            color: white;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @media (max-width: 768px) {
+            .time-greeting {
+                font-size: 2.2rem;
+            }
+            
+            .welcome-message {
+                font-size: 1.1rem;
+            }
+            
+            .welcome-screen {
+                height: 60vh;
+                min-height: 400px;
+            }
+            
+            .ministry-intro h2 {
+                font-size: 1.7rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="app-header">
+        <div class="container">
+            <div class="header-content">
+                <div class="app-logo">
+                    <img src="Gospel springs logo.jpg" alt="Gospel Springs Mission Logo">
+                    <div class="app-name">
+                        <h1>Gospel Springs Mission</h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <section class="welcome-screen">
+        <img class="welcome-bg" src="https://images.unsplash.com/photo-1434030216411-0b793f4b4173?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" alt="Ministry members gathering">
+        <div class="welcome-content">
+            <h1 class="time-greeting" id="timeGreeting">Welcome</h1>
+            <p class="welcome-message">The Gospel Springs Mission application connects our ministry members in fellowship and service.</p>
+        </div>
+    </section>
+    
+    <section class="ministry-intro">
+        <div class="container">
+            <h2>For Our Ministry Members</h2>
+            <p>This application is designed exclusively for active members of Gospel Springs Mission to stay connected with our ministry activities, share resources, and support one another in our spiritual journey.</p>
+            <p>As part of our church family, you'll find tools and content here to help you grow in faith and serve our community effectively.</p>
+        </div>
+    </section>
+    
+    <section class="member-access">
+        <h3>Ministry Member Access</h3>
+        <p>Sign in to access ministry resources, event schedules, and member communications.</p>
+        <a href="Login.html" class="auth-btn">Member Sign In</a>
+    </section>
+
+    <script>
+        // Dynamic greeting based on time of day
+        function setTimeBasedGreeting() {
+            const hour = new Date().getHours();
+            const greetingElement = document.getElementById('timeGreeting');
+            let greeting;
+            
+            if (hour < 12) {
+                greeting = "Good Morning";
+            } else if (hour < 18) {
+                greeting = "Good Afternoon";
+            } else {
+                greeting = "Good Evening";
+            }
+            
+            greetingElement.textContent = `${greeting}, Ministry Member`;
+        }
+        
+        // Initialize when page loads
+        window.addEventListener('load', setTimeBasedGreeting);
+        
+        // Add smooth scroll behavior
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile | Gospel Springs Ministry</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #3a5a78;
+            --primary-light: #4a6fa5;
+            --secondary: #1a3a5a;
+            --accent: #5cb3ff;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --success: #10b981;
+            --error: #ef4444;
+            --sidebar-width: 250px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--light);
+            color: var(--dark);
+            overflow-x: hidden;
+        }
+
+        /* Header Styles */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 70px;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+
+        .logo-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary);
+        }
+
+        .logo-text {
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 1.25rem;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--primary);
+        }
+
+        /* Profile Dropdown */
+        .profile-container {
+            position: relative;
+        }
+
+        .profile-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .profile-icon:hover {
+            transform: scale(1.05);
+        }
+
+        .profile-dropdown {
+            position: absolute;
+            top: 50px;
+            right: 0;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            width: 200px;
+            overflow: hidden;
+            display: none;
+            z-index: 101;
+        }
+
+        .profile-dropdown.show {
+            display: block;
+        }
+
+        .dropdown-item {
+            padding: 0.75rem 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--dark);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(92, 179, 255, 0.1);
+        }
+
+        .dropdown-item i {
+            width: 20px;
+            text-align: center;
+            color: var(--primary);
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: var(--sidebar-width);
+            background: linear-gradient(180deg, var(--primary) 0%, var(--secondary) 100%);
+            padding-top: 70px;
+            transition: all 0.3s ease;
+            z-index: 99;
+            transform: translateX(-100%);
+        }
+
+        .sidebar.show {
+            transform: translateX(0);
+        }
+
+        .sidebar-nav {
+            list-style: none;
+            padding: 1rem 0;
+        }
+
+        .nav-item {
+            margin-bottom: 0.25rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            gap: 0.75rem;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-link i {
+            width: 24px;
+            text-align: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 70px;
+            padding: 2rem;
+            min-height: calc(100vh - 120px);
+        }
+
+        /* Profile Section */
+        .profile-section {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .profile-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            padding: 2rem;
+            color: white;
+            text-align: center;
+            position: relative;
+        }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: white;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin: 0 auto 1rem;
+            border: 3px solid white;
+        }
+
+        .profile-name {
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .profile-email {
+            opacity: 0.9;
+            font-size: 1rem;
+        }
+
+        .profile-body {
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .profile-card {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+
+        .profile-card-title {
+            font-size: 1.25rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--accent);
+        }
+
+        .profile-info {
+            margin-bottom: 1.5rem;
+        }
+
+        .info-label {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-bottom: 0.25rem;
+        }
+
+        .info-value {
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--dark);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .copyright {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .profile-body {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-header {
+                padding: 1.5rem;
+            }
+
+            .profile-name {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <button class="mobile-menu-btn" id="mobileMenuBtn">
+            <i class="fas fa-bars"></i>
+        </button>
+        <a href="homepage.html" class="logo">
+            <img src="https://via.placeholder.com/40" alt="Gospel Springs Ministry Logo" class="logo-img">
+            <span class="logo-text">Gospel Springs</span>
+        </a>
+        <div class="profile-container">
+            <div class="profile-icon" id="profileIcon">U</div>
+            <div class="profile-dropdown" id="profileDropdown">
+                <a href="#" class="dropdown-item" id="updatePasswordBtn">
+                    <i class="fas fa-key"></i>
+                    <span>Update Password</span>
+                </a>
+                <a href="profile.html" class="dropdown-item active">
+                    <i class="fas fa-user"></i>
+                    <span>My Profile</span>
+                </a>
+                <a href="#" class="dropdown-item" id="logoutBtn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <ul class="sidebar-nav">
+            <li class="nav-item">
+                <a href="homepage.html" class="nav-link">
+                    <i class="fas fa-home"></i>
+                    <span>Home</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <i class="fas fa-info-circle"></i>
+                    <span>About</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Events</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <i class="fas fa-pray"></i>
+                    <span>Prayer</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <i class="fas fa-hand-holding-heart"></i>
+                    <span>Ministries</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link">
+                    <i class="fas fa-envelope"></i>
+                    <span>Contact</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <section class="profile-section">
+            <div class="profile-header">
+                <div class="profile-avatar" id="profileAvatar">U</div>
+                <h1 class="profile-name" id="profileName">User Name</h1>
+                <p class="profile-email" id="profileEmail">user@example.com</p>
+            </div>
+            <div class="profile-body">
+                <div class="profile-card">
+                    <h2 class="profile-card-title">Personal Information</h2>
+                    <div class="profile-info">
+                        <p class="info-label">Member ID</p>
+                        <p class="info-value" id="memberId">GSM-0000</p>
+                    </div>
+                    <div class="profile-info">
+                        <p class="info-label">First Name</p>
+                        <p class="info-value" id="firstName">First</p>
+                    </div>
+                    <div class="profile-info">
+                        <p class="info-label">Second Name</p>
+                        <p class="info-value" id="secondName">Second</p>
+                    </div>
+                    <div class="profile-info">
+                        <p class="info-label">Gender</p>
+                        <p class="info-value" id="gender">Not specified</p>
+                    </div>
+                </div>
+                <div class="profile-card">
+                    <h2 class="profile-card-title">Contact Information</h2>
+                    <div class="profile-info">
+                        <p class="info-label">Email</p>
+                        <p class="info-value" id="contactEmail">user@example.com</p>
+                    </div>
+                    <div class="profile-info">
+                        <p class="info-label">Phone</p>
+                        <p class="info-value" id="phone">+254 700 000000</p>
+                    </div>
+                    <div class="profile-info">
+                        <p class="info-label">Join Date</p>
+                        <p class="info-value" id="joinDate">January 2023</p>
+                    </div>
+                </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p class="copyright">&copy; <span id="currentYear"></span> Gospel Springs Ministry. All rights reserved.</p>
+    </footer>
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+        // Import the functions you need from the Firebase SDKs
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+        import { 
+            getAuth, 
+            signOut,
+            onAuthStateChanged
+        } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+        import { 
+            getFirestore, 
+            collection, 
+            query, 
+            where, 
+            getDocs 
+        } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDJJqxh3UOsTcBPAXLeEWeLoQRmIy_6hNU",
+            authDomain: "web-app-ae5b6.firebaseapp.com",
+            projectId: "web-app-ae5b6",
+            storageBucket: "web-app-ae5b6.firebasestorage.app",
+            messagingSenderId: "921251501161",
+            appId: "1:921251501161:web:316ff3fc4345735762bef8"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // DOM Elements
+        const profileIcon = document.getElementById('profileIcon');
+        const profileDropdown = document.getElementById('profileDropdown');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const sidebar = document.getElementById('sidebar');
+        const currentYear = document.getElementById('currentYear');
+        
+        // Profile Elements
+        const profileAvatar = document.getElementById('profileAvatar');
+        const profileName = document.getElementById('profileName');
+        const profileEmail = document.getElementById('profileEmail');
+        const contactEmail = document.getElementById('contactEmail');
+        const memberId = document.getElementById('memberId');
+        const firstName = document.getElementById('firstName');
+        const secondName = document.getElementById('secondName');
+        const gender = document.getElementById('gender');
+        const phone = document.getElementById('phone');
+        const joinDate = document.getElementById('joinDate');
+        const membershipStatus = document.getElementById('membershipStatus');
+        const ministryGroups = document.getElementById('ministryGroups');
+        const lastLogin = document.getElementById('lastLogin');
+
+        // Set current year in footer
+        currentYear.textContent = new Date().getFullYear();
+
+        // Toggle profile dropdown
+        profileIcon.addEventListener('click', function(e) {
+            e.stopPropagation();
+            profileDropdown.classList.toggle('show');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function() {
+            profileDropdown.classList.remove('show');
+        });
+
+        // Toggle mobile menu
+        mobileMenuBtn.addEventListener('click', function() {
+            sidebar.classList.toggle('show');
+        });
+
+        // Close mobile menu when clicking on nav item
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function() {
+                sidebar.classList.remove('show');
+            });
+        });
+
+        // Logout functionality
+        logoutBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            signOut(auth).then(() => {
+                window.location.href = 'Login.html';
+            }).catch((error) => {
+                console.error('Logout error:', error);
+                alert("Error signing out: " + error.message);
+            });
+        });
+
+        // Format date
+        function formatDate(dateString) {
+            if (!dateString) return "Not available";
+            
+            try {
+                const date = dateString.toDate();
+                return date.toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                });
+            } catch (e) {
+                return dateString; // Return as-is if it's not a Firestore timestamp
+            }
+        }
+
+        // Fetch user data from Firestore
+        async function fetchUserData(user) {
+            try {
+                // Query Firestore to find user with matching email
+                const usersRef = collection(db, 'useraccount');
+                const q = query(usersRef, where("email", "==", user.email));
+                const querySnapshot = await getDocs(q);
+                
+                if (!querySnapshot.empty) {
+                    const userDoc = querySnapshot.docs[0];
+                    const userData = userDoc.data();
+                    
+                    // Update profile icon with first letter of first name
+                    if (userData.firstName) {
+                        const firstLetter = userData.firstName.charAt(0).toUpperCase();
+                        profileIcon.textContent = firstLetter;
+                        profileAvatar.textContent = firstLetter;
+                    }
+                    
+                    // Update profile information
+                    profileName.textContent = userData.firstName ? 
+                        (userData.secondName ? `${userData.firstName} ${userData.secondName}` : userData.firstName) 
+                        : "User Name";
+                    
+                    if (userData.email) {
+                        profileEmail.textContent = userData.email;
+                        contactEmail.textContent = userData.email;
+                    }
+                    
+                    if (userData.memberId) {
+                        memberId.textContent = userData.memberId;
+                    }
+                    
+                    if (userData.firstName) {
+                        firstName.textContent = userData.firstName;
+                    }
+                    
+                    if (userData.secondName) {
+                        secondName.textContent = userData.secondName;
+                    } else {
+                        document.querySelector('.profile-info:nth-child(3)').style.display = 'none';
+                    }
+                    
+                    if (userData.gender) {
+                        gender.textContent = userData.gender;
+                    }
+                    
+                    if (userData.phone) {
+                        phone.textContent = userData.phone;
+                    }
+                    
+                    if (userData.createdAt) {
+                        joinDate.textContent = formatDate(userData.createdAt);
+                    }
+                    
+                    // Set default values for fields that might not exist
+                    if (!userData.membershipStatus) {
+                        document.querySelector('.profile-info:nth-child(1)').style.display = 'none';
+                    }
+                    
+                    if (!userData.ministryGroups) {
+                        document.querySelector('.profile-info:nth-child(2)').style.display = 'none';
+                    }
+                    
+                    // Set last login time
+                    lastLogin.textContent = new Date().toLocaleString('en-US', {
+                        weekday: 'long',
+                        hour: 'numeric',
+                        minute: 'numeric',
+                        hour12: true
+                    });
+                }
+            } catch (error) {
+                console.error("Error fetching user data:", error);
+            }
+        }
+
+        // Authentication state observer
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // User is signed in
+                fetchUserData(user);
+            } else {
+                // User is signed out, redirect to login
+                window.location.href = 'Login.html';
+            }
+        });
+    </script>
+</body>
+</html>

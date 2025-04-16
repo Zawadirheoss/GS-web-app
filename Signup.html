@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gospel Springs Mission - Member Signup</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4a6fa5;
+            --secondary-color: #6c757d;
+            --success-color: #28a745;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: var(--dark-color);
+        }
+        
+        .signup-container {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            padding: 2.5rem;
+            width: 100%;
+            max-width: 500px;
+            transition: all 0.3s ease;
+        }
+        
+        .logo-container {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .header h2 {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .header p {
+            color: var(--secondary-color);
+            font-size: 0.95rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        
+        .form-label {
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        
+        .form-control {
+            height: 48px;
+            border-radius: 8px;
+            border: 1px solid #e0e0e0;
+            padding-left: 15px;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(74, 111, 165, 0.25);
+        }
+        
+        .input-group {
+            position: relative;
+        }
+        
+        .btn {
+            height: 48px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-primary:hover {
+            background-color: #3a5a8c;
+            border-color: #3a5a8c;
+        }
+        
+        .btn-validate {
+            position: absolute;
+            right: 5px;
+            top: 5px;
+            height: 38px;
+            padding: 0 15px;
+            background-color: var(--success-color);
+            border: none;
+        }
+        
+        .btn-validate:hover {
+            background-color: #218838;
+        }
+        
+        .password-fields {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .password-strength {
+            height: 4px;
+            background-color: #e9ecef;
+            border-radius: 2px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+        
+        .strength-bar {
+            height: 100%;
+            width: 0;
+            transition: width 0.3s ease;
+        }
+        
+        .password-requirements {
+            margin-top: 10px;
+            font-size: 0.8rem;
+            color: var(--secondary-color);
+        }
+        
+        .requirement {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        
+        .requirement i {
+            margin-right: 5px;
+            font-size: 0.7rem;
+        }
+        
+        .valid {
+            color: var(--success-color);
+        }
+        
+        .invalid {
+            color: #dc3545;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            color: var(--secondary-color);
+        }
+        
+        .footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="signup-container">
+        <div class="logo-container">
+            <img src="Gospel springs logo.jpg"Gospel Springs Mission Logo" class="logo">
+        </div>
+        
+        <div class="header">
+            <h2>Create Your Account</h2>
+            <p>Welcome to Gospel Springs Mission member portal</p>
+        </div>
+        
+        <form id="signupForm">
+            <div class="form-group">
+                <label for="memberId" class="form-label">Member ID</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" id="memberId" placeholder="GS/12345/25" required>
+                    <button type="button" class="btn btn-success btn-validate" id="validateBtn">
+                        <i class="fas fa-check"></i> Validate
+                    </button>
+                </div>
+                <small class="text-muted">Format: GS/00000/YY (current year)</small>
+            </div>
+            
+            <div id="passwordFields" class="password-fields">
+                <div class="form-group">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" readonly>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" placeholder="Create a password" required>
+                    <div class="password-strength">
+                        <div class="strength-bar" id="strengthBar"></div>
+                    </div>
+                    <div class="password-requirements">
+                        <div class="requirement" id="lengthReq">
+                            <i class="fas fa-circle"></i> At least 8 characters
+                        </div>
+                        <div class="requirement" id="numberReq">
+                            <i class="fas fa-circle"></i> Contains a number
+                        </div>
+                        <div class="requirement" id="specialReq">
+                            <i class="fas fa-circle"></i> Contains a special character
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="confirmPassword" class="form-label">Confirm Password</label>
+                    <input type="password" class="form-control" id="confirmPassword" placeholder="Confirm your password" required>
+                    <div id="passwordMatch" class="text-danger mt-1" style="font-size: 0.8rem;"></div>
+                </div>
+                
+                <button type="submit" class="btn btn-primary w-100" id="createAccountBtn">
+                    <i class="fas fa-user-plus"></i> Create Account
+                </button>
+            </div>
+        </form>
+        
+        <div class="footer">
+            Already have an account? <a href="Gospel springs logo.jpg">Sign in</a>
+        </div>
+    </div>
+
+    <!-- Validation Success Modal -->
+    <div class="modal fade" id="validationModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body text-center p-4">
+                    <div class="mb-3">
+                        <i class="fas fa-check-circle" style="font-size: 3rem; color: var(--success-color);"></i>
+                    </div>
+                    <h5 class="mb-3">Member ID Validated</h5>
+                    <p>Your member ID has been successfully verified.</p>
+                    <button type="button" class="btn btn-primary w-50 mx-auto" data-bs-dismiss="modal">Continue</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body text-center p-4">
+                    <div class="mb-3">
+                        <i class="fas fa-check-circle" style="font-size: 3rem; color: var(--success-color);"></i>
+                    </div>
+                    <h5 class="mb-3">Thank You!</h5>
+                    <p>Your password has been successfully created.</p>
+                    <button type="button" class="btn btn-primary w-50 mx-auto" id="redirectBtn">Login Now</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase and Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module">
+        // Import Firebase modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+        import { 
+            getAuth, 
+            createUserWithEmailAndPassword 
+        } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+        import { 
+            getFirestore, 
+            collection, 
+            query, 
+            where, 
+            getDocs 
+        } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDJJqxh3UOsTcBPAXLeEWeLoQRmIy_6hNU",
+            authDomain: "web-app-ae5b6.firebaseapp.com",
+            projectId: "web-app-ae5b6",
+            storageBucket: "web-app-ae5b6.firebasestorage.app",
+            messagingSenderId: "921251501161",
+            appId: "1:921251501161:web:316ff3fc4345735762bef8"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        
+        // Initialize Bootstrap modals
+        const validationModal = new bootstrap.Modal(document.getElementById('validationModal'));
+        const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+
+        // DOM elements
+        const signupForm = document.getElementById('signupForm');
+        const validateBtn = document.getElementById('validateBtn');
+        const memberIdInput = document.getElementById('memberId');
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
+        const confirmPasswordInput = document.getElementById('confirmPassword');
+        const passwordFields = document.getElementById('passwordFields');
+        const passwordMatch = document.getElementById('passwordMatch');
+        const redirectBtn = document.getElementById('redirectBtn');
+        const strengthBar = document.getElementById('strengthBar');
+        const lengthReq = document.getElementById('lengthReq');
+        const numberReq = document.getElementById('numberReq');
+        const specialReq = document.getElementById('specialReq');
+
+        // Validate member ID format
+        function isValidMemberId(memberId) {
+            const regex = /^GS\/\d{5}\/\d{2}$/;
+            return regex.test(memberId);
+        }
+
+        // Check password strength
+        function checkPasswordStrength(password) {
+            let strength = 0;
+            
+            // Check length
+            if (password.length >= 8) {
+                strength += 1;
+                lengthReq.classList.add('valid');
+                lengthReq.classList.remove('invalid');
+                lengthReq.querySelector('i').className = 'fas fa-check';
+            } else {
+                lengthReq.classList.add('invalid');
+                lengthReq.classList.remove('valid');
+                lengthReq.querySelector('i').className = 'fas fa-circle';
+            }
+            
+            // Check for numbers
+            if (/\d/.test(password)) {
+                strength += 1;
+                numberReq.classList.add('valid');
+                numberReq.classList.remove('invalid');
+                numberReq.querySelector('i').className = 'fas fa-check';
+            } else {
+                numberReq.classList.add('invalid');
+                numberReq.classList.remove('valid');
+                numberReq.querySelector('i').className = 'fas fa-circle';
+            }
+            
+            // Check for special characters
+            if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+                strength += 1;
+                specialReq.classList.add('valid');
+                specialReq.classList.remove('invalid');
+                specialReq.querySelector('i').className = 'fas fa-check';
+            } else {
+                specialReq.classList.add('invalid');
+                specialReq.classList.remove('valid');
+                specialReq.querySelector('i').className = 'fas fa-circle';
+            }
+            
+            // Update strength bar
+            const width = (strength / 3) * 100;
+            strengthBar.style.width = `${width}%`;
+            
+            if (strength === 0) {
+                strengthBar.style.backgroundColor = '#dc3545';
+            } else if (strength === 1) {
+                strengthBar.style.backgroundColor = '#fd7e14';
+            } else if (strength === 2) {
+                strengthBar.style.backgroundColor = '#ffc107';
+            } else {
+                strengthBar.style.backgroundColor = '#28a745';
+            }
+            
+            return strength === 3;
+        }
+
+        // Check if passwords match
+        function checkPasswordMatch() {
+            if (passwordInput.value !== confirmPasswordInput.value) {
+                passwordMatch.textContent = 'Passwords do not match';
+                return false;
+            } else {
+                passwordMatch.textContent = '';
+                return true;
+            }
+        }
+
+        // Validate member ID button click
+        validateBtn.addEventListener('click', async () => {
+            const memberId = memberIdInput.value.trim();
+            
+            if (!isValidMemberId(memberId)) {
+                alert('Please enter a valid Member ID in the format GS/12345/23');
+                return;
+            }
+            
+            try {
+                // Check if member ID exists in useraccount collection
+                const membersRef = collection(db, 'useraccount');
+                const q = query(membersRef, where('memberId', '==', memberId));
+                const querySnapshot = await getDocs(q);
+                
+                if (querySnapshot.empty) {
+                    alert('Member ID not found. Please check your ID and try again.');
+                    return;
+                }
+                
+                // Get the email associated with the member ID
+                const memberData = querySnapshot.docs[0].data();
+                const memberEmail = memberData.email;
+                
+                if (!memberEmail) {
+                    alert('No email associated with this Member ID. Please contact support.');
+                    return;
+                }
+                
+                // Show validation success modal
+                validationModal.show();
+                
+                // When modal is closed, show password fields and populate email
+                document.getElementById('validationModal').addEventListener('hidden.bs.modal', () => {
+                    emailInput.value = memberEmail;
+                    passwordFields.style.display = 'block';
+                });
+                
+            } catch (error) {
+                console.error("Error validating member ID:", error);
+                alert('An error occurred while validating your Member ID. Please try again.');
+            }
+        });
+
+        // Password input events
+        passwordInput.addEventListener('input', () => {
+            checkPasswordStrength(passwordInput.value);
+        });
+        
+        confirmPasswordInput.addEventListener('input', checkPasswordMatch);
+
+        // Form submission
+        signupForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = emailInput.value;
+            const password = passwordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+            
+            // Validate password strength
+            const isStrongPassword = checkPasswordStrength(password);
+            
+            if (!isStrongPassword) {
+                alert('Please create a stronger password that meets all requirements.');
+                return;
+            }
+            
+            // Check passwords match
+            if (!checkPasswordMatch()) {
+                return;
+            }
+            
+            try {
+                // Create user account with email and password
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+                
+                // Show success modal
+                successModal.show();
+                
+            } catch (error) {
+                console.error("Signup error:", error);
+                
+                if (error.code === 'auth/email-already-in-use') {
+                    alert('This email is already registered. Please login instead.');
+                } else if (error.code === 'auth/weak-password') {
+                    alert('Please choose a stronger password.');
+                } else {
+                    alert('An error occurred during signup. Please try again.');
+                }
+            }
+        });
+
+        // Redirect to login page
+        redirectBtn.addEventListener('click', () => {
+            window.location.href = 'login.html';
+        });
+    </script>
+</body>
+</html>
