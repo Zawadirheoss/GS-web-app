@@ -53,6 +53,9 @@
         const mainContent = document.getElementById('mainContent');
         const messageCountBadge = document.getElementById('messageCountBadge');
         const currentUserBadge = document.getElementById('currentUserBadge');
+        const noConversationsView = document.getElementById('noConversationsView');
+        const startConversationBtn = document.getElementById('startConversationBtn');
+        const allUsersView = document.getElementById('allUsersView');
 
         // Global variables
         let currentUser = null;
@@ -60,6 +63,7 @@
         let selectedRecipient = null;
         let chatId = '';
         let messageCount = 0;
+        let hasConversations = false;
 
         // Check authentication state
         onAuthStateChanged(auth, async (user) => {
@@ -73,10 +77,10 @@
                 
                 // Display current user info
                 currentUserBadge.textContent = `Logged in as: ${currentUserMemberId}`;
-                chatHeader.textContent = `Select a member to chat with`;
+                chatHeader.textContent = `Your Conversations`;
                 
-                // Load all users except current user
-                await loadUsers();
+                // Load users with existing conversations
+                await loadConversations();
                 
             } else {
                 // User is signed out
@@ -111,38 +115,117 @@
             }
         }
 
-        // Load all users except current user
-        async function loadUsers() {
+        // Load users with existing conversations
+        async function loadConversations() {
             try {
-                const querySnapshot = await getDocs(collection(db, "useraccount"));
+                loadingSpinner.classList.remove('d-none');
+                noConversationsView.classList.add('d-none');
+                allUsersView.classList.add('d-none');
                 userList.innerHTML = '';
+                
+                // Query chats where current user is a participant
+                const chatsQuery = query(
+                    collection(db, "chats"),
+                    where("participants", "array-contains", currentUserMemberId)
+                );
+                
+                const chatsSnapshot = await getDocs(chatsQuery);
+                
+                if (chatsSnapshot.empty) {
+                    // No conversations yet
+                    loadingSpinner.classList.add('d-none');
+                    noConversationsView.classList.remove('d-none');
+                    hasConversations = false;
+                    return;
+                }
+                
+                hasConversations = true;
+                
+                // Get unique member IDs from conversations
+                const memberIds = new Set();
+                chatsSnapshot.forEach(doc => {
+                    const data = doc.data();
+                    if (data.participant1 !== currentUserMemberId) memberIds.add(data.participant1);
+                    if (data.participant2 !== currentUserMemberId) memberIds.add(data.participant2);
+                });
+                
+                // Get user details for each member
+                const usersQuery = query(
+                    collection(db, "useraccount"),
+                    where("memberId", "in", Array.from(memberIds))
+                );
+                
+                const usersSnapshot = await getDocs(usersQuery);
+                
+                if (usersSnapshot.empty) {
+                    loadingSpinner.classList.add('d-none');
+                    noConversationsView.classList.remove('d-none');
+                    return;
+                }
+                
+                // Display users with conversations
+                usersSnapshot.forEach((doc) => {
+                    const user = doc.data();
+                    addUserToConversationList(user);
+                });
+                
+                loadingSpinner.classList.add('d-none');
+                
+            } catch (error) {
+                console.error("Error loading conversations:", error);
+                loadingSpinner.classList.add('d-none');
+                userList.innerHTML = '<div class="list-group-item text-danger">Error loading conversations</div>';
+            }
+        }
+
+        // Load all users except current user
+        async function loadAllUsers() {
+            try {
+                loadingSpinner.classList.remove('d-none');
+                noConversationsView.classList.add('d-none');
+                allUsersView.classList.add('d-none');
+                userList.innerHTML = '';
+                
+                const querySnapshot = await getDocs(collection(db, "useraccount"));
+                
+                if (querySnapshot.empty) {
+                    loadingSpinner.classList.add('d-none');
+                    userList.innerHTML = '<div class="list-group-item text-muted">No members found</div>';
+                    return;
+                }
                 
                 querySnapshot.forEach((doc) => {
                     const user = doc.data();
                     if (user.memberId !== currentUserMemberId) {
-                        const userElement = document.createElement('div');
-                        userElement.className = 'list-group-item list-group-item-action user-item';
-                        userElement.innerHTML = `
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <strong>${user.memberId}</strong>
-                                    <div class="text-muted small">${user.email}</div>
-                                </div>
-                                <i class="fas fa-comment-dots"></i>
-                            </div>
-                        `;
-                        userElement.addEventListener('click', () => selectUser(user));
-                        userList.appendChild(userElement);
+                        addUserToConversationList(user);
                     }
                 });
                 
                 loadingSpinner.classList.add('d-none');
+                allUsersView.classList.remove('d-none');
                 
             } catch (error) {
                 console.error("Error loading users:", error);
                 loadingSpinner.classList.add('d-none');
                 userList.innerHTML = '<div class="list-group-item text-danger">Error loading users</div>';
             }
+        }
+
+        // Add user to conversation list
+        function addUserToConversationList(user) {
+            const userElement = document.createElement('div');
+            userElement.className = 'list-group-item list-group-item-action user-item';
+            userElement.innerHTML = `
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong>${user.memberId}</strong>
+                        <div class="text-muted small">${user.email}</div>
+                    </div>
+                    <i class="fas fa-comment-dots"></i>
+                </div>
+            `;
+            userElement.addEventListener('click', () => selectUser(user));
+            userList.appendChild(userElement);
         }
 
         // Select a user to chat with
@@ -206,6 +289,7 @@
         // Update message count display
         function updateMessageCount() {
             messageCountBadge.textContent = `${messageCount} ${messageCount === 1 ? 'message' : 'messages'}`;
+            messageCountBadge.classList.remove('d-none');
         }
 
         // Render a message
@@ -237,6 +321,7 @@
                 await setDoc(chatDocRef, {
                     participant1: currentUserMemberId,
                     participant2: selectedRecipient.memberId,
+                    participants: [currentUserMemberId, selectedRecipient.memberId],
                     lastUpdated: serverTimestamp()
                 }, { merge: true });
                 
@@ -251,6 +336,11 @@
                 
                 // Clear input
                 messageInput.value = '';
+                
+                // If this was the first message, reload conversations
+                if (!hasConversations) {
+                    await loadConversations();
+                }
                 
             } catch (error) {
                 console.error("Error sending message:", error);
@@ -291,6 +381,8 @@
                 sendMessage();
             }
         });
+        
+        startConversationBtn.addEventListener('click', loadAllUsers);
     </script>
     <style>
         :root {
@@ -337,6 +429,7 @@
             border-right: 1px solid #e2e8f0;
             overflow-y: auto;
             background-color: white;
+            position: relative;
         }
         
         .chat-area {
@@ -511,6 +604,47 @@
             border-radius: 0;
         }
         
+        .no-conversations-view {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .start-conversation-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 2rem;
+            font-weight: 500;
+            margin-top: 1.5rem;
+            transition: all 0.3s;
+        }
+        
+        .start-conversation-btn:hover {
+            background-color: #4f46e5;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .all-users-view {
+            padding: 1rem;
+            border-top: 1px solid #e2e8f0;
+            background-color: #f8fafc;
+        }
+        
+        .all-users-title {
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--gray-color);
+            margin-bottom: 0.5rem;
+        }
+        
         @media (max-width: 768px) {
             .chat-container {
                 flex-direction: column;
@@ -558,28 +692,47 @@
                 <!-- User List -->
                 <div class="user-list">
                     <div class="p-3 border-bottom">
-                        <h5 class="mb-0">Members</h5>
+                        <h5 class="mb-0">Your Conversations</h5>
                     </div>
-                    <div class="list-group list-group-flush" id="userList">
-                        <div class="text-center py-5" id="loadingSpinner">
-                            <div class="spinner-border text-primary" role="status">
-                                <span class="visually-hidden">Loading...</span>
-                            </div>
-                            <p class="mt-3">Loading members...</p>
+                    
+                    <!-- Loading Spinner -->
+                    <div class="text-center py-5" id="loadingSpinner">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
                         </div>
+                        <p class="mt-3">Loading conversations...</p>
+                    </div>
+                    
+                    <!-- No Conversations View -->
+                    <div class="no-conversations-view d-none" id="noConversationsView">
+                        <i class="fas fa-comment-slash fa-4x mb-3" style="color: var(--gray-color);"></i>
+                        <h5 class="mb-2">No conversations yet</h5>
+                        <p class="text-muted">You haven't started any conversations with other members.</p>
+                        <button class="start-conversation-btn" id="startConversationBtn">
+                            <i class="fas fa-plus me-2"></i>Start Now
+                        </button>
+                    </div>
+                    
+                    <!-- User List -->
+                    <div class="list-group list-group-flush" id="userList"></div>
+                    
+                    <!-- All Users View Footer -->
+                    <div class="all-users-view d-none" id="allUsersView">
+                        <div class="all-users-title">All Members</div>
+                        <p class="small text-muted mb-0">Select a member to start a new conversation</p>
                     </div>
                 </div>
                 
                 <!-- Chat Area -->
                 <div class="chat-area">
                     <div class="chat-header" id="chatHeader">
-                        <span>Select a member to chat with</span>
+                        <span>Select a conversation</span>
                         <span class="message-count-badge d-none" id="messageCountBadge">0 messages</span>
                     </div>
                     <div class="messages-container" id="chatContainer">
                         <div class="text-center py-5 text-muted">
                             <i class="fas fa-comment-dots fa-3x mb-3"></i>
-                            <p>Select a member to view your conversation</p>
+                            <p>Select a conversation to view messages</p>
                         </div>
                     </div>
                     <div class="message-input-area">
