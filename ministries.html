@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Ministries</title>
+    <title>My Ministries | Church Portal</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -371,66 +370,72 @@
             }
         });
 
-        // Check authentication state
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                // User is signed in
-                try {
-                    // Get user document from first Firebase
-                    const userDocRef = doc(db1, "users", user.uid);
-                    const userDocSnap = await getDoc(userDocRef);
-
-                    if (userDocSnap.exists()) {
-                        const userData = userDocSnap.data();
-                        const userPhone = userData.phone;
-
-                        if (userPhone) {
-                            // Query ministries in second Firebase where phone matches
-                            const ministriesQuery = query(
-                                collection(db2, "ministries"),
-                                where("members", "array-contains", userPhone)
-                            );
-
-                            const querySnapshot = await getDocs(ministriesQuery);
-
-                            if (!querySnapshot.empty) {
-                                // User is in one or more ministries
-                                const ministries = [];
-                                querySnapshot.forEach((doc) => {
-                                    ministries.push({ id: doc.id, ...doc.data() });
-                                });
-
-                                displayUserMinistries(ministries, userPhone);
-                            } else {
-                                // User is not in any ministries
-                                displayNoMinistries();
-                            }
-                        } else {
-                            // User has no phone number
-                            displayError("Can't find your data. Phone number not registered.");
-                        }
-                    } else {
-                        // User document doesn't exist
-                        displayError("Can't find your data. Please contact support.");
-                    }
-                } catch (error) {
-                    console.error("Error fetching data:", error);
-                    displayError("An error occurred while fetching your data. Please try again later.");
+        // Main function to load ministries data
+        async function loadMinistriesData() {
+            try {
+                // Get current user from auth (already authenticated from main portal)
+                const user = auth.currentUser;
+                
+                if (!user) {
+                    displayError("Authentication required. Please login first.");
+                    return;
                 }
-            } else {
-                // User is not signed in (shouldn't happen if authentication is handled by index.html)
-                displayError("You need to be signed in to view this page.");
+
+                // Get user document from first Firebase
+                const userDocRef = doc(db1, "users", user.uid);
+                const userDocSnap = await getDoc(userDocRef);
+
+                if (!userDocSnap.exists()) {
+                    displayError("Can't find your user data. Please contact support.");
+                    return;
+                }
+
+                const userData = userDocSnap.data();
+                const userPhone = userData.phone;
+
+                if (!userPhone) {
+                    displayError("Can't find your phone number in our records.");
+                    return;
+                }
+
+                // Query ministries in second Firebase where phone matches
+                const ministriesQuery = query(
+                    collection(db2, "ministries"),
+                    where("members", "array-contains", userPhone)
+                );
+
+                const querySnapshot = await getDocs(ministriesQuery);
+
+                if (!querySnapshot.empty) {
+                    // User is in one or more ministries
+                    const ministries = [];
+                    querySnapshot.forEach((doc) => {
+                        const ministryData = doc.data();
+                        // Find the member's specific info in this ministry
+                        const memberInfo = (ministryData.membersInfo || []).find(m => m.phone === userPhone) || {};
+                        ministries.push({ 
+                            id: doc.id, 
+                            ...ministryData,
+                            memberInfo // Attach the member's specific info
+                        });
+                    });
+
+                    displayUserMinistries(ministries);
+                } else {
+                    // User is not in any ministries
+                    displayNoMinistries();
+                }
+            } catch (error) {
+                console.error("Error loading ministries data:", error);
+                displayError("An error occurred while loading your ministries. Please try again later.");
             }
-        });
+        }
 
         // Display user's ministries
-        function displayUserMinistries(ministries, userPhone) {
+        function displayUserMinistries(ministries) {
             let html = `
                 <div class="ministries-container">
                     ${ministries.map(ministry => {
-                        // Find the member's details in this ministry
-                        const memberInfo = ministry.membersInfo?.find(m => m.phone === userPhone) || {};
-                        
                         return `
                             <div class="ministry-card">
                                 <div class="ministry-header">
@@ -438,9 +443,9 @@
                                 </div>
                                 <div class="ministry-body">
                                     <div class="ministry-info">
-                                        <p><i class="fas fa-user"></i> <strong>Full Name:</strong> ${memberInfo.fullName || 'Not specified'}</p>
-                                        <p><i class="fas fa-id-badge"></i> <strong>Position:</strong> ${memberInfo.position || 'Member'}</p>
-                                        <p><i class="fas fa-church"></i> <strong>Home Church:</strong> ${memberInfo.homeChurch || 'Not specified'}</p>
+                                        <p><i class="fas fa-user"></i> <strong>Full Name:</strong> ${ministry.memberInfo.fullName || 'Not specified'}</p>
+                                        <p><i class="fas fa-id-badge"></i> <strong>Position:</strong> ${ministry.memberInfo.position || 'Member'}</p>
+                                        <p><i class="fas fa-church"></i> <strong>Home Church:</strong> ${ministry.memberInfo.homeChurch || 'Not specified'}</p>
                                     </div>
                                 </div>
                             </div>
@@ -552,6 +557,11 @@
                 `;
             }
         }
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', () => {
+            loadMinistriesData();
+        });
     </script>
 </body>
 </html>
