@@ -21,12 +21,12 @@
             orderBy,
             getDocs,
             doc,
-            setDoc
+            setDoc,
+            getCountFromServer
         } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
         import { 
             getAuth, 
-            onAuthStateChanged,
-            signOut
+            onAuthStateChanged
         } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
 
         const firebaseConfig = {
@@ -47,18 +47,19 @@
         const messageInput = document.getElementById('messageInput');
         const sendButton = document.getElementById('sendButton');
         const userList = document.getElementById('userList');
-        const currentUserBadge = document.getElementById('currentUserBadge');
         const chatHeader = document.getElementById('chatHeader');
         const loadingSpinner = document.getElementById('loadingSpinner');
-        const signOutBtn = document.getElementById('signOutBtn');
         const authAlert = document.getElementById('authAlert');
         const mainContent = document.getElementById('mainContent');
+        const messageCountBadge = document.getElementById('messageCountBadge');
+        const currentUserBadge = document.getElementById('currentUserBadge');
 
         // Global variables
         let currentUser = null;
         let currentUserMemberId = '';
         let selectedRecipient = null;
         let chatId = '';
+        let messageCount = 0;
 
         // Check authentication state
         onAuthStateChanged(auth, async (user) => {
@@ -71,7 +72,7 @@
                 await fetchCurrentUserMemberId(user.email);
                 
                 // Display current user info
-                currentUserBadge.textContent = `You: ${currentUserMemberId}`;
+                currentUserBadge.textContent = `Logged in as: ${currentUserMemberId}`;
                 chatHeader.textContent = `Select a member to chat with`;
                 
                 // Load all users except current user
@@ -85,15 +86,6 @@
                     window.location.href = 'signin.html';
                 }, 3000);
             }
-        });
-
-        // Sign out function
-        signOutBtn.addEventListener('click', () => {
-            signOut(auth).then(() => {
-                window.location.href = 'signin.html';
-            }).catch((error) => {
-                console.error("Sign out error:", error);
-            });
         });
 
         // Fetch current user's memberId
@@ -162,11 +154,16 @@
             const memberIds = [currentUserMemberId, user.memberId].sort();
             chatId = `chat_${memberIds[0]}_${memberIds[1]}`;
             
+            // Enable input field
+            messageInput.disabled = false;
+            sendButton.disabled = false;
+            messageInput.focus();
+            
             // Load chat messages
             await loadChatMessages();
             
-            // Scroll to bottom of chat
-            scrollChatToBottom();
+            // Get message count
+            await getMessageCount();
         }
 
         // Load chat messages
@@ -176,6 +173,18 @@
             
             onSnapshot(q, (snapshot) => {
                 chatContainer.innerHTML = '';
+                messageCount = snapshot.size;
+                updateMessageCount();
+                
+                if (snapshot.empty) {
+                    chatContainer.innerHTML = `
+                        <div class="text-center py-5 text-muted">
+                            <i class="fas fa-comment-slash fa-3x mb-3"></i>
+                            <p>No messages yet. Start the conversation!</p>
+                        </div>
+                    `;
+                    return;
+                }
                 
                 snapshot.forEach((doc) => {
                     const message = doc.data();
@@ -184,6 +193,19 @@
                 
                 scrollChatToBottom();
             });
+        }
+
+        // Get total message count for the conversation
+        async function getMessageCount() {
+            const messagesRef = collection(db, "chats", chatId, "messages");
+            const snapshot = await getCountFromServer(messagesRef);
+            messageCount = snapshot.data().count;
+            updateMessageCount();
+        }
+
+        // Update message count display
+        function updateMessageCount() {
+            messageCountBadge.textContent = `${messageCount} ${messageCount === 1 ? 'message' : 'messages'}`;
         }
 
         // Render a message
@@ -198,6 +220,7 @@
                     <span class="message-time">${formatTime(message.timestamp?.toDate())}</span>
                 </div>
                 <div class="message-content">${message.text}</div>
+                <div class="message-date">${formatDate(message.timestamp?.toDate())}</div>
             `;
             
             chatContainer.appendChild(messageElement);
@@ -209,8 +232,16 @@
             if (!text || !selectedRecipient) return;
             
             try {
-                const messagesRef = collection(db, "chats", chatId, "messages");
+                // Create chat document if it doesn't exist
+                const chatDocRef = doc(db, "chats", chatId);
+                await setDoc(chatDocRef, {
+                    participant1: currentUserMemberId,
+                    participant2: selectedRecipient.memberId,
+                    lastUpdated: serverTimestamp()
+                }, { merge: true });
                 
+                // Add message to subcollection
+                const messagesRef = collection(db, "chats", chatId, "messages");
                 await addDoc(messagesRef, {
                     text: text,
                     senderId: currentUserMemberId,
@@ -220,14 +251,6 @@
                 
                 // Clear input
                 messageInput.value = '';
-                
-                // Create chat metadata if it doesn't exist
-                const chatDocRef = doc(db, "chats", chatId);
-                await setDoc(chatDocRef, {
-                    participant1: currentUserMemberId,
-                    participant2: selectedRecipient.memberId,
-                    lastUpdated: serverTimestamp()
-                }, { merge: true });
                 
             } catch (error) {
                 console.error("Error sending message:", error);
@@ -242,6 +265,17 @@
                 hour: '2-digit', 
                 minute: '2-digit',
                 hour12: true
+            });
+        }
+
+        // Format date
+        function formatDate(date) {
+            if (!date) return '';
+            return date.toLocaleDateString('en-US', { 
+                weekday: 'short', 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric' 
             });
         }
 
@@ -317,6 +351,9 @@
             background-color: white;
             border-bottom: 1px solid #e2e8f0;
             font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         
         .messages-container {
@@ -328,7 +365,7 @@
         
         .message {
             max-width: 70%;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
             padding: 0.75rem 1rem;
             border-radius: 1rem;
             position: relative;
@@ -353,7 +390,7 @@
             display: flex;
             justify-content: space-between;
             font-size: 0.75rem;
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.5rem;
         }
         
         .message-sent .message-header {
@@ -366,6 +403,21 @@
         
         .message-content {
             word-wrap: break-word;
+            margin-bottom: 0.5rem;
+        }
+        
+        .message-date {
+            font-size: 0.7rem;
+            opacity: 0.7;
+            text-align: right;
+        }
+        
+        .message-sent .message-date {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .message-received .message-date {
+            color: var(--gray-color);
         }
         
         .message-input-area {
@@ -379,10 +431,11 @@
         .message-input {
             flex: 1;
             border-radius: 2rem;
-            padding: 0.75rem 1rem;
+            padding: 0.75rem 1.25rem;
             border: 1px solid #e2e8f0;
             outline: none;
             transition: all 0.3s;
+            font-size: 0.9rem;
         }
         
         .message-input:focus {
@@ -412,6 +465,7 @@
         .send-button:disabled {
             background-color: var(--gray-color);
             cursor: not-allowed;
+            transform: none;
         }
         
         .user-item {
@@ -439,6 +493,15 @@
             font-weight: 500;
         }
         
+        .message-count-badge {
+            background-color: #e0e7ff;
+            color: var(--primary-color);
+            padding: 0.25rem 0.75rem;
+            border-radius: 2rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        
         .auth-alert {
             position: fixed;
             top: 0;
@@ -460,6 +523,10 @@
                 border-right: none;
                 border-bottom: 1px solid #e2e8f0;
             }
+            
+            .message {
+                max-width: 85%;
+            }
         }
     </style>
 </head>
@@ -480,9 +547,6 @@
             </a>
             <div class="d-flex align-items-center">
                 <span class="current-user-badge me-3" id="currentUserBadge">Loading...</span>
-                <button class="btn btn-link text-decoration-none" id="signOutBtn">
-                    <i class="fas fa-sign-out-alt"></i>
-                </button>
             </div>
         </div>
     </nav>
@@ -509,7 +573,8 @@
                 <!-- Chat Area -->
                 <div class="chat-area">
                     <div class="chat-header" id="chatHeader">
-                        Select a member to start chatting
+                        <span>Select a member to chat with</span>
+                        <span class="message-count-badge d-none" id="messageCountBadge">0 messages</span>
                     </div>
                     <div class="messages-container" id="chatContainer">
                         <div class="text-center py-5 text-muted">
@@ -527,21 +592,5 @@
             </div>
         </div>
     </div>
-
-    <script>
-        // Enable/disable input based on recipient selection
-        const messageInput = document.getElementById('messageInput');
-        const sendButton = document.getElementById('sendButton');
-        
-        // This would be handled by the actual selectUser function
-        // For demo purposes, we'll simulate it here
-        function updateInputState(enabled) {
-            messageInput.disabled = !enabled;
-            sendButton.disabled = !enabled;
-            if (enabled) {
-                messageInput.focus();
-            }
-        }
-    </script>
 </body>
 </html>
