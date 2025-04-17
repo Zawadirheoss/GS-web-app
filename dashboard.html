@@ -3,17 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Member Dashboard | Gospel Springs Ministry</title>
+    <title>User Dashboard | Gospel Springs Ministry</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary: #3a5a78;
-            --primary-light: #4a6fa5;
-            --secondary: #1a3a5a;
-            --accent: #5cb3ff;
+            --primary: #2563eb;
+            --primary-light: #3b82f6;
+            --primary-dark: #1d4ed8;
+            --secondary: #1e40af;
+            --accent: #60a5fa;
             --light: #f8fafc;
             --dark: #1e293b;
+            --gray: #64748b;
+            --light-gray: #e2e8f0;
             --success: #10b981;
             --error: #ef4444;
         }
@@ -26,7 +29,7 @@
 
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: var(--light);
+            background-color: #f1f5f9;
             color: var(--dark);
             line-height: 1.6;
         }
@@ -51,7 +54,6 @@
             padding: 1.5rem;
             border-radius: 12px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            flex-grow: 1;
         }
 
         .greeting {
@@ -64,19 +66,13 @@
             opacity: 0.9;
         }
 
-        /* Profile Section */
-        .profile-section {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-bottom: 2rem;
-        }
-
+        /* User Profile Card */
         .profile-card {
             background: white;
             border-radius: 12px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            padding: 1.5rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
         }
 
         .profile-header {
@@ -105,78 +101,145 @@
         }
 
         .profile-info p {
-            color: var(--secondary);
-            font-weight: 500;
+            color: var(--gray);
         }
 
-        /* Member Details */
-        .details-grid {
+        .profile-details {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1rem;
-        }
-
-        .detail-card {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .detail-card h2 {
-            font-size: 1.25rem;
-            margin-bottom: 1rem;
-            color: var(--primary);
-            border-bottom: 1px solid var(--light);
-            padding-bottom: 0.5rem;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
         }
 
         .detail-item {
-            margin-bottom: 1rem;
+            background: var(--light);
+            padding: 1rem;
+            border-radius: 8px;
         }
 
         .detail-item h3 {
             font-size: 0.9rem;
-            color: var(--secondary);
-            margin-bottom: 0.25rem;
+            color: var(--gray);
+            margin-bottom: 0.5rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
         .detail-item p {
             font-weight: 500;
-            padding: 0.5rem;
-            background: var(--light);
-            border-radius: 6px;
         }
 
-        /* Loading State */
-        .loading {
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
             display: flex;
-            justify-content: center;
             align-items: center;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(96, 165, 250, 0.1);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            margin-right: 1rem;
+        }
+
+        .stat-content h3 {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-content p {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        /* Recent Activity */
+        .activity-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
             padding: 2rem;
         }
 
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid rgba(0, 0, 0, 0.1);
-            border-radius: 50%;
-            border-top-color: var(--primary);
-            animation: spin 1s ease-in-out infinite;
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
         }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        .card-header h2 {
+            font-size: 1.25rem;
+        }
+
+        .activity-list {
+            list-style: none;
+        }
+
+        .activity-item {
+            display: flex;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(96, 165, 250, 0.1);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+        }
+
+        .activity-content h4 {
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .activity-content p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .activity-time {
+            color: var(--gray);
+            font-size: 0.8rem;
+            margin-left: auto;
         }
 
         /* Responsive */
         @media (max-width: 768px) {
             .dashboard-header {
                 flex-direction: column;
+                align-items: flex-start;
                 gap: 1rem;
+            }
+
+            .greeting {
+                font-size: 1.5rem;
             }
 
             .profile-header {
@@ -196,96 +259,140 @@
         <!-- Dashboard Header with Greeting -->
         <div class="dashboard-header">
             <div class="greeting-container">
-                <h1 class="greeting" id="greetingText">Hello, <span id="userFirstName">Member</span></h1>
-                <p class="greeting-text" id="greetingTime">Welcome to your member dashboard</p>
+                <h1 class="greeting" id="greetingText">Good Morning</h1>
+                <p class="greeting-text">Welcome to your Gospel Springs Ministry dashboard</p>
             </div>
         </div>
 
-        <!-- Loading State -->
-        <div class="loading" id="loadingIndicator">
-            <div class="spinner"></div>
-        </div>
-
-        <!-- Profile Section -->
-        <div class="profile-section" id="profileSection" style="display: none;">
-            <div class="profile-card">
-                <div class="profile-header">
-                    <div class="profile-avatar" id="profileAvatar">M</div>
-                    <div class="profile-info">
-                        <h2 id="userName">Loading...</h2>
-                        <p id="userRole">Member</p>
-                    </div>
-                </div>
-                <div class="details-grid">
-                    <div class="detail-item">
-                        <h3>Member ID</h3>
-                        <p id="memberId">GSM-0000</p>
-                    </div>
-                    <div class="detail-item">
-                        <h3>Email</h3>
-                        <p id="userEmail">user@example.com</p>
-                    </div>
-                    <div class="detail-item">
-                        <h3>Phone</h3>
-                        <p id="userPhone">+1234567890</p>
-                    </div>
-                    <div class="detail-item">
-                        <h3>Membership Date</h3>
-                        <p id="membershipDate">January 1, 2023</p>
-                    </div>
+        <!-- User Profile Card -->
+        <div class="profile-card">
+            <div class="profile-header">
+                <div class="profile-avatar" id="profileAvatar">U</div>
+                <div class="profile-info">
+                    <h2 id="userName">Loading...</h2>
+                    <p id="userRole">Member</p>
                 </div>
             </div>
-
-            <div class="profile-card">
-                <h2>Contact Information</h2>
-                <div class="details-grid">
-                    <div class="detail-item">
-                        <h3>Address</h3>
-                        <p id="userAddress">123 Church Street, City</p>
-                    </div>
-                    <div class="detail-item">
-                        <h3>City</h3>
-                        <p id="userCity">City</p>
-                    </div>
-                    <div class="detail-item">
-                        <h3>State/Region</h3>
-                        <p id="userState">State</p>
-                    </div>
-                    <div class="detail-item">
-                        <h3>Country</h3>
-                        <p id="userCountry">Country</p>
-                    </div>
+            <div class="profile-details">
+                <div class="detail-item">
+                    <h3>Email</h3>
+                    <p id="userEmail">Loading...</p>
+                </div>
+                <div class="detail-item">
+                    <h3>Phone Number</h3>
+                    <p id="userPhone">Loading...</p>
+                </div>
+                <div class="detail-item">
+                    <h3>Member Since</h3>
+                    <p id="memberSince">Loading...</p>
+                </div>
+                <div class="detail-item">
+                    <h3>Membership Status</h3>
+                    <p id="membershipStatus">Loading...</p>
                 </div>
             </div>
         </div>
 
-        <!-- Member Details Section -->
-        <div class="detail-card" id="memberDetails" style="display: none;">
-            <h2>Member Details</h2>
-            <div class="details-grid" id="memberDetailsGrid">
-                <!-- Dynamic content will be inserted here -->
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+                <div class="stat-content">
+                    <h3>Upcoming Events</h3>
+                    <p id="upcomingEvents">3</p>
+                </div>
             </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-hands-helping"></i>
+                </div>
+                <div class="stat-content">
+                    <h3>Ministries</h3>
+                    <p id="ministriesCount">2</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-pray"></i>
+                </div>
+                <div class="stat-content">
+                    <h3>Prayer Requests</h3>
+                    <p id="prayerRequests">1</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-hand-holding-heart"></i>
+                </div>
+                <div class="stat-content">
+                    <h3>Giving This Month</h3>
+                    <p id="monthlyGiving">$150.00</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="activity-card">
+            <div class="card-header">
+                <h2>Recent Activity</h2>
+            </div>
+            <ul class="activity-list" id="activityList">
+                <li class="activity-item">
+                    <div class="activity-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <div class="activity-content">
+                        <h4>Attended Sunday Service</h4>
+                        <p>Main Sanctuary - 10:00 AM</p>
+                    </div>
+                    <div class="activity-time">2 days ago</div>
+                </li>
+                <li class="activity-item">
+                    <div class="activity-icon">
+                        <i class="fas fa-donate"></i>
+                    </div>
+                    <div class="activity-content">
+                        <h4>Made a Donation</h4>
+                        <p>Tithes & Offerings</p>
+                    </div>
+                    <div class="activity-time">1 week ago</div>
+                </li>
+                <li class="activity-item">
+                    <div class="activity-icon">
+                        <i class="fas fa-user-friends"></i>
+                    </div>
+                    <div class="activity-content">
+                        <h4>Joined Small Group</h4>
+                        <p>Men's Bible Study</p>
+                    </div>
+                    <div class="activity-time">2 weeks ago</div>
+                </li>
+            </ul>
         </div>
     </div>
 
-    <!-- Firebase SDKs - First Project (Authentication) -->
+    <!-- Firebase SDKs -->
     <script type="module">
-        // Import the functions you need from the SDKs you need
-        import { initializeApp as initializeApp1 } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+        // Import the functions you need from the Firebase SDKs
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
         import { 
             getAuth, 
-            onAuthStateChanged 
+            onAuthStateChanged
         } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
         import { 
             getFirestore, 
             collection, 
             query, 
             where, 
-            getDocs 
+            getDocs,
+            doc,
+            getDoc
         } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 
-        // First Firebase project configuration (Web App)
-        const firebaseConfig1 = {
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
             apiKey: "AIzaSyDJJqxh3UOsTcBPAXLeEWeLoQRmIy_6hNU",
             authDomain: "web-app-ae5b6.firebaseapp.com",
             projectId: "web-app-ae5b6",
@@ -294,61 +401,35 @@
             appId: "1:921251501161:web:316ff3fc4345735762bef8"
         };
 
-        // Second Firebase project configuration (Church CMS)
-        const firebaseConfig2 = {
-            apiKey: "AIzaSyAyiRtkvdxnGWaiG-Xn-50Vm_Pb1J0ya6E",
-            authDomain: "church-cms-96407.firebaseapp.com",
-            projectId: "church-cms-96407",
-            storageBucket: "church-cms-96407.appspot.com",
-            messagingSenderId: "19370427001",
-            appId: "1:19370427001:web:b1d20215c437fc324e4aa8",
-            measurementId: "G-NKDZSFGR4X"
-        };
-
-        // Initialize both Firebase apps
-        const app1 = initializeApp1(firebaseConfig1, "app1");
-        const app2 = initializeApp1(firebaseConfig2, "app2");
-
-        // Get auth and firestore instances
-        const auth = getAuth(app1);
-        const db1 = getFirestore(app1);
-        const db2 = getFirestore(app2);
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
 
         // DOM Elements
         const greetingText = document.getElementById('greetingText');
-        const userFirstName = document.getElementById('userFirstName');
-        const greetingTime = document.getElementById('greetingTime');
         const profileAvatar = document.getElementById('profileAvatar');
         const userName = document.getElementById('userName');
         const userRole = document.getElementById('userRole');
-        const memberId = document.getElementById('memberId');
         const userEmail = document.getElementById('userEmail');
         const userPhone = document.getElementById('userPhone');
-        const membershipDate = document.getElementById('membershipDate');
-        const userAddress = document.getElementById('userAddress');
-        const userCity = document.getElementById('userCity');
-        const userState = document.getElementById('userState');
-        const userCountry = document.getElementById('userCountry');
-        const memberDetailsGrid = document.getElementById('memberDetailsGrid');
-        const loadingIndicator = document.getElementById('loadingIndicator');
-        const profileSection = document.getElementById('profileSection');
-        const memberDetails = document.getElementById('memberDetails');
+        const memberSince = document.getElementById('memberSince');
+        const membershipStatus = document.getElementById('membershipStatus');
 
         // Set greeting based on time of day
-        function setGreeting(firstName) {
+        function setGreeting() {
             const hour = new Date().getHours();
-            let timeGreeting;
+            let greeting;
             
             if (hour < 12) {
-                timeGreeting = "Good Morning";
+                greeting = "Good Morning";
             } else if (hour < 18) {
-                timeGreeting = "Good Afternoon";
+                greeting = "Good Afternoon";
             } else {
-                timeGreeting = "Good Evening";
+                greeting = "Good Evening";
             }
             
-            greetingTime.textContent = timeGreeting;
-            userFirstName.textContent = firstName || "Member";
+            greetingText.textContent = greeting;
         }
 
         // Format date
@@ -356,167 +437,75 @@
             if (!dateString) return "Not available";
             
             const options = { year: 'numeric', month: 'long', day: 'numeric' };
-            try {
-                const date = dateString.toDate ? dateString.toDate() : new Date(dateString);
-                return isNaN(date.getTime()) ? "Not available" : date.toLocaleDateString('en-US', options);
-            } catch (e) {
-                return "Not available";
-            }
+            const date = dateString.toDate ? dateString.toDate() : new Date(dateString);
+            return date.toLocaleDateString('en-US', options);
         }
 
-        // Display all member data in a structured way
-        function displayMemberData(memberData) {
-            // Clear previous content
-            memberDetailsGrid.innerHTML = '';
-
-            // Loop through all properties in memberData
-            for (const [key, value] of Object.entries(memberData)) {
-                // Skip these as they're already displayed in the profile section
-                if (['firstName', 'lastName', 'email', 'phone', 'address', 'city', 'state', 'country', 'memberId', 'membershipDate'].includes(key)) {
-                    continue;
-                }
-
-                // Skip if value is empty or null
-                if (!value && value !== 0 && value !== false) continue;
-
-                // Create detail item
-                const detailItem = document.createElement('div');
-                detailItem.className = 'detail-item';
-
-                // Format the key for display
-                const formattedKey = key
-                    .replace(/([A-Z])/g, ' $1')
-                    .replace(/^./, str => str.toUpperCase())
-                    .replace(/_/g, ' ');
-
-                let displayValue = value;
-
-                // Special formatting for certain field types
-                if (typeof value === 'boolean') {
-                    displayValue = value ? 'Yes' : 'No';
-                } else if (key.toLowerCase().includes('date')) {
-                    displayValue = formatDate(value);
-                } else if (typeof value === 'object' && value !== null) {
-                    displayValue = JSON.stringify(value, null, 2);
-                }
-
-                detailItem.innerHTML = `
-                    <h3>${formattedKey}</h3>
-                    <p>${displayValue}</p>
-                `;
-
-                memberDetailsGrid.appendChild(detailItem);
-            }
-
-            // Show the member details section
-            memberDetails.style.display = 'block';
-        }
-
-        // Fetch member data from second Firebase project
-        async function fetchMemberData(email) {
-            try {
-                // Query members collection in second Firebase project
-                const membersRef = collection(db2, 'members');
-                const q = query(membersRef, where("email", "==", email));
-                const querySnapshot = await getDocs(q);
-                
-                if (!querySnapshot.empty) {
-                    const memberDoc = querySnapshot.docs[0];
-                    return memberDoc.data();
-                } else {
-                    console.log("No member data found in church-cms database");
-                    return null;
-                }
-            } catch (error) {
-                console.error("Error fetching member data:", error);
-                return null;
-            }
-        }
-
-        // Fetch user data from first Firebase project
+        // Fetch user data from Firestore
         async function fetchUserData(user) {
             try {
-                // Query useraccount collection in first Firebase project
-                const usersRef = collection(db1, 'useraccount');
+                // Query Firestore to find user with matching email
+                const usersRef = collection(db, 'useraccount');
                 const q = query(usersRef, where("email", "==", user.email));
                 const querySnapshot = await getDocs(q);
                 
                 if (!querySnapshot.empty) {
                     const userDoc = querySnapshot.docs[0];
-                    return userDoc.data();
+                    const userData = userDoc.data();
+                    
+                    // Update profile information
+                    if (userData.firstName || userData.lastName) {
+                        const fullName = `${userData.firstName || ''} ${userData.lastName || ''}`.trim();
+                        userName.textContent = fullName;
+                        profileAvatar.textContent = userData.firstName ? userData.firstName.charAt(0).toUpperCase() : 'U';
+                    }
+                    
+                    if (userData.role) {
+                        userRole.textContent = userData.role;
+                    }
+                    
+                    userEmail.textContent = user.email || "Not provided";
+                    userPhone.textContent = userData.phoneNumber || "Not provided";
+                    memberSince.textContent = formatDate(userData.createdAt || user.metadata.creationTime);
+                    membershipStatus.textContent = userData.membershipStatus || "Active";
+                    
+                    // You can update other fields similarly
                 } else {
-                    console.log("No user data found in web-app database");
-                    return null;
+                    console.log("No user data found in Firestore");
+                    // Fallback to auth data
+                    userName.textContent = user.displayName || "Member";
+                    profileAvatar.textContent = user.displayName ? user.displayName.charAt(0).toUpperCase() : 'U';
+                    userEmail.textContent = user.email || "Not provided";
+                    memberSince.textContent = formatDate(user.metadata.creationTime);
                 }
             } catch (error) {
                 console.error("Error fetching user data:", error);
-                return null;
+                // Fallback to auth data if Firestore fails
+                userName.textContent = user.displayName || "Member";
+                profileAvatar.textContent = user.displayName ? user.displayName.charAt(0).toUpperCase() : 'U';
+                userEmail.textContent = user.email || "Not provided";
+                memberSince.textContent = formatDate(user.metadata.creationTime);
             }
         }
 
         // Authentication state observer
-        onAuthStateChanged(auth, async (user) => {
+        onAuthStateChanged(auth, (user) => {
             if (user) {
-                // User is signed in to first Firebase project
-                try {
-                    // Fetch basic user data from first project
-                    const userData = await fetchUserData(user);
-                    
-                    // Fetch detailed member data from second project
-                    const memberData = await fetchMemberData(user.email);
-
-                    // Hide loading indicator
-                    loadingIndicator.style.display = 'none';
-                    profileSection.style.display = 'grid';
-
-                    // Set greeting with first name
-                    const firstName = memberData?.firstName || userData?.firstName || '';
-                    setGreeting(firstName);
-
-                    // Update profile information
-                    if (memberData || userData) {
-                        const data = memberData || userData;
-
-                        // Profile avatar with first initial
-                        profileAvatar.textContent = data.firstName ? data.firstName.charAt(0).toUpperCase() : 'M';
-
-                        // User name
-                        const fullName = `${data.firstName || ''} ${data.lastName || ''}`.trim();
-                        userName.textContent = fullName || 'Member';
-
-                        // Member ID (from first project)
-                        memberId.textContent = userData?.memberId || 'GSM-0000';
-
-                        // Email
-                        userEmail.textContent = user.email || "Not provided";
-
-                        // Other details from member data
-                        if (memberData) {
-                            userRole.textContent = memberData.role || "Member";
-                            userPhone.textContent = memberData.phone || "Not provided";
-                            membershipDate.textContent = formatDate(memberData.membershipDate || memberData.createdAt);
-                            userAddress.textContent = memberData.address || "Not provided";
-                            userCity.textContent = memberData.city || "Not provided";
-                            userState.textContent = memberData.state || "Not provided";
-                            userCountry.textContent = memberData.country || "Not provided";
-
-                            // Display all other member data
-                            displayMemberData(memberData);
-                        } else {
-                            // Fallback to user data if no member data
-                            userPhone.textContent = userData?.phoneNumber || "Not provided";
-                            membershipDate.textContent = formatDate(userData?.createdAt);
-                        }
-                    }
-                } catch (error) {
-                    console.error("Error processing user data:", error);
-                    // Handle error (could show error message to user)
-                }
+                // User is signed in
+                fetchUserData(user);
             } else {
                 // User is signed out, redirect to login
                 window.location.href = 'Login.html';
             }
         });
+
+        // Initialize page
+        function init() {
+            setGreeting();
+        }
+
+        // Run initialization when page loads
+        document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>
