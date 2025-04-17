@@ -1,1 +1,557 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Ministries</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4a6fa5;
+            --secondary-color: #166088;
+            --accent-color: #4fc3f7;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --success-color: #28a745;
+            --warning-color: #ffc107;
+            --danger-color: #dc3545;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+            color: var(--dark-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--secondary-color);
+            margin-bottom: 2rem;
+            font-size: 2.5rem;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: var(--accent-color);
+            border-radius: 2px;
+        }
+
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .ministries-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .ministry-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .ministry-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .ministry-header {
+            background: var(--primary-color);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .ministry-header h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .ministry-body {
+            padding: 1.5rem;
+        }
+
+        .ministry-info {
+            margin-bottom: 1rem;
+        }
+
+        .ministry-info p {
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .ministry-info i {
+            margin-right: 0.5rem;
+            color: var(--primary-color);
+            width: 20px;
+            text-align: center;
+        }
+
+        .no-ministries {
+            text-align: center;
+            padding: 2rem;
+            grid-column: 1 / -1;
+        }
+
+        .no-ministries h2 {
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+        }
+
+        .available-ministries {
+            margin-top: 3rem;
+            grid-column: 1 / -1;
+        }
+
+        .available-ministries h2 {
+            color: var(--secondary-color);
+            margin-bottom: 1.5rem;
+            text-align: center;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+        .available-ministries h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: var(--accent-color);
+            border-radius: 2px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-align: center;
+            text-decoration: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+            animation: modalFadeIn 0.3s ease;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            color: var(--dark-color);
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        .error-message {
+            text-align: center;
+            padding: 2rem;
+            color: var(--danger-color);
+            font-size: 1.2rem;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            background-color: var(--accent-color);
+            color: white;
+            border-radius: 50px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-left: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .ministries-container {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>My Ministries</h1>
+        
+        <div id="content">
+            <div class="loading">
+                <div class="spinner"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Join Ministry Modal -->
+    <div id="joinModal" class="modal">
+        <div class="modal-content">
+            <button class="close-modal">&times;</button>
+            <h2>Join a Ministry</h2>
+            <p>To join a ministry, please liaise with your leader and request to join.</p>
+            <div style="margin-top: 2rem;">
+                <button class="btn" id="closeModalBtn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+        // Import from first Firebase project (authentication)
+        import { initializeApp as initializeApp1 } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+
+        // First Firebase configuration (authentication)
+        const firebaseConfig1 = {
+            apiKey: "AIzaSyDJJqxh3UOsTcBPAXLeEWeLoQRmIy_6hNU",
+            authDomain: "web-app-ae5b6.firebaseapp.com",
+            projectId: "web-app-ae5b6",
+            storageBucket: "web-app-ae5b6.firebasestorage.app",
+            messagingSenderId: "921251501161",
+            appId: "1:921251501161:web:316ff3fc4345735762bef8"
+        };
+
+        // Initialize first Firebase app
+        const app1 = initializeApp1(firebaseConfig1, "app1");
+        const auth = getAuth(app1);
+        const db1 = getFirestore(app1);
+
+        // Second Firebase configuration (ministries)
+        const firebaseConfig2 = {
+            apiKey: "AIzaSyBG-N0g33c5-xru56dV7Ymi3YuOwPFnd-w",
+            authDomain: "ministries-d4f65.firebaseapp.com",
+            projectId: "ministries-d4f65",
+            storageBucket: "ministries-d4f65.firebasestorage.app",
+            messagingSenderId: "796981416799",
+            appId: "1:796981416799:web:f77774148935d4191c1cea",
+            measurementId: "G-06Y1CP4S7G"
+        };
+
+        // Initialize second Firebase app
+        const app2 = initializeApp1(firebaseConfig2, "app2");
+        const db2 = getFirestore(app2);
+
+        // DOM elements
+        const contentDiv = document.getElementById('content');
+        const joinModal = document.getElementById('joinModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const closeModalX = document.querySelector('.close-modal');
+
+        // Modal functionality
+        function openModal() {
+            joinModal.style.display = 'flex';
+        }
+
+        function closeModal() {
+            joinModal.style.display = 'none';
+        }
+
+        closeModalBtn.addEventListener('click', closeModal);
+        closeModalX.addEventListener('click', closeModal);
+
+        // Close modal when clicking outside
+        joinModal.addEventListener('click', (e) => {
+            if (e.target === joinModal) {
+                closeModal();
+            }
+        });
+
+        // Check authentication state
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                // User is signed in
+                try {
+                    // Get user document from first Firebase
+                    const userDocRef = doc(db1, "users", user.uid);
+                    const userDocSnap = await getDoc(userDocRef);
+
+                    if (userDocSnap.exists()) {
+                        const userData = userDocSnap.data();
+                        const userPhone = userData.phone;
+
+                        if (userPhone) {
+                            // Query ministries in second Firebase where phone matches
+                            const ministriesQuery = query(
+                                collection(db2, "ministries"),
+                                where("members", "array-contains", userPhone)
+                            );
+
+                            const querySnapshot = await getDocs(ministriesQuery);
+
+                            if (!querySnapshot.empty) {
+                                // User is in one or more ministries
+                                const ministries = [];
+                                querySnapshot.forEach((doc) => {
+                                    ministries.push({ id: doc.id, ...doc.data() });
+                                });
+
+                                displayUserMinistries(ministries, userPhone);
+                            } else {
+                                // User is not in any ministries
+                                displayNoMinistries();
+                            }
+                        } else {
+                            // User has no phone number
+                            displayError("Can't find your data. Phone number not registered.");
+                        }
+                    } else {
+                        // User document doesn't exist
+                        displayError("Can't find your data. Please contact support.");
+                    }
+                } catch (error) {
+                    console.error("Error fetching data:", error);
+                    displayError("An error occurred while fetching your data. Please try again later.");
+                }
+            } else {
+                // User is not signed in (shouldn't happen if authentication is handled by index.html)
+                displayError("You need to be signed in to view this page.");
+            }
+        });
+
+        // Display user's ministries
+        function displayUserMinistries(ministries, userPhone) {
+            let html = `
+                <div class="ministries-container">
+                    ${ministries.map(ministry => {
+                        // Find the member's details in this ministry
+                        const memberInfo = ministry.membersInfo?.find(m => m.phone === userPhone) || {};
+                        
+                        return `
+                            <div class="ministry-card">
+                                <div class="ministry-header">
+                                    <h2>${ministry.title}</h2>
+                                </div>
+                                <div class="ministry-body">
+                                    <div class="ministry-info">
+                                        <p><i class="fas fa-user"></i> <strong>Full Name:</strong> ${memberInfo.fullName || 'Not specified'}</p>
+                                        <p><i class="fas fa-id-badge"></i> <strong>Position:</strong> ${memberInfo.position || 'Member'}</p>
+                                        <p><i class="fas fa-church"></i> <strong>Home Church:</strong> ${memberInfo.homeChurch || 'Not specified'}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+
+            // Add available ministries section
+            html += `
+                <div class="available-ministries">
+                    <h2>Other Ministries You Can Join</h2>
+                    <div class="ministries-container" id="availableMinistries">
+                        <div class="loading">
+                            <div class="spinner"></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            contentDiv.innerHTML = html;
+
+            // Load available ministries
+            loadAvailableMinistries();
+        }
+
+        // Display no ministries message
+        function displayNoMinistries() {
+            let html = `
+                <div class="no-ministries">
+                    <h2>You're not currently part of any ministry</h2>
+                    <p>You can browse available ministries below and request to join.</p>
+                </div>
+                <div class="available-ministries">
+                    <h2>Available Ministries</h2>
+                    <div class="ministries-container" id="availableMinistries">
+                        <div class="loading">
+                            <div class="spinner"></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            contentDiv.innerHTML = html;
+
+            // Load available ministries
+            loadAvailableMinistries();
+        }
+
+        // Display error message
+        function displayError(message) {
+            contentDiv.innerHTML = `
+                <div class="error-message">
+                    <i class="fas fa-exclamation-circle" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                    <p>${message}</p>
+                </div>
+            `;
+        }
+
+        // Load available ministries
+        async function loadAvailableMinistries() {
+            const availableMinistriesDiv = document.getElementById('availableMinistries');
+            
+            try {
+                const querySnapshot = await getDocs(collection(db2, "ministries"));
+                const ministries = [];
+                
+                querySnapshot.forEach((doc) => {
+                    ministries.push({ id: doc.id, ...doc.data() });
+                });
+
+                if (ministries.length > 0) {
+                    availableMinistriesDiv.innerHTML = `
+                        ${ministries.map(ministry => `
+                            <div class="ministry-card">
+                                <div class="ministry-header">
+                                    <h2>${ministry.title}</h2>
+                                </div>
+                                <div class="ministry-body">
+                                    <div class="ministry-info">
+                                        <p><i class="fas fa-info-circle"></i> ${ministry.description || 'No description available'}</p>
+                                        <p><i class="fas fa-users"></i> <strong>Members:</strong> ${ministry.members?.length || 0}</p>
+                                    </div>
+                                    <button class="btn btn-outline join-btn" data-ministry="${ministry.title}">
+                                        Join Ministry
+                                    </button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    `;
+
+                    // Add event listeners to join buttons
+                    document.querySelectorAll('.join-btn').forEach(btn => {
+                        btn.addEventListener('click', openModal);
+                    });
+                } else {
+                    availableMinistriesDiv.innerHTML = `
+                        <div class="no-ministries">
+                            <p>No ministries available at the moment.</p>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error("Error loading available ministries:", error);
+                availableMinistriesDiv.innerHTML = `
+                    <div class="error-message">
+                        <p>Failed to load available ministries. Please try again later.</p>
+                    </div>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>
