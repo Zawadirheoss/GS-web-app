@@ -1,1 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard | Gospel Springs Ministry</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-light: #3b82f6;
+            --primary-dark: #1d4ed8;
+            --secondary: #1e40af;
+            --accent: #60a5fa;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --gray: #64748b;
+            --light-gray: #e2e8f0;
+            --success: #10b981;
+            --error: #ef4444;
+        }
 
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f1f5f9;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Header */
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .greeting-container {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .greeting {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .greeting-text {
+            opacity: 0.9;
+        }
+
+        /* User Profile Card */
+        .profile-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 600;
+            margin-right: 1.5rem;
+        }
+
+        .profile-info h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .profile-info p {
+            color: var(--gray);
+        }
+
+        .profile-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .detail-item {
+            background: var(--light);
+            padding: 1rem;
+            border-radius: 8px;
+        }
+
+        .detail-item h3 {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .detail-item p {
+            font-weight: 500;
+        }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(96, 165, 250, 0.1);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            margin-right: 1rem;
+        }
+
+        .stat-content h3 {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-content p {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        /* Recent Activity */
+        .activity-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-header h2 {
+            font-size: 1.25rem;
+        }
+
+        .activity-list {
+            list-style: none;
+        }
+
+        .activity-item {
+            display: flex;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(96, 165, 250, 0.1);
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+        }
+
+        .activity-content h4 {
+            font-size: 1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .activity-content p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .activity-time {
+            color: var(--gray);
+            font-size: 0.8rem;
+            margin-left: auto;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .greeting {
+                font-size: 1.5rem;
+            }
+
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .profile-avatar {
+                margin-right: 0;
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Dashboard Header with Greeting -->
+        <div class="dashboard-header">
+            <div class="greeting-container">
+                <h1 class="greeting" id="greetingText">Good Morning</h1>
+                <p class="greeting-text">Welcome to your Gospel Springs Ministry dashboard</p>
+            </div>
+        </div>
+
+        <!-- User Profile Card -->
+        <div class="profile-card">
+            <div class="profile-header">
+                <div class="profile-avatar" id="profileAvatar">U</div>
+                <div class="profile-info">
+                    <h2 id="userName">Loading...</h2>
+                    <p id="userRole">Member</p>
+                </div>
+            </div>
+            <div class="profile-details">
+                <div class="detail-item">
+                    <h3>Email</h3>
+                    <p id="userEmail">Loading...</p>
+                </div>
+                <div class="detail-item">
+                    <h3>Phone Number</h3>
+                    <p id="userPhone">Loading...</p>
+                </div>
+                <div class="detail-item">
+                    <h3>Member Since</h3>
+                    <p id="memberSince">Loading...</p>
+                </div>
+                <div class="detail-item">
+                    <h3>Membership Status</h3>
+                    <p id="membershipStatus">Loading...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+                <div class="stat-content">
+                    <h3>Upcoming Events</h3>
+                    <p id="upcomingEvents">3</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-hands-helping"></i>
+                </div>
+                <div class="stat-content">
+                    <h3>Ministries</h3>
+                    <p id="ministriesCount">2</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-pray"></i>
+                </div>
+                <div class="stat-content">
+                    <h3>Prayer Requests</h3>
+                    <p id="prayerRequests">1</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-hand-holding-heart"></i>
+                </div>
+                <div class="stat-content">
+                    <h3>Giving This Month</h3>
+                    <p id="monthlyGiving">$150.00</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="activity-card">
+            <div class="card-header">
+                <h2>Recent Activity</h2>
+            </div>
+            <ul class="activity-list" id="activityList">
+                <li class="activity-item">
+                    <div class="activity-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <div class="activity-content">
+                        <h4>Attended Sunday Service</h4>
+                        <p>Main Sanctuary - 10:00 AM</p>
+                    </div>
+                    <div class="activity-time">2 days ago</div>
+                </li>
+                <li class="activity-item">
+                    <div class="activity-icon">
+                        <i class="fas fa-donate"></i>
+                    </div>
+                    <div class="activity-content">
+                        <h4>Made a Donation</h4>
+                        <p>Tithes & Offerings</p>
+                    </div>
+                    <div class="activity-time">1 week ago</div>
+                </li>
+                <li class="activity-item">
+                    <div class="activity-icon">
+                        <i class="fas fa-user-friends"></i>
+                    </div>
+                    <div class="activity-content">
+                        <h4>Joined Small Group</h4>
+                        <p>Men's Bible Study</p>
+                    </div>
+                    <div class="activity-time">2 weeks ago</div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+        // Import the functions you need from the Firebase SDKs
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+        import { 
+            getAuth, 
+            onAuthStateChanged
+        } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+        import { 
+            getFirestore, 
+            collection, 
+            query, 
+            where, 
+            getDocs,
+            doc,
+            getDoc
+        } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDJJqxh3UOsTcBPAXLeEWeLoQRmIy_6hNU",
+            authDomain: "web-app-ae5b6.firebaseapp.com",
+            projectId: "web-app-ae5b6",
+            storageBucket: "web-app-ae5b6.appspot.com",
+            messagingSenderId: "921251501161",
+            appId: "1:921251501161:web:316ff3fc4345735762bef8"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // DOM Elements
+        const greetingText = document.getElementById('greetingText');
+        const profileAvatar = document.getElementById('profileAvatar');
+        const userName = document.getElementById('userName');
+        const userRole = document.getElementById('userRole');
+        const userEmail = document.getElementById('userEmail');
+        const userPhone = document.getElementById('userPhone');
+        const memberSince = document.getElementById('memberSince');
+        const membershipStatus = document.getElementById('membershipStatus');
+
+        // Set greeting based on time of day
+        function setGreeting() {
+            const hour = new Date().getHours();
+            let greeting;
+            
+            if (hour < 12) {
+                greeting = "Good Morning";
+            } else if (hour < 18) {
+                greeting = "Good Afternoon";
+            } else {
+                greeting = "Good Evening";
+            }
+            
+            greetingText.textContent = greeting;
+        }
+
+        // Format date
+        function formatDate(dateString) {
+            if (!dateString) return "Not available";
+            
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            const date = dateString.toDate ? dateString.toDate() : new Date(dateString);
+            return date.toLocaleDateString('en-US', options);
+        }
+
+        // Fetch user data from Firestore
+        async function fetchUserData(user) {
+            try {
+                // Query Firestore to find user with matching email
+                const usersRef = collection(db, 'useraccount');
+                const q = query(usersRef, where("email", "==", user.email));
+                const querySnapshot = await getDocs(q);
+                
+                if (!querySnapshot.empty) {
+                    const userDoc = querySnapshot.docs[0];
+                    const userData = userDoc.data();
+                    
+                    // Update profile information
+                    if (userData.firstName || userData.lastName) {
+                        const fullName = `${userData.firstName || ''} ${userData.lastName || ''}`.trim();
+                        userName.textContent = fullName;
+                        profileAvatar.textContent = userData.firstName ? userData.firstName.charAt(0).toUpperCase() : 'U';
+                    }
+                    
+                    if (userData.role) {
+                        userRole.textContent = userData.role;
+                    }
+                    
+                    userEmail.textContent = user.email || "Not provided";
+                    userPhone.textContent = userData.phoneNumber || "Not provided";
+                    memberSince.textContent = formatDate(userData.createdAt || user.metadata.creationTime);
+                    membershipStatus.textContent = userData.membershipStatus || "Active";
+                    
+                    // You can update other fields similarly
+                } else {
+                    console.log("No user data found in Firestore");
+                    // Fallback to auth data
+                    userName.textContent = user.displayName || "Member";
+                    profileAvatar.textContent = user.displayName ? user.displayName.charAt(0).toUpperCase() : 'U';
+                    userEmail.textContent = user.email || "Not provided";
+                    memberSince.textContent = formatDate(user.metadata.creationTime);
+                }
+            } catch (error) {
+                console.error("Error fetching user data:", error);
+                // Fallback to auth data if Firestore fails
+                userName.textContent = user.displayName || "Member";
+                profileAvatar.textContent = user.displayName ? user.displayName.charAt(0).toUpperCase() : 'U';
+                userEmail.textContent = user.email || "Not provided";
+                memberSince.textContent = formatDate(user.metadata.creationTime);
+            }
+        }
+
+        // Authentication state observer
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // User is signed in
+                fetchUserData(user);
+            } else {
+                // User is signed out, redirect to login
+                window.location.href = 'Login.html';
+            }
+        });
+
+        // Initialize page
+        function init() {
+            setGreeting();
+        }
+
+        // Run initialization when page loads
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
