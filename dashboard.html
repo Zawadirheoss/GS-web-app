@@ -278,17 +278,100 @@
                     <h3>Email</h3>
                     <p id="userEmail">Loading...</p>
                 </div>
-               
+                <div class="detail-item">
+                    <h3>Phone Number</h3>
+                    <p id="userPhone">Loading...</p>
+                </div>
                 <div class="detail-item">
                     <h3>Member Since</h3>
                     <p id="memberSince">Loading...</p>
                 </div>
                 <div class="detail-item">
                     <h3>Membership Status</h3>
-                    <p id="membershipStatus">Active</p>
+                    <p id="membershipStatus">Loading...</p>
                 </div>
             </div>
         </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-calendar-check"></i>
+                </div>
+                <div class="stat-content">
+                    <h3>Upcoming Events</h3>
+                    <p id="upcomingEvents">3</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-hands-helping"></i>
+                </div>
+                <div class="stat-content">
+                    <h3>Ministries</h3>
+                    <p id="ministriesCount">2</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-pray"></i>
+                </div>
+                <div class="stat-content">
+                    <h3>Prayer Requests</h3>
+                    <p id="prayerRequests">1</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-hand-holding-heart"></i>
+                </div>
+                <div class="stat-content">
+                    <h3>Giving This Month</h3>
+                    <p id="monthlyGiving">$150.00</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="activity-card">
+            <div class="card-header">
+                <h2>Recent Activity</h2>
+            </div>
+            <ul class="activity-list" id="activityList">
+                <li class="activity-item">
+                    <div class="activity-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <div class="activity-content">
+                        <h4>Attended Sunday Service</h4>
+                        <p>Main Sanctuary - 10:00 AM</p>
+                    </div>
+                    <div class="activity-time">2 days ago</div>
+                </li>
+                <li class="activity-item">
+                    <div class="activity-icon">
+                        <i class="fas fa-donate"></i>
+                    </div>
+                    <div class="activity-content">
+                        <h4>Made a Donation</h4>
+                        <p>Tithes & Offerings</p>
+                    </div>
+                    <div class="activity-time">1 week ago</div>
+                </li>
+                <li class="activity-item">
+                    <div class="activity-icon">
+                        <i class="fas fa-user-friends"></i>
+                    </div>
+                    <div class="activity-content">
+                        <h4>Joined Small Group</h4>
+                        <p>Men's Bible Study</p>
+                    </div>
+                    <div class="activity-time">2 weeks ago</div>
+                </li>
+            </ul>
+        </div>
+    </div>
 
     <!-- Firebase SDKs -->
     <script type="module">
@@ -426,3 +509,4 @@
     </script>
 </body>
 </html>
+
