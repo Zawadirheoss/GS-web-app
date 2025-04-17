@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Member Chat Platform</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+        import { 
+            getFirestore, 
+            collection, 
+            query, 
+            where, 
+            onSnapshot,
+            addDoc,
+            serverTimestamp,
+            orderBy,
+            getDocs,
+            doc,
+            setDoc
+        } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+        import { 
+            getAuth, 
+            onAuthStateChanged,
+            signOut
+        } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDJJqxh3UOsTcBPAXLeEWeLoQRmIy_6hNU",
+            authDomain: "web-app-ae5b6.firebaseapp.com",
+            projectId: "web-app-ae5b6",
+            storageBucket: "web-app-ae5b6.appspot.com",
+            messagingSenderId: "921251501161",
+            appId: "1:921251501161:web:316ff3fc4345735762bef8"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        // DOM elements
+        const chatContainer = document.getElementById('chatContainer');
+        const messageInput = document.getElementById('messageInput');
+        const sendButton = document.getElementById('sendButton');
+        const userList = document.getElementById('userList');
+        const currentUserBadge = document.getElementById('currentUserBadge');
+        const chatHeader = document.getElementById('chatHeader');
+        const loadingSpinner = document.getElementById('loadingSpinner');
+        const signOutBtn = document.getElementById('signOutBtn');
+        const authAlert = document.getElementById('authAlert');
+        const mainContent = document.getElementById('mainContent');
+
+        // Global variables
+        let currentUser = null;
+        let currentUserMemberId = '';
+        let selectedRecipient = null;
+        let chatId = '';
+
+        // Check authentication state
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                authAlert.classList.add('d-none');
+                mainContent.classList.remove('d-none');
+                
+                // Get current user's memberId
+                await fetchCurrentUserMemberId(user.email);
+                
+                // Display current user info
+                currentUserBadge.textContent = `You: ${currentUserMemberId}`;
+                chatHeader.textContent = `Select a member to chat with`;
+                
+                // Load all users except current user
+                await loadUsers();
+                
+            } else {
+                // User is signed out
+                authAlert.classList.remove('d-none');
+                mainContent.classList.add('d-none');
+                setTimeout(() => {
+                    window.location.href = 'signin.html';
+                }, 3000);
+            }
+        });
+
+        // Sign out function
+        signOutBtn.addEventListener('click', () => {
+            signOut(auth).then(() => {
+                window.location.href = 'signin.html';
+            }).catch((error) => {
+                console.error("Sign out error:", error);
+            });
+        });
+
+        // Fetch current user's memberId
+        async function fetchCurrentUserMemberId(email) {
+            try {
+                const q = query(collection(db, "useraccount"), where("email", "==", email));
+                const querySnapshot = await getDocs(q);
+                
+                if (querySnapshot.empty) {
+                    throw new Error("No user account found");
+                }
+                
+                const userDoc = querySnapshot.docs[0];
+                currentUserMemberId = userDoc.data().memberId;
+                
+                if (!currentUserMemberId) {
+                    throw new Error("No member ID associated with your account");
+                }
+                
+            } catch (error) {
+                console.error("Error fetching member ID:", error);
+                alert("Error loading your account information");
+            }
+        }
+
+        // Load all users except current user
+        async function loadUsers() {
+            try {
+                const querySnapshot = await getDocs(collection(db, "useraccount"));
+                userList.innerHTML = '';
+                
+                querySnapshot.forEach((doc) => {
+                    const user = doc.data();
+                    if (user.memberId !== currentUserMemberId) {
+                        const userElement = document.createElement('div');
+                        userElement.className = 'list-group-item list-group-item-action user-item';
+                        userElement.innerHTML = `
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <strong>${user.memberId}</strong>
+                                    <div class="text-muted small">${user.email}</div>
+                                </div>
+                                <i class="fas fa-comment-dots"></i>
+                            </div>
+                        `;
+                        userElement.addEventListener('click', () => selectUser(user));
+                        userList.appendChild(userElement);
+                    }
+                });
+                
+                loadingSpinner.classList.add('d-none');
+                
+            } catch (error) {
+                console.error("Error loading users:", error);
+                loadingSpinner.classList.add('d-none');
+                userList.innerHTML = '<div class="list-group-item text-danger">Error loading users</div>';
+            }
+        }
+
+        // Select a user to chat with
+        async function selectUser(user) {
+            selectedRecipient = user;
+            chatHeader.textContent = `Chat with ${user.memberId}`;
+            
+            // Generate chat ID (sorted to ensure consistency)
+            const memberIds = [currentUserMemberId, user.memberId].sort();
+            chatId = `chat_${memberIds[0]}_${memberIds[1]}`;
+            
+            // Load chat messages
+            await loadChatMessages();
+            
+            // Scroll to bottom of chat
+            scrollChatToBottom();
+        }
+
+        // Load chat messages
+        async function loadChatMessages() {
+            const messagesRef = collection(db, "chats", chatId, "messages");
+            const q = query(messagesRef, orderBy("timestamp"));
+            
+            onSnapshot(q, (snapshot) => {
+                chatContainer.innerHTML = '';
+                
+                snapshot.forEach((doc) => {
+                    const message = doc.data();
+                    renderMessage(message);
+                });
+                
+                scrollChatToBottom();
+            });
+        }
+
+        // Render a message
+        function renderMessage(message) {
+            const isCurrentUser = message.senderId === currentUserMemberId;
+            const messageElement = document.createElement('div');
+            messageElement.className = `message ${isCurrentUser ? 'message-sent' : 'message-received'}`;
+            
+            messageElement.innerHTML = `
+                <div class="message-header">
+                    <span class="message-sender">${isCurrentUser ? 'You' : message.senderId}</span>
+                    <span class="message-time">${formatTime(message.timestamp?.toDate())}</span>
+                </div>
+                <div class="message-content">${message.text}</div>
+            `;
+            
+            chatContainer.appendChild(messageElement);
+        }
+
+        // Send message
+        async function sendMessage() {
+            const text = messageInput.value.trim();
+            if (!text || !selectedRecipient) return;
+            
+            try {
+                const messagesRef = collection(db, "chats", chatId, "messages");
+                
+                await addDoc(messagesRef, {
+                    text: text,
+                    senderId: currentUserMemberId,
+                    recipientId: selectedRecipient.memberId,
+                    timestamp: serverTimestamp()
+                });
+                
+                // Clear input
+                messageInput.value = '';
+                
+                // Create chat metadata if it doesn't exist
+                const chatDocRef = doc(db, "chats", chatId);
+                await setDoc(chatDocRef, {
+                    participant1: currentUserMemberId,
+                    participant2: selectedRecipient.memberId,
+                    lastUpdated: serverTimestamp()
+                }, { merge: true });
+                
+            } catch (error) {
+                console.error("Error sending message:", error);
+                alert("Failed to send message");
+            }
+        }
+
+        // Format time
+        function formatTime(date) {
+            if (!date) return '';
+            return date.toLocaleTimeString('en-US', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                hour12: true
+            });
+        }
+
+        // Scroll chat to bottom
+        function scrollChatToBottom() {
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        // Event listeners
+        sendButton.addEventListener('click', sendMessage);
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --primary-light: #818cf8;
+            --dark-color: #1e293b;
+            --light-color: #f8fafc;
+            --gray-color: #94a3b8;
+            --success-color: #10b981;
+        }
+        
+        body {
+            background-color: #f8fafc;
+            font-family: 'Poppins', sans-serif;
+            color: var(--dark-color);
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .navbar {
+            background-color: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            color: white;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+        
+        .chat-container {
+            display: flex;
+            height: calc(100vh - 120px);
+        }
+        
+        .user-list {
+            width: 300px;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            background-color: white;
+        }
+        
+        .chat-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: #f1f5f9;
+        }
+        
+        .chat-header {
+            padding: 1rem;
+            background-color: white;
+            border-bottom: 1px solid #e2e8f0;
+            font-weight: 600;
+        }
+        
+        .messages-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+            background-color: #f8fafc;
+        }
+        
+        .message {
+            max-width: 70%;
+            margin-bottom: 1rem;
+            padding: 0.75rem 1rem;
+            border-radius: 1rem;
+            position: relative;
+        }
+        
+        .message-sent {
+            background-color: var(--primary-color);
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 0.25rem;
+        }
+        
+        .message-received {
+            background-color: white;
+            color: var(--dark-color);
+            margin-right: auto;
+            border-bottom-left-radius: 0.25rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .message-sent .message-header {
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .message-received .message-header {
+            color: var(--gray-color);
+        }
+        
+        .message-content {
+            word-wrap: break-word;
+        }
+        
+        .message-input-area {
+            padding: 1rem;
+            background-color: white;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .message-input {
+            flex: 1;
+            border-radius: 2rem;
+            padding: 0.75rem 1rem;
+            border: 1px solid #e2e8f0;
+            outline: none;
+            transition: all 0.3s;
+        }
+        
+        .message-input:focus {
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+        
+        .send-button {
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .send-button:hover {
+            background-color: #4f46e5;
+            transform: translateY(-2px);
+        }
+        
+        .send-button:disabled {
+            background-color: var(--gray-color);
+            cursor: not-allowed;
+        }
+        
+        .user-item {
+            cursor: pointer;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+        
+        .user-item:hover {
+            background-color: #f8fafc;
+            border-left-color: var(--primary-light);
+        }
+        
+        .user-item.active {
+            background-color: #f1f5f9;
+            border-left-color: var(--primary-color);
+        }
+        
+        .current-user-badge {
+            background-color: #e0e7ff;
+            color: var(--primary-color);
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        .auth-alert {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            border-radius: 0;
+        }
+        
+        @media (max-width: 768px) {
+            .chat-container {
+                flex-direction: column;
+                height: calc(100vh - 160px);
+            }
+            
+            .user-list {
+                width: 100%;
+                height: 200px;
+                border-right: none;
+                border-bottom: 1px solid #e2e8f0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Authentication Alert -->
+    <div class="alert alert-warning auth-alert d-none" id="authAlert" role="alert">
+        <div class="container d-flex justify-content-between align-items-center">
+            <span>You need to be signed in to use the chat. Redirecting...</span>
+            <a href="signin.html" class="btn btn-sm btn-outline-warning">Sign In Now</a>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#" style="color: var(--primary-color);">
+                <i class="fas fa-comments me-2"></i>Member Chat
+            </a>
+            <div class="d-flex align-items-center">
+                <span class="current-user-badge me-3" id="currentUserBadge">Loading...</span>
+                <button class="btn btn-link text-decoration-none" id="signOutBtn">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container-fluid h-100 px-0">
+        <div class="d-none" id="mainContent">
+            <div class="chat-container">
+                <!-- User List -->
+                <div class="user-list">
+                    <div class="p-3 border-bottom">
+                        <h5 class="mb-0">Members</h5>
+                    </div>
+                    <div class="list-group list-group-flush" id="userList">
+                        <div class="text-center py-5" id="loadingSpinner">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <p class="mt-3">Loading members...</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Chat Area -->
+                <div class="chat-area">
+                    <div class="chat-header" id="chatHeader">
+                        Select a member to start chatting
+                    </div>
+                    <div class="messages-container" id="chatContainer">
+                        <div class="text-center py-5 text-muted">
+                            <i class="fas fa-comment-dots fa-3x mb-3"></i>
+                            <p>Select a member to view your conversation</p>
+                        </div>
+                    </div>
+                    <div class="message-input-area">
+                        <input type="text" class="message-input" id="messageInput" placeholder="Type a message..." disabled>
+                        <button class="send-button" id="sendButton" disabled>
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Enable/disable input based on recipient selection
+        const messageInput = document.getElementById('messageInput');
+        const sendButton = document.getElementById('sendButton');
+        
+        // This would be handled by the actual selectUser function
+        // For demo purposes, we'll simulate it here
+        function updateInputState(enabled) {
+            messageInput.disabled = !enabled;
+            sendButton.disabled = !enabled;
+            if (enabled) {
+                messageInput.focus();
+            }
+        }
+    </script>
+</body>
+</html>
